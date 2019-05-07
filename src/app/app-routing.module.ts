@@ -36,11 +36,7 @@ const routes: Routes = [
     path: 'list',
     loadChildren: './list/list.module#ListPageModule'
   },
-  { path: 'stockin', loadChildren: './pages/stockin/stockin.module#StockinPageModule' },
-  { path: 'stockout', loadChildren: './pages/stockout/stockout.module#StockoutPageModule' },
-  { path: 'returnorders', loadChildren: './pages/returnorders/returnorders.module#ReturnordersPageModule' },
-  { path: 'addnewstock', loadChildren: './pages/stockin/addnewstock/addnewstock.module#AddnewstockPageModule' },
-  { path: 'scanin', loadChildren: './pages/stockin/scanin/scanin.module#ScaninPageModule' }
+  
 ];
 
 @NgModule({
