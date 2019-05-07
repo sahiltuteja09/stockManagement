@@ -1,0 +1,133 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="stockin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Update Stock
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-item>
+      <ion-label position="floating">Search</ion-label>
+      <ion-input type="text" name="search"></ion-input>
+    </ion-item>
+  </ion-card>
+
+  <div text-center class="ion-padding-top">Or</div>
+
+  <ion-row>
+    <ion-col text-center class="ion-padding-top">
+      <ion-button routerLink="/scanin" color="success" shape="round">
+        <ion-icon slot="start" name="star"></ion-icon>
+        Scan
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <div class="ion-text-center">If Data found using scan the show below card else alow to search above</div>
+
+  <ion-card>
+    <ion-row>
+        <ion-col>
+      <form (ngSubmit)="logForm()">
+        <ion-item>
+          <ion-thumbnail>
+            <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+          </ion-thumbnail>
+        </ion-item>
+        <ion-item>
+          <p>Product Name</p>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Add Quantity</ion-label>
+          <ion-input type="number" name="product_qty"></ion-input>
+        </ion-item>
+        <div class="ion-text-end">Available 10</div>
+<p>Convert Radio button to select box</p>
+        <ion-list>
+            <ion-radio-group>
+                <ion-list-header>
+                    Product Conditions
+                  </ion-list-header>
+              <ion-row>
+                <ion-col size="6" size-sm>
+                  <ion-item>
+                    <ion-label>New</ion-label>
+                    <ion-radio value="cord"></ion-radio>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="6" size-sm>
+                  <ion-item>
+                    <ion-label>Old</ion-label>
+                    <ion-radio value="duesenberg"></ion-radio>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col size="6" size-sm>
+                  <ion-item>
+                    <ion-label>Return</ion-label>
+                    <ion-radio value="hudson"></ion-radio>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="6" size-sm>
+                  <ion-item>
+                    <ion-label>Other</ion-label>
+                    <ion-radio value="packard"></ion-radio>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-radio-group>
+          </ion-list>
+
+          <ion-list>
+              <ion-radio-group>
+                  <ion-list-header>
+                     If Return then ask from witch platform it comes
+                    </ion-list-header>
+                <ion-row>
+                  <ion-col size="6" size-sm>
+                    <ion-item>
+                      <ion-label>Paytm</ion-label>
+                      <ion-radio value="cord"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size="6" size-sm>
+                    <ion-item>
+                      <ion-label>Amazon</ion-label>
+                      <ion-radio value="duesenberg"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+  
+                <ion-row>
+                  <ion-col size="6" size-sm>
+                    <ion-item>
+                      <ion-label>Flipkart</ion-label>
+                      <ion-radio value="hudson"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size="6" size-sm>
+                    <ion-item>
+                      <ion-label>Other</ion-label>
+                      <ion-radio value="packard"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-radio-group>
+            </ion-list>
+  
+        <ion-button color="success" type="submit" block>Update</ion-button>
+        <ion-button color="danger" type="button" block>Edit</ion-button>
+      </form>
+    </ion-col>
+    </ion-row>
+  </ion-card>
+</ion-content>

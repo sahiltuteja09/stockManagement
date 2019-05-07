@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Add Stock
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col text-center class="ion-padding-top">
+      <ion-button routerLink="/scanin" color="success" shape="round" >
+          <ion-icon slot="start" name="star"></ion-icon>
+        Update</ion-button>
+    </ion-col>
+  </ion-row>
+<div text-center  class="ion-padding-top">Or</div>
+  <ion-row>
+      <ion-col text-center class="ion-padding-top">
+        <ion-button routerLink="/addnewstock" color="danger" shape="round" >
+            <ion-icon slot="start" name="add"></ion-icon>
+          Add New</ion-button>
+      </ion-col>
+    </ion-row>
+</ion-content>

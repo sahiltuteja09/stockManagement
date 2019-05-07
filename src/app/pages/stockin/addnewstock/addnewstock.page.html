@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="stockin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Add / Update Stock
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <form (ngSubmit)="logForm()">
+    <ion-item>
+      <ion-label position="floating">Unique ID</ion-label>
+      <ion-input type="text" [(ngModel)]="stock.unique_id" name="unique_id"></ion-input>
+    </ion-item>
+    <ion-row>
+      <ion-col size="6" size-sm>
+        <ion-item>
+          <ion-label position="floating">Purchase Cost</ion-label>
+          <ion-input type="number" [(ngModel)]="stock.purchase_cost" name="purchase_cost"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6" size-sm>
+        <ion-item>
+          <ion-label position="floating">Quantity</ion-label>
+          <ion-input type="number" [(ngModel)]="stock.product_qty" name="product_qty"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-item>
+      <ion-label position="floating">Product Name</ion-label>
+      <ion-input type="text" [(ngModel)]="stock.product_name" name="product_name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Description</ion-label>
+      <ion-textarea [(ngModel)]="stock.description" name="description"></ion-textarea>
+    </ion-item>
+    <ion-row>
+      <ion-col size="12" size-sm class="ion-text-center">
+        <ion-button color="primary" small color="tertiary" shape="round">Upload Image</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="6" size-sm>
+        <ion-item>
+          <ion-label position="floating">Amazon ASIN</ion-label>
+          <ion-input type="text" [(ngModel)]="stock.amazon_asin" name="amazon_asin"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6" size-sm>
+        <ion-item>
+          <ion-label position="floating">Flipkart FNSKU</ion-label>
+          <ion-input type="number" [(ngModel)]="stock.flipkart_fnsku" name="flipkart_fnsku"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" size-sm>
+        <ion-item>
+          <ion-label position="floating">Paytm SKU</ion-label>
+          <ion-input type="text" [(ngModel)]="stock.paytm_sku" name="paytm_sku"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6" size-sm>
+        <ion-item>
+          <ion-label position="floating">Other UID</ion-label>
+          <ion-input type="number" [(ngModel)]="stock.other_uid" name="other_uid"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-button color="success" type="submit" block>Add</ion-button>
+  </form>
+
+</ion-content>
