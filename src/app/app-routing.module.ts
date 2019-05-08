@@ -26,12 +26,7 @@ const routes: Routes = [
   {
     path: 'stockout',
     loadChildren: './pages/stockout/stockout.module#StockoutPageModule'
-  },
-  {
-    path: 'returnorders',
-    loadChildren: './pages/returnorders/returnorders.module#ReturnordersPageModule'
-  },
-  
+  },  
   {
     path: 'list',
     loadChildren: './list/list.module#ListPageModule'
