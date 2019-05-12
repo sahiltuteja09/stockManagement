@@ -27,10 +27,13 @@ const routes: Routes = [
     path: 'stockout',
     loadChildren: './pages/stockout/stockout.module#StockoutPageModule'
   },  
-  {
-    path: 'list',
-    loadChildren: './list/list.module#ListPageModule'
-  },
+  { path: 'register', loadChildren: './pages/auth/register/register.module#RegisterPageModule' },
+  { path: 'profile', loadChildren: './pages/setting/profile/profile.module#ProfilePageModule' },
+  { path: 'about', loadChildren: './pages/setting/about/about.module#AboutPageModule' },
+  { path: 'sale', loadChildren: './pages/reports/sale/sale.module#SalePageModule' },
+  { path: 'request-quote', loadChildren: './pages/quotes/request-quote/request-quote.module#RequestQuotePageModule' },
+  { path: 'myquotes', loadChildren: './pages/quotes/myquotes/myquotes.module#MyquotesPageModule' },
+  { path: 'messages', loadChildren: './pages/notifications/messages/messages.module#MessagesPageModule' },
   
 ];
 
