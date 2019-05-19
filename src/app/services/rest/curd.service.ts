@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { CoreConfigConstant } from '../../../configconstants';
+import { HttpParamsOptions } from '@angular/common/http/src/params';
 
 @Injectable({
   providedIn: 'root'
@@ -13,16 +14,21 @@ export class CurdService {
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'access-token':'1234'
     })
   };
 
   constructor(private http: HttpClient) { }
-  getData(apiMethod: string, param?: string) {
-    if (!param) {
-      param = '';
+  getData(apiMethod: string, term?: any) {
+    let options = {};
+    if (term) {
+      const httpParams: HttpParamsOptions = { fromObject: term } as HttpParamsOptions;
+      options = { params: new HttpParams(httpParams), headers: this.httpOptions.headers };
     }
-    return this.http.get(this.END_POINT + apiMethod + param).pipe(
+    
+    return this.http.get(this.END_POINT + apiMethod, options).pipe(
       retry(3), // retry a failed request up to 3 times
       catchError(this.handleError)// then handle the error
     );

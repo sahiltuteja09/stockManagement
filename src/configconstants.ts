@@ -1,3 +1,4 @@
 export class CoreConfigConstant {
-    static apiUrl = 'localhost/stockmanagement/';
+    static apiUrl = 'http://localhost/stockmanagement/api/v1/'; 
+    static appID = 'stockmanagementcom';
 }
