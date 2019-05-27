@@ -15,14 +15,16 @@ export class CurdService {
   httpOptions = {
     headers: new HttpHeaders({
       'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'access-token':'1234'
+      'Content-Type': 'application/json',
+      'Authorization':'1234'
     })
   };
 
   constructor(private http: HttpClient) { }
   getData(apiMethod: string, term?: any) {
     let options = {};
+	let headers = this.httpOptions.headers;
+	headers = headers.append('Authorization', '123213');
     if (term) {
       const httpParams: HttpParamsOptions = { fromObject: term } as HttpParamsOptions;
       options = { params: new HttpParams(httpParams), headers: this.httpOptions.headers };

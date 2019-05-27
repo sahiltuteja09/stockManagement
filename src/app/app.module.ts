@@ -12,12 +12,14 @@ import { CoreAppProvider } from './providers/app';
 import { QRScanner } from '@ionic-native/qr-scanner/ngx';
 import { ConfigServiceService, loadConfigurations } from 'src/config';
 import {  HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    BrowserModule,
+    BrowserModule,FormsModule, ReactiveFormsModule,
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule
