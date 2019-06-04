@@ -43,7 +43,7 @@ export class AppComponent {
     },
     {
       title: 'Login/Register',
-      url: '/register',
+      url: '/login',
       icon: 'list'
     }
   ];

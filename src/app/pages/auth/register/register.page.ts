@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {  FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { EmailValidator } from '../../../classes/validator/email';
+import { CoreConfigConstant } from '../../../../configconstants';
+//https://www.joshmorony.com/advanced-forms-validation-in-ionic-2/
+//https://jasonwatmore.com/post/2018/05/10/angular-6-reactive-forms-validation-example
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
@@ -8,20 +11,27 @@ import {  FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class RegisterPage implements OnInit {
   public registerDetails: FormGroup;
+  submitAttempt:boolean = false;
+  appId:string;
   constructor(public formBuilder: FormBuilder) {
-
+this.appId = CoreConfigConstant.appID;
     this.registerDetails = formBuilder.group({
-      name: ['', Validators.compose([Validators.maxLength(3), Validators.pattern('[a-zA-Z ]*'), Validators.required])],
-      mobile: ['', Validators.compose([Validators.minLength(10), Validators.pattern('[0-9 ]*'), Validators.required])],
-      email:[''],
-      password:['']
+      name: ['', Validators.compose([Validators.maxLength(30), Validators.pattern('[a-zA-Z ]*'), Validators.required])],
+      mobile: ['', Validators.compose([Validators.minLength(10),Validators.maxLength(10), Validators.pattern('[0-9 ]*'), Validators.required])],
+      email:['', Validators.compose([Validators.required, Validators.email]), EmailValidator.checkEmail],
+      password:['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(20)])],
+      appid:[this.appId]
   });
    }
-
+   // get the form contorls in a f object
+   get f() { return this.registerDetails.controls; }
   ngOnInit() {
   }
   register(){
-    if(!this.registerDetails.valid){console.log('form');}
+    this.submitAttempt = true;
+    if(!this.registerDetails.valid){console.log('form');}else{
+      console.log(this.registerDetails.value);
+    }
 
   }
 }

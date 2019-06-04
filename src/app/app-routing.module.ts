@@ -34,6 +34,8 @@ const routes: Routes = [
   { path: 'request-quote', loadChildren: './pages/quotes/request-quote/request-quote.module#RequestQuotePageModule' },
   { path: 'myquotes', loadChildren: './pages/quotes/myquotes/myquotes.module#MyquotesPageModule' },
   { path: 'messages', loadChildren: './pages/notifications/messages/messages.module#MessagesPageModule' },
+  { path: 'login', loadChildren: './pages/auth/login/login.module#LoginPageModule' },
+  { path: 'forgot', loadChildren: './pages/auth/forgot/forgot.module#ForgotPageModule' },
   
 ];
 
