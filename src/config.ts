@@ -13,23 +13,13 @@ export class ConfigServiceService {
         private curdService: CurdService) { }
 
     getConfigs(): Promise<Object> {
-        const dummyConfigs: Object = {
-            APIEndpoint: 'url_here',
-            apiKey: 'abcdee'
-        };
-
-        // return of(dummyConfigs) // <== this could be a http request here
-        //     .pipe(
-        //         tap(config => {
-        //             this.configurations = config;
-        //         })
-        //     )
-        //     .toPromise();
-        //let param:string = "app_id="+CoreConfigConstant.appID;
         let param = {'app_id':CoreConfigConstant.appID};
         return of(this.curdService.getData('appConfig', param)
             .subscribe((data: any) => {
-                this.configurations = data;
+                if(data.status){
+                    this.configurations = data;
+                }
+                
             },
                 error => {
                     this.error = error;

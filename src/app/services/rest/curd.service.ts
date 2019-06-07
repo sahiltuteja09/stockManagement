@@ -12,6 +12,7 @@ export class CurdService {
 
   END_POINT: string = CoreConfigConstant.apiUrl;
 
+
   httpOptions = {
     headers: new HttpHeaders({
       'Accept': 'application/json',
@@ -23,11 +24,9 @@ export class CurdService {
   constructor(private http: HttpClient) { }
   getData(apiMethod: string, term?: any) {
     let options = {};
-	let headers = this.httpOptions.headers;
-	headers = headers.append('Authorization', '123213');
     if (term) {
       const httpParams: HttpParamsOptions = { fromObject: term } as HttpParamsOptions;
-      options = { params: new HttpParams(httpParams), headers: this.httpOptions.headers };
+      options = { params: new HttpParams(httpParams) };
     }
     
     return this.http.get(this.END_POINT + apiMethod, options).pipe(
@@ -36,7 +35,7 @@ export class CurdService {
     );
   }
   postData(apiMethod: string, param: any): Observable<any> {
-    return this.http.post(this.END_POINT + apiMethod, param, this.httpOptions).pipe(
+    return this.http.post(this.END_POINT + apiMethod, param).pipe(
       catchError(this.handleError)// then handle the error
     );
   }

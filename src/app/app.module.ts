@@ -11,10 +11,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { CoreAppProvider } from './providers/app';
 import { QRScanner } from '@ionic-native/qr-scanner/ngx';
 import { ConfigServiceService, loadConfigurations } from 'src/config';
-import {  HttpClientModule } from '@angular/common/http';
+import {  HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-
+import { Network } from '@ionic-native/network/ngx';
+import { JwtInterceptor } from '../app/services/rest/jwt.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,13 +31,14 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     CoreAppProvider, QRScanner,
-    ConfigServiceService,InAppBrowser,
+    ConfigServiceService,InAppBrowser,Network,
     {
       provide: APP_INITIALIZER,
       useFactory: loadConfigurations,
       deps: [ConfigServiceService], // dependancy
       multi: true
-    }
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

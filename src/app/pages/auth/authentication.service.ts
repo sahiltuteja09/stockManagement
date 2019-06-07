@@ -3,6 +3,7 @@ import { CurdService } from 'src/app/services/rest/curd.service';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { User } from './model/user';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ConfigServiceService } from 'src/config';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
-  constructor(private curdService: CurdService, private appProvider: CoreAppProvider) {
+  constructor(private curdService: CurdService, private appProvider: CoreAppProvider,private configService: ConfigServiceService) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -20,10 +21,13 @@ export class AuthenticationService {
   }
 
   login(loginData: any) {
+   let d = this.configService.configurations.data;
+   d.token = '123456789';
+    console.log(this.configService.configurations);
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
 
-        this.curdService.getData('register', loginData)
+        this.curdService.postData('login', loginData)
           .subscribe((user: any) => {
 
             if (user && user.token) {
