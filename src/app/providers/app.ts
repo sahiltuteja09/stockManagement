@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { LoadingController, ToastController, Events, Platform } from '@ionic/angular';
 import { Network, Connection } from '@ionic-native/network/ngx';
 import { Router } from '@angular/router';
+import { Device } from '@ionic-native/device/ngx';
 //import { AdMobFree, AdMobFreeBannerConfig, AdMobFreeInterstitialConfig } from '@ionic-native/admob-free/ngx';
 export enum ConnectionStatusEnum {
     Online,
@@ -19,13 +20,57 @@ export class CoreAppProvider {
         private network: Network,
         public eventCtrl: Events,
         private platform: Platform,
-        private router: Router
+        private router: Router,
+        private device: Device
     ) { }
 
     goto(page: string, parameter?: any) {
         this.router.navigate([page]);
     }
+    get deviceId() {
+        if (this.isBrowser()) {
+            return 'browser';
+        } else if (this.isDesktop()) {
+            return 'desktop';
+        } else {
+            return this.device.uuid;
+        }
 
+    }
+    public isBrowser() {
+        return (this.platform.is('desktop') || this.platform.is('mobileweb')) && this.hasHttp();
+    }
+    public hasHttp() {
+        return (document.URL.startsWith('http') || !document.URL.startsWith('http://localhost:8080'));
+    }
+    public isDesktop() {
+        return this.platform.is('desktop') && this.platform.is('electron');
+    }
+    /**
+     * Checks if the app is running in a mobile or tablet device (Cordova).
+     *
+     * @return {boolean} Whether the app is running in a mobile or tablet device.
+     */
+    isMobile(): boolean {
+        return this.platform.is('cordova');
+    }
+
+    /**
+     * Checks if the current window is wider than a mobile.
+     *
+     * @return {boolean} Whether the app the current window is wider than a mobile.
+     */
+    isWide(): boolean {
+        return this.platform.width() > 768;
+    }
+    /**
+        * Check if device uses a wifi connection.
+        *
+        * @return {boolean} Whether the device uses a wifi connection.
+        */
+    isWifi(): boolean {
+        return this.isOnline() && !this.isNetworkAccessLimited();
+    }
     async showLoading() {
         this.isLoading = true;
         return await this.loadingController.create({
@@ -84,14 +129,7 @@ export class CoreAppProvider {
 
         return limited.indexOf(type) > -1;
     }
-    /**
-        * Check if device uses a wifi connection.
-        *
-        * @return {boolean} Whether the device uses a wifi connection.
-        */
-    isWifi(): boolean {
-        return this.isOnline() && !this.isNetworkAccessLimited();
-    }
+
 
     public initializeNetworkEvents(): void {
         this.network.onDisconnect().subscribe(() => {

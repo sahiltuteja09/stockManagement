@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CoreConfigConstant } from '../../../../configconstants';
 import { AuthenticationService } from '../authentication.service';
-import { CoreAppProvider } from 'src/app/providers/app';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -12,11 +11,8 @@ export class LoginPage implements OnInit {
   public loginDetails: FormGroup;
   submitAttempt: boolean = false;
   appId: string;
-  constructor(public formBuilder: FormBuilder, private authenticationService: AuthenticationService, private appProvider: CoreAppProvider) {
-
-    if (this.authenticationService.currentUserValue) {
-      this.appProvider.goto('home');
-    }
+  constructor(public formBuilder: FormBuilder, private authenticationService: AuthenticationService) {
+    this.authenticationService.isLoggedin('home');
 
     this.appId = CoreConfigConstant.appID;
     this.loginDetails = formBuilder.group({

@@ -16,7 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import { JwtInterceptor } from '../app/services/rest/jwt.interceptor';
-
+import { AuthenticationService } from './pages/auth/authentication.service';
+import { Device } from '@ionic-native/device/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -31,14 +32,15 @@ import { JwtInterceptor } from '../app/services/rest/jwt.interceptor';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     CoreAppProvider, QRScanner,
-    ConfigServiceService,InAppBrowser,Network,
+    ConfigServiceService,InAppBrowser,Network,AuthenticationService,
     {
       provide: APP_INITIALIZER,
       useFactory: loadConfigurations,
       deps: [ConfigServiceService], // dependancy
       multi: true
     },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    Device
   ],
   bootstrap: [AppComponent]
 })
