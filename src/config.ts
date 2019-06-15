@@ -1,6 +1,5 @@
 import { CurdService } from './app/services/rest/curd.service';
-import { of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { of, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { CoreConfigConstant } from './configconstants';
 @Injectable({
@@ -9,20 +8,28 @@ import { CoreConfigConstant } from './configconstants';
 export class ConfigServiceService {
     configurations: any;
     error = '';
+    private currentConfigSubject: BehaviorSubject<any>;
     constructor(
-        private curdService: CurdService) { }
+        private curdService: CurdService) {
+            this.currentConfigSubject = new BehaviorSubject<any>(null);
+         }
+
+        public get configValue() {
+            return this.currentConfigSubject.value;
+          }
 
     getConfigs(): Promise<Object> {
         let param = {'app_id':CoreConfigConstant.appID};
         return of(this.curdService.getData('appConfig', param)
             .subscribe((data: any) => {
-                if(data.status){
-                    this.configurations = data;
-                }
-                
+                this.configurations = data;
+                this.currentConfigSubject.next(data);
             },
-                error => {
+                (error) => {
+                    console.log('in Error');
+                    this.configurations = {'status': false, 'msg': 'Something went wrong or no internet.'};
                     this.error = error;
+                    this.currentConfigSubject.next(this.configurations);
                 },
                 () => {
                 }

@@ -4,6 +4,8 @@ import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ConfigServiceService } from 'src/config';
+import { CoreAppProvider } from './providers/app';
+import { AuthenticationService } from './pages/auth/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -51,17 +53,30 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar,private configService: ConfigServiceService
+    private statusBar: StatusBar,
+    private configService: ConfigServiceService, 
+    private appProvider: CoreAppProvider, 
+    private authenticationService: AuthenticationService
   ) {
     this.initializeApp();
-    this.configs = configService.configurations;
-    console.log(this.configs);
+    
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      setTimeout(() => {
+        this.configs = this.configService.configValue;
+        if(this.configs != undefined){
+          if(this.configs.status == false){
+          this.appProvider.showToast(this.configs.msg);
+        }}
+      }, 3000);
+      
     });
+  }
+  logout(){
+    this.authenticationService.logout();
   }
 }

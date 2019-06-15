@@ -24,8 +24,13 @@ export class CoreAppProvider {
         private device: Device
     ) { }
 
-    goto(page: string, parameter?: any) {
-        this.router.navigate([page]);
+    goto(page: string, removeHistory?: any) {
+        if(removeHistory){
+            this.router.navigate([page],{ replaceUrl: true });
+        }else{
+            this.router.navigate([page]);
+        }
+        
     }
     get deviceId() {
         if (this.isBrowser()) {
@@ -35,7 +40,15 @@ export class CoreAppProvider {
         } else {
             return this.device.uuid;
         }
-
+    }
+    get devicePlatform(){
+        if (this.isBrowser()) {
+            return 'browser';
+        } else if (this.isDesktop()) {
+            return 'desktop';
+        } else {
+            return this.device.platform;
+        }
     }
     public isBrowser() {
         return (this.platform.is('desktop') || this.platform.is('mobileweb')) && this.hasHttp();

@@ -43,9 +43,6 @@
               <div *ngIf="f.email.errors.required">Email is required</div>
               <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
           </div>
-            <ion-item *ngIf="registerDetails.controls.email.pending">
-              <p>Checking email...</p>
-          </ion-item>
             <ion-item>
               <ion-label position="floating">Password</ion-label>
               <ion-input name="password" type="password" formControlName="password" required></ion-input>

@@ -12,7 +12,7 @@ export class LoginPage implements OnInit {
   submitAttempt: boolean = false;
   appId: string;
   constructor(public formBuilder: FormBuilder, private authenticationService: AuthenticationService) {
-    this.authenticationService.isLoggedin('home');
+    
 
     this.appId = CoreConfigConstant.appID;
     this.loginDetails = formBuilder.group({
@@ -23,19 +23,27 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
+    
+  }
+  ionViewDidEnter(){
+// check login
+this.authenticationService.isLoggedin('home');
   }
   // convenience getter for easy access to form fields
   get f() { return this.loginDetails.controls; }
+
   login() {
     // stop here if form is invalid
     if (this.loginDetails.invalid) {
       return;
     }
     this.submitAttempt = true;
-    if (!this.loginDetails.valid) { console.log('form'); } else {
+    if (!this.loginDetails.valid) { 
+      console.log('form'); 
+    } else {
       this.authenticationService.login(this.loginDetails.value);
+     
       //this.f.email.value, this.f.password.value
-      console.log(this.loginDetails.value);
     }
   }
 

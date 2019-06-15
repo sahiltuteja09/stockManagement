@@ -31,7 +31,7 @@ import { Device } from '@ionic-native/device/ngx';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    CoreAppProvider, QRScanner,
+     QRScanner,
     ConfigServiceService,InAppBrowser,Network,AuthenticationService,
     {
       provide: APP_INITIALIZER,
@@ -40,7 +40,7 @@ import { Device } from '@ionic-native/device/ngx';
       multi: true
     },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    Device
+    Device,CoreAppProvider
   ],
   bootstrap: [AppComponent]
 })

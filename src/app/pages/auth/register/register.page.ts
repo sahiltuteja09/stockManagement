@@ -18,12 +18,11 @@ export class RegisterPage implements OnInit {
     public formBuilder: FormBuilder, 
     private authenticationService: AuthenticationService
      ) {
-    this.authenticationService.isLoggedin('home');
     this.appId = CoreConfigConstant.appID;
     this.registerDetails = formBuilder.group({
       name: ['', Validators.compose([Validators.maxLength(30), Validators.pattern('[a-zA-Z ]*'), Validators.required])],
       mobile: ['', Validators.compose([Validators.minLength(10), Validators.maxLength(10), Validators.pattern('[0-9 ]*'), Validators.required])],
-      email: ['', Validators.compose([Validators.required, Validators.email]), EmailValidator.checkEmail],
+      email: ['', Validators.compose([Validators.required, Validators.email])],
       password: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(20)])],
       appid: [this.appId]
     });
@@ -32,9 +31,15 @@ export class RegisterPage implements OnInit {
   get f() { return this.registerDetails.controls; }
   ngOnInit() {
   }
+  ionViewDidEnter(){
+    // check login
+    this.authenticationService.isLoggedin('home');
+      }
   register() {
     this.submitAttempt = true;
-    if (!this.registerDetails.valid) { console.log('form'); }
+    if (!this.registerDetails.valid) {
+       console.log('form'); 
+      }
     else {
       this.authenticationService.register(this.registerDetails.value);
       console.log(this.registerDetails.value);
