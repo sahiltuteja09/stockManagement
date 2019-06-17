@@ -18,6 +18,9 @@ import { Network } from '@ionic-native/network/ngx';
 import { JwtInterceptor } from '../app/services/rest/jwt.interceptor';
 import { AuthenticationService } from './pages/auth/authentication.service';
 import { Device } from '@ionic-native/device/ngx';
+import { Crop } from '@ionic-native/crop/ngx';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { File } from '@ionic-native/file/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -40,7 +43,10 @@ import { Device } from '@ionic-native/device/ngx';
       multi: true
     },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    Device,CoreAppProvider
+    Device,CoreAppProvider,
+    Crop,
+    ImagePicker,
+    File,
   ],
   bootstrap: [AppComponent]
 })

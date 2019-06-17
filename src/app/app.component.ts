@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ConfigServiceService } from 'src/config';
 import { CoreAppProvider } from './providers/app';
 import { AuthenticationService } from './pages/auth/authentication.service';
+import { Router, Event, NavigationStart, NavigationEnd, NavigationError } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -42,24 +43,37 @@ export class AppComponent {
       title: 'Setting',
       url: '/about',
       icon: 'list'
-    },
-    {
-      title: 'Login/Register',
-      url: '/login',
-      icon: 'list'
     }
   ];
   public configs = null;
+  public loggedin = false;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private configService: ConfigServiceService, 
     private appProvider: CoreAppProvider, 
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private router: Router
   ) {
     this.initializeApp();
-    
+    router.events.subscribe((event: Event) => {
+      this.loggedin = this.authenticationService.isLoggedin();
+        if (event instanceof NavigationStart) {
+            // Show loading indicator
+        }
+
+        if (event instanceof NavigationEnd) {
+            // Hide loading indicator
+        }
+
+        if (event instanceof NavigationError) {
+            // Hide loading indicator
+
+            // Present error to user
+            console.log(event.error);
+        }
+    });
   }
 
   initializeApp() {
@@ -75,6 +89,9 @@ export class AppComponent {
       }, 3000);
       
     });
+  }
+  menuControl(){
+   this.loggedin = this.authenticationService.isLoggedin();
   }
   logout(){
     this.authenticationService.logout();

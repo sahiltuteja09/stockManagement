@@ -42,7 +42,6 @@ export class RegisterPage implements OnInit {
       }
     else {
       this.authenticationService.register(this.registerDetails.value);
-      console.log(this.registerDetails.value);
     }
 
   }

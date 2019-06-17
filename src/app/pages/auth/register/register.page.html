@@ -21,7 +21,7 @@
             <ion-item>
               <ion-label position="floating">Name</ion-label>
               <ion-input name="name" type="text" formControlName="name" required></ion-input>
-            </ion-item>{{registerDetails.controls.name.maxLength}}
+            </ion-item>
             <ion-item *ngIf="!registerDetails.controls.name.valid  && (registerDetails.controls.name.dirty)">
               <p>Please enter a valid name.</p>
             </ion-item>
