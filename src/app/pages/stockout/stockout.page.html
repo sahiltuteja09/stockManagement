@@ -1,83 +1,97 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>
-      Stock Out
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-
-  <ion-card>
-    <ion-item>
-      <ion-label position="floating">Search</ion-label>
-      <ion-input type="text" name="search"></ion-input>
-    </ion-item>
-  </ion-card>
-
-  <div text-center class="ion-padding-top">Or</div>
-
-  <ion-row>
-    <ion-col text-center class="ion-padding-top">
-      <ion-button routerLink="/scanin" color="success" shape="round">
-        <ion-icon slot="start" name="star"></ion-icon>
-        Scan
-      </ion-button>
-    </ion-col>
-  </ion-row>
-
-  <div class="ion-text-center">If Data found using scan the show below card else alow to search above</div>
-
-  <ion-card>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="home"></ion-back-button>
+      </ion-buttons>
+      <ion-title>
+        Update Stock
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+  
+    <ion-card>
+      <ion-item>
+        <ion-label position="floating">Search</ion-label>
+        <ion-input type="text" name="search" [formControl]="searchControl" [(ngModel)]="searchTerm"
+          (ionChange)="setFilteredItems()"></ion-input>
+      </ion-item>
+    </ion-card>
+    <div *ngIf="searching" class="ion-text-center" text-center>
+      <ion-spinner></ion-spinner>
+    </div>
+  
+    <div text-center class="ion-padding-top">Or</div>
+  
     <ion-row>
-      <ion-col>
-        <form (ngSubmit)="logForm()">
-          <ion-item>
-            <ion-thumbnail>
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-            </ion-thumbnail>
-          </ion-item>
-          <ion-item>
-            <p>Product Name</p>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="floating"> Quantity</ion-label>
-            <ion-input type="number" name="product_qty"></ion-input>
-          </ion-item>
-          <div class="ion-text-end">Available 10</div>
-
-          <ion-list>
-            <ion-item>
-              <ion-label>Product Condition</ion-label>
-              <ion-select placeholder="Select One">
-                <ion-select-option value="1">Sold out</ion-select-option>
-                <ion-select-option value="2">Damage</ion-select-option>
-                <ion-select-option value="3">Loss</ion-select-option>
-                <ion-select-option value="4">Other</ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-list>
-          <p>If Sold out then ask from witch platform it</p>
-          <ion-list>
-            <ion-item>
-              <ion-label>Product Condition</ion-label>
-              <ion-select placeholder="Select One">
-                <ion-select-option value="1">Amazon</ion-select-option>
-                <ion-select-option value="2">Paytm</ion-select-option>
-                <ion-select-option value="3">Flipkart</ion-select-option>
-                <ion-select-option value="4">Shop</ion-select-option>
-                <ion-select-option value="5">Other</ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-list>
-
-          <ion-button color="success" type="submit" block>Update</ion-button>
-        </form>
+      <ion-col text-center class="ion-padding-top">
+        <ion-button routerLink="/scanin" color="success" shape="round">
+          <ion-icon slot="start" name="star"></ion-icon>
+          Scan
+        </ion-button>
       </ion-col>
     </ion-row>
-  </ion-card>
-</ion-content>
+  
+    <div *ngIf="(searchData.status); else noData">
+      <ion-card *ngFor="let result of searchData.data">
+        <ion-row>
+          <ion-col>
+            <form [formGroup]="updatestockdetail">
+              <ion-item lines="none">
+                <ion-thumbnail>
+                  <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+                </ion-thumbnail>
+                <ion-item lines="none">
+                  <p>{{result.title}}</p>
+                </ion-item>
+              </ion-item>
+  
+              <ion-row>
+                <ion-col size="6" size-sm>
+                  <ion-item>
+                    <ion-label position="floating">Subtract Quantity</ion-label>
+                    <ion-input type="number" formControlName="quantity" name="quantity" maxlength="5" #qtyInput></ion-input>
+                  </ion-item>
+                  <div class="ion-text-end">Available: {{result.quantity}}</div>
+                </ion-col>
+                <ion-col size="6" size-sm> 
+                  <ion-item>
+                    <ion-label position="floating">Stock Type</ion-label>
+                    <ion-select placeholder="Select One" name="product_status_id" formControlName="product_status_id" #product_status_id>
+                      <ion-select-option 
+                      *ngFor="let stockTypes of stockStatus.data | stocktypepipe: 2"
+                       [value]="stockTypes.id"
+                       >{{stockTypes.type}}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-list>
+                <ion-item>
+                  <ion-label  position="floating">Merchants (Optional)</ion-label>
+                  <ion-select placeholder="Select One" name="marketplace_id" formControlName="marketplace_id" #marketplace_id>
+                    <ion-select-option 
+                      *ngFor="let merchant of merchants.data"
+                       [value]="merchant.id"
+                       >{{merchant.name}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-list>
+              <ion-button color="success" (click)="updateStock(qtyInput.value, result.id,product_status_id.value, marketplace_id.value)" type="submit" block>Update</ion-button>
+              <ion-button color="danger" type="button" block>Edit</ion-button>
+            </form>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </div>
+    <ng-template #noData>
+      <div class="ion-text-center">
+        {{noDataFound}}
+      </div>
+    </ng-template>
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ion-content>

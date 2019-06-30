@@ -80,8 +80,7 @@ export class AddnewstockPage implements OnInit {
       console.log('form');
     }
     else {
-      console.log(this.stock);
-
+ 
       this.appProvider.showLoading().then(loading => {
         loading.present().then(() => {
           this.curdService.postData('save_product', this.stock)

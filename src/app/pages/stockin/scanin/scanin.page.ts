@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
@@ -16,15 +16,28 @@ export class ScaninPage implements OnInit {
   searchApi: string = 'searchByKeyword';
   page: number = 1;
   searchData: any = [];
-  noDataFound:string = 'Please enter the keyword or scan qr to search.';
+  noDataFound: string = 'Please enter the keyword or scan qr to search.';
 
-  stock:any;
+  stock: any;
+  stockStatus: any = [];
+  isStockStatusFetched: boolean = false;
+
+  merchants: any = [];
+  isMerchantFetched: boolean = false;
+  public updatestockdetail: FormGroup;
 
   constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider
   ) {
     this.searchControl = new FormControl();
+    this.updatestockdetail = new FormGroup({
+      quantity: new FormControl(),
+      product_status_id: new FormControl(),
+      marketplace_id: new FormControl(),
+    });
+    this.getStockType();
+    this.getMerchants();
   }
 
   ngOnInit() {
@@ -38,6 +51,12 @@ export class ScaninPage implements OnInit {
       this.page = 1;
       this.appProvider.showLoading().then(loading => {
         loading.present().then(() => {
+          if (!this.isStockStatusFetched) {
+            this.getStockType();
+          }
+          if (!this.isStockStatusFetched) {
+            this.getMerchants();
+          }
           let param = { 'page': this.page, 'term': this.searchTerm };
           this.curdService.getData(this.searchApi, param)
             .subscribe((data: any) => {
@@ -85,9 +104,80 @@ export class ScaninPage implements OnInit {
       infiniteScroll.target.complete();
     }, 2000);
   }
-  
-  updateStock(quantity, productId){
-    console.log(productId);
+
+  updateStock(quantity, productId, product_status_id, marketplace_id) {
+    
+    if (quantity > 0) {
+      if (product_status_id == '') {
+        this.appProvider.showToast('Stock type is required.');
+        return;
+      }
+      let stock = { 'quantity': quantity, 'id': productId, 'product_status_id': product_status_id, 'marketplace_id': marketplace_id, 'stockType': 1 }
+      this.appProvider.showLoading().then(loading => {
+        loading.present().then(() => {
+          this.curdService.postData('updateStock', stock)
+            .subscribe((data: any) => {
+
+              if (data.status) {
+                this.appProvider.showToast(data.data);
+                this.updatestockdetail.reset();
+              } else {
+                this.appProvider.showToast(data.msg);
+              }
+              setTimeout(() => {
+                this.appProvider.dismissLoading();
+              }, 2000);
+
+            },
+              error => {
+                this.appProvider.showToast(error);
+                this.appProvider.dismissLoading();
+              },
+              () => {
+              }
+            );
+        });
+      });
+    }else{ 
+      this.appProvider.showToast('Quantity field must be greater than zero.');
+    }
+  }
+
+  getStockType() {
+    this.curdService.getData('getProductStatus')
+      .subscribe(
+        (data: any) => {
+          if (data.status == false) {
+            // no product found
+            this.noDataFound = data.msg;
+            this.isStockStatusFetched = false;
+          } else {
+            this.isStockStatusFetched = true;
+            this.stockStatus = data;
+          }
+        },
+        error => {
+          this.isStockStatusFetched = false;
+        }
+      );
+  }
+  getMerchants() {
+    this.curdService.getData('getMerchants')
+      .subscribe(
+        (data: any) => {
+          if (data.status == false) {
+            // no product found
+            this.noDataFound = data.msg;
+            this.isStockStatusFetched = false;
+          } else {
+            this.isStockStatusFetched = true;
+            this.merchants = data;
+          }
+        },
+        error => {
+          this.isStockStatusFetched = false;
+        }
+      );
   }
 
 }

@@ -37,7 +37,7 @@
     <ion-card *ngFor="let result of searchData.data">
       <ion-row>
         <ion-col>
-          <form >
+          <form [formGroup]="updatestockdetail">
             <ion-item lines="none">
               <ion-thumbnail>
                 <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
@@ -46,41 +46,38 @@
                 <p>{{result.title}}</p>
               </ion-item>
             </ion-item>
-
             <ion-row>
               <ion-col size="6" size-sm>
                 <ion-item>
                   <ion-label position="floating">Add Quantity</ion-label>
-                  <ion-input type="number" name="quantity" maxlength="5" #qtyInput></ion-input>
+                  <ion-input type="number" formControlName="quantity" name="quantity" maxlength="5" #qtyInput></ion-input>
                 </ion-item>
                 <div class="ion-text-end">Available: {{result.quantity}}</div>
               </ion-col>
-              <!-- <ion-col size="6" size-sm> 
+              <ion-col size="6" size-sm> 
                 <ion-item>
-                  <ion-label position="floating">Product Condition</ion-label>
-                  <ion-select placeholder="Select One" name="product_status_id" [(ngModel)]="stock.product_status_id">
-                    <ion-select-option value="1">New</ion-select-option>
-                    <ion-select-option value="2">Old</ion-select-option>
-                    <ion-select-option value="3">Return</ion-select-option>
-                    <ion-select-option value="4">Other</ion-select-option>
+                  <ion-label position="floating">Stock Type</ion-label>
+                  <ion-select placeholder="Select One" name="product_status_id" formControlName="product_status_id" #product_status_id>
+                    <ion-select-option 
+                    *ngFor="let stockTypes of stockStatus.data | stocktypepipe: 1"
+                     [value]="stockTypes.id"
+                     >{{stockTypes.type}}</ion-select-option>
                   </ion-select>
                 </ion-item>
-              </ion-col> -->
+              </ion-col>
             </ion-row>
-            <p>If Return then ask from witch platform it comes</p>
-            <!-- <ion-list>
+            <ion-list>
               <ion-item>
-                <ion-label  position="floating">Return from</ion-label>
-                <ion-select placeholder="Select One" name="marketplace_id" [(ngModel)]="stock.marketplace_id">
-                  <ion-select-option value="1">Amazon</ion-select-option>
-                  <ion-select-option value="2">Paytm</ion-select-option>
-                  <ion-select-option value="3">Flipkart</ion-select-option>
-                  <ion-select-option value="4">Shop</ion-select-option>
-                  <ion-select-option value="5">Other</ion-select-option>
+                <ion-label  position="floating">Merchants (Optional)</ion-label>
+                <ion-select placeholder="Select One" name="marketplace_id" formControlName="marketplace_id" #marketplace_id>
+                  <ion-select-option 
+                    *ngFor="let merchant of merchants.data"
+                     [value]="merchant.id"
+                     >{{merchant.name}}</ion-select-option>
                 </ion-select>
               </ion-item>
-            </ion-list> -->
-            <ion-button color="success" (click)="updateStock(qtyInput.value, result.id)" type="submit" block>Update</ion-button>
+            </ion-list>
+            <ion-button color="success" (click)="updateStock(qtyInput.value, result.id,product_status_id.value, marketplace_id.value)" type="submit" block>Update</ion-button>
             <ion-button color="danger" type="button" block>Edit</ion-button>
           </form>
         </ion-col>
