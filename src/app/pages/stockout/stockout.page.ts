@@ -88,12 +88,14 @@ export class StockoutPage implements OnInit {
       let param = { 'page': this.page, 'term': this.searchTerm };
       this.curdService.getData(this.searchApi, param)
         .subscribe(
-          (data: any) => {
-            if (data.status == false) {
+          (result: any) => {
+            if (result.status == false) {
               // no product found
-              this.noDataFound = data.msg;
+              this.noDataFound = result.msg;
             } else {
-              this.searchData.data.push(data.data);
+              for (let i = 0; i < result.data.length; i++) {
+                this.searchData.data.push(result.data[i]);
+              }
               this.page = this.page + 1;
             }
           },

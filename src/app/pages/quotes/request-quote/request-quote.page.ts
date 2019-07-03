@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./request-quote.page.scss'],
 })
 export class RequestQuotePage implements OnInit {
-
-  constructor() { }
+  comment:any = '';
+   constructor() { }
 
   ngOnInit() {
+  }
+  sendQuery(){
+    console.log(this.comment);
   }
 
 }

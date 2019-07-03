@@ -1,9 +1,35 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>request_quote</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Update Stock
+    </ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-
+  <ion-card>
+    <ion-row>
+      <ion-col>
+        <form>
+          <ion-item lines="none">
+            <ion-thumbnail>
+              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+            </ion-thumbnail>
+            <ion-item lines="none">
+              <p>result.title</p>
+            </ion-item>
+          </ion-item>
+          <ion-list>
+            <ion-item>
+              <ion-label  position="floating">Your Query</ion-label>
+              <ion-textarea placeholder="eg. What is the price of 10 quantity.." name="comment" [(ngModel)]="comment"></ion-textarea>
+            </ion-item>
+          </ion-list>
+          <ion-button color="success" (click)="sendQuery()" type="submit" block>Send Request</ion-button>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-card>
 </ion-content>
