@@ -32,8 +32,8 @@ export class CoreAppProvider {
         }
         
     }
-    navTo(page: string, para?: any) {
-        this.router.navigate([page, para]);
+    navTo(page: string, para?: any, para2?:any) {
+        this.router.navigate([page, para,para2]);
         
     }
     get deviceId() {

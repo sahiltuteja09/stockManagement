@@ -96,6 +96,6 @@ export class HomePage {
     }, 2000);
   }
   requestQuote(data){
-    this.appProvider.navTo('request-quote', data.id)
+    this.appProvider.navTo('request-quote', data.id, data.user_id)
   }
 }

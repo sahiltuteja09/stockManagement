@@ -11,11 +11,15 @@ import { ActivatedRoute } from '@angular/router';
 export class RequestQuotePage implements OnInit {
   comment:any = '';
   product_id:string = '';
+  user_id:string = '';
    constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider, private route: ActivatedRoute
    ) { 
-    this.route.params.subscribe( (params) => {this.product_id =  params['id']});
+    this.route.params.subscribe( (params) => {
+      this.product_id =  params['id'];
+      this.user_id =  params['user_id'];
+    });
    }
 
   ngOnInit() {
@@ -26,10 +30,10 @@ export class RequestQuotePage implements OnInit {
       this.appProvider.showToast('Query field is required.');
       return;
     }
-    let stock = {'product_id': '','request_to':'','':'', 'detail': this.comment};
+    let stock = {'product_id': this.product_id,'msg_to': this.user_id, 'detail': this.comment};
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
-        this.curdService.postData('updateStock', stock)
+        this.curdService.postData('requestQuotes', stock)
           .subscribe((data: any) => {
 
             if (data.status) {
