@@ -32,7 +32,7 @@ const routes: Routes = [
   { path: 'profile', loadChildren: './pages/setting/profile/profile.module#ProfilePageModule' },
   { path: 'about', loadChildren: './pages/setting/about/about.module#AboutPageModule' },
   { path: 'sale', loadChildren: './pages/reports/sale/sale.module#SalePageModule' },
-  { path: 'request-quote', loadChildren: './pages/quotes/request-quote/request-quote.module#RequestQuotePageModule' },
+  { path: 'request-quote/:id', loadChildren: './pages/quotes/request-quote/request-quote.module#RequestQuotePageModule' },
   { path: 'myquotes', loadChildren: './pages/quotes/myquotes/myquotes.module#MyquotesPageModule' },
   { path: 'messages', loadChildren: './pages/notifications/messages/messages.module#MessagesPageModule' },
   { path: 'login', loadChildren: './pages/auth/login/login.module#LoginPageModule' },

@@ -95,4 +95,7 @@ export class HomePage {
       event.target.complete();
     }, 2000);
   }
+  requestQuote(data){
+    this.appProvider.navTo('request-quote', data.id)
+  }
 }

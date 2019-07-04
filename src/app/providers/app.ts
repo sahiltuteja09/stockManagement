@@ -32,6 +32,10 @@ export class CoreAppProvider {
         }
         
     }
+    navTo(page: string, para?: any) {
+        this.router.navigate([page, para]);
+        
+    }
     get deviceId() {
         if (this.isBrowser()) {
             return 'browser';
