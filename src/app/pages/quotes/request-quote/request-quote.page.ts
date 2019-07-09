@@ -9,28 +9,33 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./request-quote.page.scss'],
 })
 export class RequestQuotePage implements OnInit {
-  comment:any = '';
-  product_id:string = '';
-  user_id:string = '';
-   constructor(
+  comment: any = '';
+  product_id: string = '';
+  user_id: string = '';
+  constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider, private route: ActivatedRoute
-   ) { 
-    this.route.params.subscribe( (params) => {
-      this.product_id =  params['id'];
-      this.user_id =  params['user_id'];
+  ) {
+    this.route.params.subscribe((params) => {
+      this.product_id = params['id'];
+      this.user_id = params['user_id'];
     });
-   }
+  }
 
   ngOnInit() {
   }
-  sendQuery(){
-    console.log(this.product_id);
+  sendQuery() {
+    if (this.product_id == '') {
+      return;
+    }
+    if (this.user_id == '') {
+      return;
+    }
     if (this.comment == '') {
       this.appProvider.showToast('Query field is required.');
       return;
     }
-    let stock = {'product_id': this.product_id,'msg_to': this.user_id, 'detail': this.comment};
+    let stock = { 'product_id': this.product_id, 'msg_to': this.user_id, 'detail': this.comment };
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
         this.curdService.postData('requestQuotes', stock)
