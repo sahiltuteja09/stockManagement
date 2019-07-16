@@ -32,23 +32,23 @@
   </ion-segment>
   <!-- <content> -->
   <ion-list *ngIf="segmentTab == 'chat' " no-padding>
-    <ion-item *ngFor="let chat of chatData" (click)="goforChat(chat)">
+    <ion-item *ngFor="let chat of chatData.data" (click)="goforChat(chat)">
       <ion-avatar class="chatImage" slot="start">
         <ion-img [src]="chat.image"></ion-img>
       </ion-avatar>
       <ion-label>
         <div class="withcount">
           <div class="nameAvatar">
-            <h2 color="light">name
+            <h2 color="light">{{chat.name}}
             </h2>
-            <ion-avatar class="chatCount" *ngIf="chat.count">6</ion-avatar>
+            <ion-avatar class="chatCount" *ngIf="chat.count">{{chat.count}}</ion-avatar>
           </div>
 
           <div class="timeEnd">
             <ion-text slot="end" color="light">{{chat.time}}</ion-text>
           </div>
         </div>
-        <p class="widthHalf">hgvhg hghh huguh hgh </p>
+        <p class="widthHalf">{{chat.description}} </p>
       </ion-label>
     </ion-item>
   </ion-list>

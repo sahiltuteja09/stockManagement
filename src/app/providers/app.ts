@@ -25,16 +25,26 @@ export class CoreAppProvider {
     ) { }
 
     goto(page: string, removeHistory?: any) {
-        if(removeHistory){
-            this.router.navigate([page],{ replaceUrl: true });
-        }else{
+        if (removeHistory) {
+            this.router.navigate([page], { replaceUrl: true });
+        } else {
             this.router.navigate([page]);
         }
-        
+
     }
-    navTo(page: string, para?: any, para2?:any) {
-        this.router.navigate([page, para,para2]);
-        
+    // for chat and quotes request routes structure
+    navTo(page: string, para?: any, para2?: any) {
+
+        if (para && typeof para2 == 'object') {
+            this.router.navigate([page, para], para2);
+        } else if (para && typeof para2 !== 'object') {
+            this.router.navigate([page, para, para2]);
+        }
+        else {
+            this.router.navigate([page, para]);
+        }
+
+
     }
     get deviceId() {
         if (this.isBrowser()) {
@@ -45,7 +55,7 @@ export class CoreAppProvider {
             return this.device.uuid;
         }
     }
-    get devicePlatform(){
+    get devicePlatform() {
         if (this.isBrowser()) {
             return 'browser';
         } else if (this.isDesktop()) {

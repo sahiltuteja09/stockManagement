@@ -1,0 +1,67 @@
+<!-- /**
+ * Chatter - Chat themes Ionic 4 (https://www.enappd.com)
+ *
+ * Copyright © 2018-present Enappd. All rights reserved.
+ *
+ * This source code is licensed as per the terms found in the
+ * LICENSE.md file in the root directory of this source .
+ */ -->
+
+ <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="title-block">
+        <ion-icon name="chatboxes" color="d3blue" class="title-icon"></ion-icon>
+        <ion-text color="d3blue" class="title-text">Fluid</ion-text>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding-vertical fullscreen>
+  <div id="chat-parent" class="bg-image" [ngClass]="{ 'bg-image-X': phone_model=='iPhone X'}">
+    <div id="chat-container">
+      <ion-row *ngFor="let conv of conversation; let first = first; let last = last " class="full no-padding">
+        <ion-col class="no-padding chat-row" [ngClass]="{ 'reverse': conv.msg_from == userID ? 1 : 0}">
+          <div class="avatar-parent">
+            <div class="avatar-border"></div>
+            <img [src]="conv.image ? conv.image : ((conv.msg_from == userID) ? defaultImg_sender : defaultImg_reciver) " class="avatar">
+          </div>
+          <div [ngClass]="{ 'name-row-parent-right': (conv.msg_from == userID ? 1 : 0),'name-row-parent-left': (conv.msg_from == userID ? 0 : 1)}">
+            <div class="no-padding" [ngClass]="{ 'name-row-right': (conv.msg_from == userID ? 1 : 0),'name-row-left': (conv.msg_from == userID ? 0 : 1)}">
+              {{conv.msg_from == userID ? conv.sender_name :  (conv.msg_from == userID ? conv.reciver_name : conv.sender_name) }}
+              <div [ngClass]="{ 'timer-right': (conv.msg_from == userID ? 1 : 0),'timer-left': (conv.msg_from == userID ? 0 : 1)}">{{conv.date_added}} mins ago
+                <ion-icon *ngIf="conv.msg_from == userID ? 1 : 0" name="checkmark" [color]="conv.mark_read ? 'success': 'light'"
+                  class="first-tick"></ion-icon>
+                <ion-icon *ngIf="conv.msg_from == userID ? 1 : 0" name="checkmark" [color]="conv.mark_read ? 'success': 'light'"
+                  class="second-tick"></ion-icon>
+              </div>
+              <div [ngClass]="{ 'reverse-arc-right': conv.msg_from == userID ? 1 : 0,'reverse-arc-left': conv.msg_from == userID ? 0 : 1}">
+                <div [ngClass]="{ 'reverse-arc-color-right': conv.msg_from == userID ? 1 : 0,'reverse-arc-color-left': conv.msg_from == userID ? 0 : 1}"></div>
+              </div>
+            </div>
+            <div class="no-padding" [ngClass]="{ 'message-row-right': conv.msg_from == userID ? 1 : 0,'message-row-left': conv.msg_from == userID ? 0 : 1}">
+              <ion-text no-margin class="text">{{conv.comment}}</ion-text>
+            </div>
+          </div>
+          <div *ngIf="last && conv.id"><input type="hidden" #latestFetchid value="{{conv.id}}"></div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>
+<ion-footer translucent [ngClass]="{ 'custom-footer': phone_model=='iPhone X'}">
+  <ion-row class="input-position" [ngClass]="{ 'custom-footer-row': phone_model=='iPhone X'}">
+    <ion-col size="9">
+      <ion-input class="input restrict" type="text" placeholder="Type a message" [(ngModel)]="input" padding-start></ion-input>
+    </ion-col>
+    <ion-col size="3">
+      <ion-button shape="round" class="send-button" color="d3blue" [disabled]="sending_text == 'SENDING...'" (click)="send()">
+        <ion-text color="light">{{sending_text}}</ion-text>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

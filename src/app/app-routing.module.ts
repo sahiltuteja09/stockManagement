@@ -37,6 +37,8 @@ const routes: Routes = [
   { path: 'messages', loadChildren: './pages/notifications/messages/messages.module#MessagesPageModule' },
   { path: 'login', loadChildren: './pages/auth/login/login.module#LoginPageModule' },
   { path: 'forgot', loadChildren: './pages/auth/forgot/forgot.module#ForgotPageModule' },
+  { path: 'chats/:conversationId', loadChildren: './pages/notifications/chats/chats.module#ChatsPageModule' },
+
   
 ];
 
