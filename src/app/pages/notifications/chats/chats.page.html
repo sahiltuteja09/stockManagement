@@ -6,24 +6,28 @@
  * This source code is licensed as per the terms found in the
  * LICENSE.md file in the root directory of this source .
  */ -->
-
- <ion-header>
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="messages"></ion-back-button>
     </ion-buttons>
     <ion-title>
       <div class="title-block">
         <ion-icon name="chatboxes" color="d3blue" class="title-icon"></ion-icon>
-        <ion-text color="d3blue" class="title-text">Fluid</ion-text>
+        <ion-text color="d3blue" class="title-text">Chat</ion-text>
       </div>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding-vertical fullscreen>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
+          refreshingText="Refreshing...">
+        </ion-refresher-content>
+      </ion-refresher>
   <div id="chat-parent" class="bg-image" [ngClass]="{ 'bg-image-X': phone_model=='iPhone X'}">
-    <div id="chat-container">
+    <div id="chat-container" *ngIf="conversation.length">
       <ion-row *ngFor="let conv of conversation; let first = first; let last = last " class="full no-padding">
         <ion-col class="no-padding chat-row" [ngClass]="{ 'reverse': conv.msg_from == userID ? 1 : 0}">
           <div class="avatar-parent">
@@ -47,6 +51,7 @@
               <ion-text no-margin class="text">{{conv.comment}}</ion-text>
             </div>
           </div>
+          <div *ngIf="first && conv.id"><input type="hidden" #firstFetchid value="{{conv.id}}"></div>
           <div *ngIf="last && conv.id"><input type="hidden" #latestFetchid value="{{conv.id}}"></div>
         </ion-col>
       </ion-row>

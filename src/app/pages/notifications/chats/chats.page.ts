@@ -13,10 +13,10 @@ import { AuthenticationService } from '../../auth/authentication.service';
 })
 export class ChatsPage implements OnInit {
   @ViewChild('latestFetchid') latestFetchid: ElementRef;
+  @ViewChild('firstFetchid') firstFetchid: ElementRef;
 
   userID = 2;
   uname: string = '';
-  //conversation = [ { comment: 'Hey, that\'s an awesome chat UI', msg_from: 0, image: '../../assets/chat/sg2.jpg', sender_name: '' }]
 
   phone_model = 'iPhone';
   input = '';
@@ -93,8 +93,8 @@ export class ChatsPage implements OnInit {
 
 
   ionViewDidEnter() {
-    this.menuCtrl.enable(false, 'end');
-    this.menuCtrl.enable(true, 'start');
+    //this.menuCtrl.enable(false, 'end');
+   // this.menuCtrl.enable(true, 'start');
 
     setTimeout(() => {
       this.scrollToBottom()
@@ -213,6 +213,35 @@ export class ChatsPage implements OnInit {
     }
 
     parent.scrollTo(scrollOptions)
+  }
+
+  doRefresh(event) {
+   this.deactivateChatMonitor();
+   
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        let param = { 'conversationId': this.conversationId, 'last_fetch_id': this.firstFetchid.nativeElement.value };
+        this.curdService.getData('getChats', param)
+          .subscribe((data: any) => {
+            if (data.status == false) {
+            } else {
+              let conversations =  data.data;
+              let recentConversations = this.conversation;
+              this.conversation = conversations.concat(recentConversations);
+            }
+            event.target.complete();
+            this.appProvider.dismissLoading();
+            this.activateChatMonitor();
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            }
+          );
+      });
+    });
+
+
   }
 
 }
