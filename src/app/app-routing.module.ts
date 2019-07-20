@@ -38,6 +38,8 @@ const routes: Routes = [
   { path: 'login', loadChildren: './pages/auth/login/login.module#LoginPageModule' },
   { path: 'forgot', loadChildren: './pages/auth/forgot/forgot.module#ForgotPageModule' },
   { path: 'chats/:conversationId', loadChildren: './pages/notifications/chats/chats.module#ChatsPageModule' },
+  { path: 'product-report/:product_id', loadChildren: './pages/reports/sale/product-report/product-report.module#ProductReportPageModule' },
+
 
   
 ];

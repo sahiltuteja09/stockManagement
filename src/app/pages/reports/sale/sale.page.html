@@ -28,9 +28,13 @@
             <ion-list>
                 <ion-item>
                   <ion-label position="floating">Merchants</ion-label>
-                  <ion-select placeholder="Select One">
-                    <ion-select-option value="f">Female</ion-select-option>
-                    <ion-select-option value="m">Male</ion-select-option>
+                  <ion-select placeholder="Select One" [(ngModel)]="merchant">
+                      <ion-select-option value="0" selected="true">All
+                        </ion-select-option>
+                      <ion-select-option 
+                      *ngFor="let merchant of merchants.data"
+                       [value]="merchant.id"
+                       >{{merchant.name}}</ion-select-option>
                   </ion-select>
                 </ion-item>
               </ion-list>
@@ -39,9 +43,14 @@
             <ion-list>
                 <ion-item>
                   <ion-label position="floating">Stock Status</ion-label>
-                  <ion-select placeholder="Select One">
-                    <ion-select-option value="f">Female</ion-select-option>
-                    <ion-select-option value="m">Male</ion-select-option>
+                  <ion-select placeholder="Select One" [(ngModel)]="stockType">
+                      <ion-select-option value="0" selected="true">All
+                        </ion-select-option>
+                      <ion-select-option 
+                      *ngFor="let stockTypes of stockStatus.data"
+                       [value]="stockTypes.id"
+                       >{{stockTypes.type}}</ion-select-option>
+                    
                   </ion-select>
                 </ion-item>
               </ion-list>
@@ -49,27 +58,27 @@
 
         <ion-col size="4" size-sm align-items-start>
             <ion-list>
-          <ion-button color="success">
-              <ion-icon slot="start" name="star"></ion-icon>
+          <ion-button color="success" (click)="filterReport()">
+              <ion-icon slot="start" name="search"></ion-icon>
             GO</ion-button>
           </ion-list>
       </ion-col>
     </ion-row>
-
-    <ion-list >
+<div *ngIf="(reportData.status); else noData">
+    <ion-list *ngFor="let product_report of reportData.data">
         <ion-card>
             <ion-item>
               <ion-thumbnail slot="start">
-                <img src="http://placehold.it/75">
+                <img [src]="product_report.image">
               </ion-thumbnail>
               <ion-label>
-                <p>Test product</p>
+                <p>{{product_report.title}}</p>
                 <ion-col size="3" size-sm align-items-end>
-                  <small class="deal_price" >Total Sold :- 10</small>
+                  <small class="deal_price" >Remaining:- {{product_report.quantity}}</small>
                 </ion-col>
                 <ion-col size="6" size-sm>
-                  <ion-button float-right color="danger" shape="round" size="small">
-                    <ion-icon name="cart"></ion-icon> Details
+                  <ion-button (click)="goforProductReport(product_report)" float-right color="danger" shape="round" size="small">
+                    <ion-icon name="eye"></ion-icon> Details
                   </ion-button>
                 </ion-col>
               </ion-label>
@@ -78,5 +87,10 @@
         </ion-card>
     
       </ion-list>
-    
+    </div>
+    <ng-template #noData>
+      <div class="ion-text-center">
+        {{noDataFound}}
+      </div>
+    </ng-template>
 </ion-content>

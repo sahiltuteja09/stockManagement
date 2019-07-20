@@ -1,0 +1,158 @@
+<ion-header>
+  <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="sale"></ion-back-button>
+        </ion-buttons>
+    <ion-title>
+      Product Sale Report
+    </ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+    <ion-list *ngFor="let product_report of product_name_header.data; let first = first; let last = last ">
+      <ion-card *ngIf="first">
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <img [src]="product_report.image">
+          </ion-thumbnail>
+          <ion-label>
+            <p>{{product_report.title}}</p>
+            <ion-col size="3" size-sm align-items-end>
+              <small class="deal_price"><b>Product added on:- </b>
+                <ion-text color="primary"> {{product_report.addedDate}}</ion-text>
+              </small>
+            </ion-col>
+            <ion-col size="6" size-sm>
+
+            </ion-col>
+          </ion-label>
+
+        </ion-item>
+      </ion-card>
+
+    </ion-list>
+  
+  <ion-row>
+    <ion-col size="4" size-sm align-items-start>
+      <ion-item>
+        <ion-label position="floating">Start</ion-label>
+        <ion-datetime displayFormat="DD-MM-YYYY" [(ngModel)]="startDate"></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col size="4" size-sm align-items-start>
+      <ion-item>
+        <ion-label position="floating">End</ion-label>
+        <ion-datetime displayFormat="DD-MM-YYYY" [(ngModel)]="endDate"></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col size="4" size-sm align-items-start>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Merchants</ion-label>
+          <ion-select placeholder="Select One" [(ngModel)]="merchant">
+              <ion-select-option value="0" selected="true">All
+                </ion-select-option>
+            <ion-select-option *ngFor="let merchant of merchants.data" [value]="merchant.id">{{merchant.name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col size="4" size-sm align-items-start>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Stock Status</ion-label>
+          <ion-select placeholder="Select One" [(ngModel)]="stockType">
+              <ion-select-option value="0" selected="true">All
+                </ion-select-option>
+            <ion-select-option *ngFor="let stockTypes of stockStatus.data" [value]="stockTypes.id">{{stockTypes.type}}
+            </ion-select-option>
+
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+
+    <ion-col size="4" size-sm align-items-start>
+      <ion-list>
+        <ion-button color="success" (click)="productReportFilter()">
+          <ion-icon slot="start" name="search"></ion-icon>
+          GO
+        </ion-button>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+  <div *ngIf="(product_reports.status); else noData">
+  <ion-card>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col size="3">
+          <div class="ion-text-center">
+            Merchant
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="ion-text-center">
+            Status Type
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="ion-text-center">
+            Quantity
+          </div>
+        </ion-col>
+        <ion-col size="3">
+            <div class="ion-text-center">
+              Date
+            </div>
+          </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+  <ion-card>
+      <ion-list >
+        <ion-item *ngFor="let product_report of product_reports.data;">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="3">
+                <div class="ion-text-center">  
+                  {{merchantName(product_report.marketplace_id)}}
+                </div>
+              </ion-col>
+              <ion-col size="3">
+                <div class="ion-text-center">
+                    {{stockName(product_report.product_status_id)}}
+                </div>
+              </ion-col>
+              <ion-col size="3">
+                <div class="ion-text-center">
+                    {{product_report.quantity}}
+                </div>
+              </ion-col>
+              <ion-col size="3">
+                  <div class="ion-text-center">
+                      {{product_report.historyDate}}
+                  </div>
+                </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+</div>
+
+  <ng-template #noData>
+    <div class="ion-text-center">
+      {{noDataFound}}
+    </div>
+  </ng-template>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>
