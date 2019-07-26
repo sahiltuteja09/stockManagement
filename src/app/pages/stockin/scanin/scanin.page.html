@@ -1,15 +1,28 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="!isScaning">
       <ion-back-button defaultHref="stockin"></ion-back-button>
     </ion-buttons>
-    <ion-title>
+    <ion-buttons slot="start" *ngIf="isScaning">
+        <ion-icon name="arrow-back" style="zoom:2.0;" (click)="hideCamera()"></ion-icon>
+    </ion-buttons>
+    
+    <ion-title *ngIf="!isScaning">
       Update Stock
     </ion-title>
+    <ion-title *ngIf="isScaning">
+      Scan
+    </ion-title>
+
+    <ion-buttons slot="secondary" *ngIf="isScaning">
+        <ion-button (click)="openFlash()">
+            <ion-icon slot="icon-only" name="{{flashIcon}}"></ion-icon>
+          </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="cameraClass">
 
   <ion-card>
     <ion-item>
@@ -22,16 +35,20 @@
     <ion-spinner></ion-spinner>
   </div>
 
-  <div text-center class="ion-padding-top">Or</div>
+  <div *ngIf="isMobileDevice" text-center class="ion-padding-top">Or</div>
 
-  <ion-row>
+  <ion-row *ngIf="isMobileDevice">
     <ion-col text-center class="ion-padding-top">
-      <ion-button routerLink="/scanin" color="success" shape="round">
-        <ion-icon slot="start" name="star"></ion-icon>
+      <ion-button (click)="scanCode()" color="success" shape="round" *ngIf="scannerPermission">
+        <ion-icon slot="start" name="qr-scanner"></ion-icon>
         Scan
+      </ion-button>
+      <ion-button (click)="openSetting()" color="success" shape="round" *ngIf="!scannerPermission">
+        <ion-icon slot="start" name="settings"></ion-icon> Allow Permission to Scan
       </ion-button>
     </ion-col>
   </ion-row>
+  
 
   <div *ngIf="(searchData.status); else noData">
     <ion-card *ngFor="let result of searchData.data">
@@ -94,3 +111,5 @@
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>
+
+  

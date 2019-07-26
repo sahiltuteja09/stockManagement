@@ -23,8 +23,8 @@ export class ProductReportPage implements OnInit {
   end_date:string = '';
 
   // from ngModel
-  stockType = '';
-  merchant = '';
+  stockType:number = 0;
+  merchant:number = 0;
   startDate: string;
   endDate: string;
 
@@ -49,6 +49,8 @@ merchantmap:any = [];
     this.queryParmSub.unsubscribe();
   }
   ngOnInit() {
+    this.getStockType();
+    this.getMerchants();
 
     this.routSub = this.route.params.subscribe((params) => {
       this.product_id = params['product_id'];
@@ -60,9 +62,13 @@ merchantmap:any = [];
       this.product_status_id = params['product_status_id'] ? params['product_status_id'] : 0;
       this.start_date = params['start_date'] ? params['start_date'] : 0;
       this.end_date = params['end_date'] ? params['end_date'] : 0;
+
+      this.startDate = this.start_date;
+      this.endDate = this.end_date;
+      this.merchant = this.marketplace_id;
+      this.stockType = this.product_status_id;
     });
-    this.getStockType();
-    this.getMerchants();
+    
     this.productReport();
   }
 

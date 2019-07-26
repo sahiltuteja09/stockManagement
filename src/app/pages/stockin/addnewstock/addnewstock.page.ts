@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AuthenticationService } from '../../auth/authentication.service';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { Crop } from '@ionic-native/crop/ngx';
@@ -36,7 +35,6 @@ export class AddnewstockPage implements OnInit {
   public newstockdetail: FormGroup;
   constructor(
     public formBuilder: FormBuilder,
-    private authenticationService: AuthenticationService,
     private appProvider: CoreAppProvider,
     private curdService: CurdService,
     private crop: Crop,
@@ -80,7 +78,7 @@ export class AddnewstockPage implements OnInit {
       console.log('form');
     }
     else {
- 
+
       this.appProvider.showLoading().then(loading => {
         loading.present().then(() => {
           this.curdService.postData('save_product', this.stock)
@@ -110,12 +108,19 @@ export class AddnewstockPage implements OnInit {
   }
 
   pickImage() {
-    this.imagePicker.getPictures(this.imagePickerOptions).then((results) => {
-      for (var i = 0; i < results.length; i++) {
-        this.cropImage(results[i]);
-      }
-    }, (err) => {
-      alert(err);
+    //https://devdactic.com/ionic-4-image-upload-storage/
+    this.imagePicker.requestReadPermission().then(res => {
+      console.log("res" + res);
+      this.imagePicker.getPictures(this.imagePickerOptions).then((results) => {
+        console.log(results);
+        if (typeof results != 'string') {
+          for (var i = 0; i < results.length; i++) {
+            console.log(results[i]);
+            this.cropImage(results[i]);
+          }
+        }
+      }, (err) => {
+      });
     });
   }
 
@@ -126,7 +131,7 @@ export class AddnewstockPage implements OnInit {
           this.showCroppedImage(newPath.split('?')[0])
         },
         error => {
-          alert('Error cropping image' + error);
+          //alert('Error cropping image' + error);
         }
       );
   }
@@ -142,7 +147,7 @@ export class AddnewstockPage implements OnInit {
       this.croppedImagepath = base64;
       this.isLoading = false;
     }, error => {
-      alert('Error in showing image' + error);
+     // alert('Error in showing image' + error);
       this.isLoading = false;
     });
   }

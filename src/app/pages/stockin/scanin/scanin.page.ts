@@ -3,6 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
+import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
+import { ScannerService } from 'src/app/providers/scanner.service';
 
 @Component({
   selector: 'app-scanin',
@@ -10,6 +12,9 @@ import { CurdService } from 'src/app/services/rest/curd.service';
   styleUrls: ['./scanin.page.scss'],
 })
 export class ScaninPage implements OnInit {
+
+  isMobileDevice: boolean = true;
+
   searchTerm: string = "";
   searching: boolean = false;
   searchControl: FormControl;
@@ -24,9 +29,20 @@ export class ScaninPage implements OnInit {
 
   merchants: any = [];
   isMerchantFetched: boolean = false;
+
+  isFlashEnable: boolean = false;
+  isScaning: boolean = false;
+  flashIcon: string = 'flash';
+  scannerPermission: boolean = true;
+
+  scannerPermissionSubscriber;
+  isScaningSubscriber;
+  scanedTextSubscriber;
+
   public updatestockdetail: FormGroup;
 
   constructor(
+    private scanService: ScannerService,
     private curdService: CurdService,
     private appProvider: CoreAppProvider
   ) {
@@ -39,9 +55,13 @@ export class ScaninPage implements OnInit {
     this.getStockType();
     this.getMerchants();
   }
+  ionViewWillEnter() {
+    this.isMobileDevice = this.appProvider.isMobile();
+  }
 
   ngOnInit() {
     this.searchControl.valueChanges.pipe(debounceTime(2000)).subscribe(value => { this.searching = false; this.searchProduct() });
+
   }
   setFilteredItems() {
     this.searching = true;
@@ -108,7 +128,7 @@ export class ScaninPage implements OnInit {
   }
 
   updateStock(quantity, productId, product_status_id, marketplace_id) {
-    
+
     if (quantity > 0) {
       if (product_status_id == '') {
         this.appProvider.showToast('Stock type is required.');
@@ -140,7 +160,7 @@ export class ScaninPage implements OnInit {
             );
         });
       });
-    }else{ 
+    } else {
       this.appProvider.showToast('Quantity field must be greater than zero.');
     }
   }
@@ -182,4 +202,55 @@ export class ScaninPage implements OnInit {
       );
   }
 
+  scanCode() {
+    if (!this.appProvider.isMobile()) { return false; }
+
+    if (typeof this.scannerPermissionSubscriber != 'object') {
+      this.scannerPermissionSubscriber = this.scanService.scannerPermission.subscribe((data) => {
+        this.scannerPermission = data;
+      });
+    }
+    if (typeof this.isScaningSubscriber != 'object') {
+    this.isScaningSubscriber = this.scanService.isScaning.subscribe((data) => {
+      this.isScaning = data;
+    });
+  }
+    this.scanedTextSubscriber = this.scanService.scanedText.subscribe((data) => {
+      if (data) {
+        this.scanService.setScaningFlag();
+        if (typeof this.scannerPermissionSubscriber == 'object')
+          this.scannerPermissionSubscriber.unsubscribe();
+
+        this.scanedTextSubscriber.unsubscribe();
+        this.searchTerm = data;
+        this.searchProduct();
+      }
+    });
+    this.searchTerm = '';
+    this.scanService.scanCode();
+  }
+
+  hideCamera() {
+    this.scanService.setScaningFlag();
+    this.flashIcon = this.scanService.hideCamera(this.isFlashEnable);
+  }
+  openFlash() {
+    this.isFlashEnable = !this.isFlashEnable;
+    this.flashIcon = this.scanService.openFlash(this.isFlashEnable);
+  }
+  openSetting() {
+    this.scanService.openSetting();
+  }
+  ionViewWillLeave() {
+    this.scanService.setScaningFlag();
+    if (typeof this.scannerPermissionSubscriber == 'object')
+      this.scannerPermissionSubscriber.unsubscribe();
+    if (typeof this.isScaningSubscriber == 'object')
+      this.isScaningSubscriber.unsubscribe();
+    if (typeof this.scanedTextSubscriber == 'object')
+      this.scanedTextSubscriber.unsubscribe();
+
+    this.scanService.distroyScaner();
+
+  }
 }
