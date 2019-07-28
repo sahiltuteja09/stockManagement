@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
-import { Crop } from '@ionic-native/crop/ngx';
-import { ImagePicker } from '@ionic-native/image-picker/ngx';
-import { File } from '@ionic-native/file/ngx';
+import { ImagesService } from 'src/app/providers/upload/images.service';
 
 interface Stock {
   product_unique: string;
@@ -16,6 +14,7 @@ interface Stock {
   paytm: string;
   product_qty: number;
   purchase_cost: number;
+  image: string;
 }
 
 @Component({
@@ -25,21 +24,19 @@ interface Stock {
 })
 export class AddnewstockPage implements OnInit {
   stock: Stock = <Stock>{};
-  croppedImagepath = "";
-  isLoading = false;
 
-  imagePickerOptions = {
-    maximumImagesCount: 1,
-    quality: 50
-  };
+  isLoading: boolean = false;
+  croppedImagepath: string = '';
+  imageName: string = '';
+  isLoadingSubscriber;
+  croppedImagepathSubscriber;
+
   public newstockdetail: FormGroup;
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
     private curdService: CurdService,
-    private crop: Crop,
-    private imagePicker: ImagePicker,
-    private file: File
+    private uploadImage: ImagesService
   ) {
 
 
@@ -52,7 +49,8 @@ export class AddnewstockPage implements OnInit {
       'flipkart': '',
       'paytm': '',
       'product_qty': 0,
-      'purchase_cost': 0
+      'purchase_cost': 0,
+      'image':''
     }
 
     this.newstockdetail = formBuilder.group({
@@ -65,6 +63,7 @@ export class AddnewstockPage implements OnInit {
       flipkart: ['', Validators.compose([Validators.maxLength(30)])],
       paytm: ['', Validators.compose([Validators.maxLength(30)])],
       other_uid: ['', Validators.compose([Validators.maxLength(30)])],
+      image: ['']
     });
   }
 
@@ -76,6 +75,7 @@ export class AddnewstockPage implements OnInit {
 
     if (!this.newstockdetail.valid) {
       console.log('form');
+      return;
     }
     else {
 
@@ -108,48 +108,31 @@ export class AddnewstockPage implements OnInit {
   }
 
   pickImage() {
-    //https://devdactic.com/ionic-4-image-upload-storage/
-    this.imagePicker.requestReadPermission().then(res => {
-      console.log("res" + res);
-      this.imagePicker.getPictures(this.imagePickerOptions).then((results) => {
-        console.log(results);
-        if (typeof results != 'string') {
-          for (var i = 0; i < results.length; i++) {
-            console.log(results[i]);
-            this.cropImage(results[i]);
-          }
-        }
-      }, (err) => {
+
+    if (typeof this.isLoadingSubscriber != 'object') {
+      this.isLoadingSubscriber = this.uploadImage.isLoading.subscribe((data) => {
+        this.isLoading = data;
       });
-    });
+    }
+    if (typeof this.croppedImagepathSubscriber != 'object') {
+      this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
+        this.croppedImagepath = data;
+        this.imageName = this.uploadImage.imageFileName();
+
+        this.isLoadingSubscriber.unsubscribe();
+        if (typeof this.croppedImagepathSubscriber == 'object')
+          this.croppedImagepathSubscriber.unsubscribe();
+      });
+    }
+
+    this.uploadImage.pickImage();
   }
 
-  cropImage(imgPath) {
-    this.crop.crop(imgPath, { quality: 50 })
-      .then(
-        newPath => {
-          this.showCroppedImage(newPath.split('?')[0])
-        },
-        error => {
-          //alert('Error cropping image' + error);
-        }
-      );
-  }
-
-  showCroppedImage(ImagePath) {
-    this.isLoading = true;
-    var copyPath = ImagePath;
-    var splitPath = copyPath.split('/');
-    var imageName = splitPath[splitPath.length - 1];
-    var filePath = ImagePath.split(imageName)[0];
-
-    this.file.readAsDataURL(filePath, imageName).then(base64 => {
-      this.croppedImagepath = base64;
-      this.isLoading = false;
-    }, error => {
-     // alert('Error in showing image' + error);
-      this.isLoading = false;
-    });
+  ionViewWillLeave() {
+    if (typeof this.isLoadingSubscriber == 'object')
+      this.isLoadingSubscriber.unsubscribe();
+    if (typeof this.croppedImagepathSubscriber == 'object')
+      this.croppedImagepathSubscriber.unsubscribe();
   }
 
 }

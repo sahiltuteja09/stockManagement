@@ -13,8 +13,10 @@
 
   <form (ngSubmit)="newStock()" #form="ngForm" [formGroup]="newstockdetail">
     <ion-item>
-      <ion-label position="floating">Unique ID <ion-text color="danger">*</ion-text></ion-label>
-      <ion-input type="text" formControlName="product_unique" [(ngModel)]="stock.product_unique" name="product_unique"></ion-input>
+      <ion-label position="floating">Unique ID <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input type="text" formControlName="product_unique" [(ngModel)]="stock.product_unique" name="product_unique">
+      </ion-input>
     </ion-item>
     <div *ngIf=" f.product_unique.errors && f.product_unique.touched" class="invalid-feedback">
       <div *ngIf="f.product_unique.errors.required">UID field is required</div>
@@ -23,8 +25,10 @@
     <ion-row>
       <ion-col size="6" size-sm>
         <ion-item>
-          <ion-label position="floating">Purchase Cost <ion-text color="danger">*</ion-text></ion-label>
-          <ion-input type="number" formControlName="purchase_cost"  required [(ngModel)]="stock.purchase_cost" name="purchase_cost"></ion-input>
+          <ion-label position="floating">Purchase Cost <ion-text color="danger">*</ion-text>
+          </ion-label>
+          <ion-input type="number" formControlName="purchase_cost" required [(ngModel)]="stock.purchase_cost"
+            name="purchase_cost"></ion-input>
         </ion-item>
         <div *ngIf=" f.purchase_cost.errors && f.purchase_cost.touched" class="invalid-feedback">
           <div *ngIf="f.purchase_cost.errors.required">Cost field is required</div>
@@ -33,8 +37,10 @@
       </ion-col>
       <ion-col size="6" size-sm>
         <ion-item>
-          <ion-label position="floating">Quantity <ion-text color="danger">*</ion-text></ion-label>
-          <ion-input type="number" formControlName="product_qty" required [(ngModel)]="stock.product_qty" name="product_qty"></ion-input>
+          <ion-label position="floating">Quantity <ion-text color="danger">*</ion-text>
+          </ion-label>
+          <ion-input type="number" formControlName="product_qty" required [(ngModel)]="stock.product_qty"
+            name="product_qty"></ion-input>
         </ion-item>
         <div *ngIf=" f.product_qty.errors && f.product_qty.touched" class="invalid-feedback">
           <div *ngIf="f.product_qty.errors.required">Quantity field is required</div>
@@ -43,8 +49,10 @@
       </ion-col>
     </ion-row>
     <ion-item>
-      <ion-label position="floating">Product Name <ion-text color="danger">*</ion-text></ion-label>
-      <ion-input type="text" formControlName="product_name" required maxlength="80" [(ngModel)]="stock.product_name" name="product_name"></ion-input>
+      <ion-label position="floating">Product Name <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input type="text" formControlName="product_name" required maxlength="80" [(ngModel)]="stock.product_name"
+        name="product_name"></ion-input>
     </ion-item>
     <div *ngIf=" f.product_name.errors && f.product_name.touched" class="invalid-feedback">
       <div *ngIf="f.product_name.errors.required">Product name field is required</div>
@@ -59,13 +67,21 @@
     </div>
     <ion-row>
       <ion-col size="12" size-sm class="ion-text-center">
-        <ion-button (click)="pickImage()" color="primary" small color="tertiary" shape="round">Upload Image</ion-button>
+        <ion-button *ngIf="!isLoading && !croppedImagepath" (click)="pickImage()" color="primary" small color="tertiary" shape="round">Upload Image</ion-button>
+        <ion-button *ngIf="isLoading && !croppedImagepath" color="primary" small color="tertiary" shape="round">Loading ...</ion-button>
       </ion-col>
-      <h5 *ngIf="croppedImagepath.length">Cropped Image</h5>
- 
-  <p *ngIf="isLoading">Loading ...</p>
- 
-  <img [src]="croppedImagepath" />
+
+      <ion-list *ngIf="!isLoading && croppedImagepath">
+        <ion-item class="ion-text-center">
+          <ion-thumbnail >
+            <ion-img [src]="croppedImagepath"></ion-img>
+          </ion-thumbnail>
+        </ion-item>
+      </ion-list>
+      <ion-item>
+        <ion-input type="hidden" formControlName="image" [value] = "imageName" [(ngModel)]="stock.image"
+        name="image"></ion-input>
+      </ion-item>
     </ion-row>
 
     <ion-row>
@@ -101,7 +117,8 @@
       <ion-col size="6" size-sm>
         <ion-item>
           <ion-label position="floating">Other UID</ion-label>
-          <ion-input type="text" formControlName="other_uid" [(ngModel)]="stock.other_uid" name="other_uid" value=""></ion-input>
+          <ion-input type="text" formControlName="other_uid" [(ngModel)]="stock.other_uid" name="other_uid" value="">
+          </ion-input>
         </ion-item>
         <div *ngIf=" f.other_uid.errors && f.other_uid.touched" class="invalid-feedback">
           <div *ngIf="f.other_uid.errors.maxlength">Other field cannot be greater than 30 characters.</div>
