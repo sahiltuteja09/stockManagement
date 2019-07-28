@@ -14,7 +14,7 @@ import { ScannerService } from 'src/app/providers/scanner.service';
 export class ScaninPage implements OnInit {
 
   isMobileDevice: boolean = true;
-
+defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
   searchTerm: string = "";
   searching: boolean = false;
   searchControl: FormControl;
