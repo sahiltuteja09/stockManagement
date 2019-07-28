@@ -12,7 +12,7 @@ export class HomePage {
   latestStock: any = [];
   page: number = 1;
   noDataFound: string = 'No data found.';
-  defaultImage: string = 'http://placehold.it/75';
+  defaultImage: string = 'http://placehold.it/300x200';
   constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider

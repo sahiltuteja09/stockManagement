@@ -52,7 +52,7 @@ export class AddnewstockPage implements OnInit {
       'purchase_cost': 0,
       'image':''
     }
-
+    this.stock.image = 'hello';
     this.newstockdetail = formBuilder.group({
       product_unique: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       purchase_cost: ['', Validators.compose([Validators.maxLength(5), Validators.required])],
@@ -63,7 +63,7 @@ export class AddnewstockPage implements OnInit {
       flipkart: ['', Validators.compose([Validators.maxLength(30)])],
       paytm: ['', Validators.compose([Validators.maxLength(30)])],
       other_uid: ['', Validators.compose([Validators.maxLength(30)])],
-      image: ['']
+      image: [this.imageName]
     });
   }
 
@@ -118,7 +118,12 @@ export class AddnewstockPage implements OnInit {
       this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
         this.croppedImagepath = data;
         this.imageName = this.uploadImage.imageFileName();
-
+        if(this.imageName){
+          this.stock.image = this.imageName;
+          console.log('this.imageName if '+this.imageName);
+        }
+       
+      console.log('this.imageName '+this.imageName);
         this.isLoadingSubscriber.unsubscribe();
         if (typeof this.croppedImagepathSubscriber == 'object')
           this.croppedImagepathSubscriber.unsubscribe();

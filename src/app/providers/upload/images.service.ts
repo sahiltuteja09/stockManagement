@@ -61,7 +61,7 @@ export class ImagesService {
     var splitPath = copyPath.split('/');
     var imageName = splitPath[splitPath.length - 1];
     var filePath = ImagePath.split(imageName)[0];
-
+    this.imagefileName = imageName;
     this.file.readAsDataURL(filePath, imageName).then(base64 => {
       this.croppedImagepath.next(base64);
       this.uploadPic(base64, imageName);
