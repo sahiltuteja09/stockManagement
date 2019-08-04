@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { EmailValidator } from '../../../classes/validator/email';
 import { CoreConfigConstant } from '../../../../configconstants';
 import { AuthenticationService } from '../authentication.service';
 //https://www.joshmorony.com/advanced-forms-validation-in-ionic-2/

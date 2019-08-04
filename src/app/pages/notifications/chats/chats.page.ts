@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MenuController } from '@ionic/angular';
 import { Device } from '@ionic-native/device/ngx';
 import { AlertController, Platform } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
@@ -49,7 +48,6 @@ export class ChatsPage implements OnInit {
     private curdService: CurdService,
     public alertController: AlertController,
     private device: Device, private platform: Platform,
-    private menuCtrl: MenuController,
     private route: ActivatedRoute, private authenticationService: AuthenticationService) {
 
     const currentUser = this.authenticationService.currentUserValue;

@@ -57,9 +57,10 @@ export class AuthenticationService {
               }
               this.appProvider.showToast(user.msg);
             }
-            setTimeout(() => {
-              this.appProvider.dismissLoading();
-            }, 2000);
+            this.appProvider.dismissLoading();
+            // setTimeout(() => {
+              
+            // }, 2000);
           },
             error => {
               this.appProvider.showToast(error);
@@ -112,6 +113,10 @@ export class AuthenticationService {
       this.appProvider.goto('home', 1);
     }
     return user;
+  }
+  updateUser(user) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
   generateToken(app_id,device_id, user_id) {
     const salt = CoreConfigConstant.salt;

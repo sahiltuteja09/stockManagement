@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./request-quote.page.scss'],
 })
 export class RequestQuotePage implements OnInit {
+  result: any;
   comment: any = '';
   product_id: string = '';
   user_id: string = '';
@@ -23,6 +24,37 @@ export class RequestQuotePage implements OnInit {
   }
 
   ngOnInit() {
+    this.getProductDetail();
+  }
+  getProductDetail(){
+    this.result = [];
+    let stock = { 'product_id': this.product_id};
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        this.curdService.getData('getProduct', stock)
+          .subscribe((data: any) => {
+
+            if (data.status) {
+              this.result = data;
+              this.comment = '';
+            } else {
+              this.result = data;
+              this.appProvider.showToast(data.msg);
+            }
+            setTimeout(() => {
+              this.appProvider.dismissLoading();
+            }, 2000);
+
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            },
+            () => {
+            }
+          );
+      });
+    });
   }
   sendQuery() {
     if (this.product_id == '') {

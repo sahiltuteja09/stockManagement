@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
-import {TimeAgoPipe} from 'time-ago-pipe';
+import { TimeAgoPipe } from 'time-ago-pipe';
+import { AuthenticationService } from '../auth/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -11,12 +12,17 @@ import {TimeAgoPipe} from 'time-ago-pipe';
 export class HomePage {
   latestStock: any = [];
   page: number = 1;
-  noDataFound: string = 'No data found.';
+  noDataFound: string = 'Fetching records...';
   defaultImage: string = 'http://placehold.it/300x200';
+  userID: number = 0;
   constructor(
     private curdService: CurdService,
-    private appProvider: CoreAppProvider
-  ) { this.stockLatest(); }
+    private appProvider: CoreAppProvider, private authenticationService: AuthenticationService
+  ) {
+    this.stockLatest();
+    const currentUser = this.authenticationService.currentUserValue;
+    this.userID = currentUser.id;
+  }
 
   // https://medium.com/google-developer-experts/angular-supercharge-your-router-transitions-using-new-animation-features-v4-3-3eb341ede6c8
 
@@ -46,23 +52,23 @@ export class HomePage {
       });
     });
   }
-  userLikes(pid:any){
+  userLikes(pid: any) {
     let param = { 'pid': pid.id };
-        this.curdService.getData('updateLikes', param)
-          .subscribe((data: any) => {
-            if (data.status == false) {
-              // no product found
-              this.appProvider.showToast(data.msg);
-            } else {
-              pid.likes = data.data;
-            }
-            this.appProvider.dismissLoading();
-          },
-            error => {
-              this.appProvider.showToast(error);
-              this.appProvider.dismissLoading();
-            }
-          );
+    this.curdService.getData('updateLikes', param)
+      .subscribe((data: any) => {
+        if (data.status == false) {
+          // no product found
+          this.appProvider.showToast(data.msg);
+        } else {
+          pid.likes = data.data;
+        }
+        this.appProvider.dismissLoading();
+      },
+        error => {
+          this.appProvider.showToast(error);
+          this.appProvider.dismissLoading();
+        }
+      );
   }
 
 
@@ -96,7 +102,7 @@ export class HomePage {
       event.target.complete();
     }, 2000);
   }
-  requestQuote(data){
+  requestQuote(data) {
     this.appProvider.navTo('request-quote', data.id, data.user_id)
   }
 }

@@ -27,7 +27,8 @@
         </ion-refresher-content>
       </ion-refresher>
   <div id="chat-parent" class="bg-image" [ngClass]="{ 'bg-image-X': phone_model=='iPhone X'}">
-    <div id="chat-container" *ngIf="conversation.length">
+    <div id="chat-container">
+    <div *ngIf="conversation.length">
       <ion-row *ngFor="let conv of conversation; let first = first; let last = last " class="full no-padding">
         <ion-col class="no-padding chat-row" [ngClass]="{ 'reverse': conv.msg_from == userID ? 1 : 0}">
           <div class="avatar-parent">
@@ -55,6 +56,7 @@
           <div *ngIf="last && conv.id"><input type="hidden" #latestFetchid value="{{conv.id}}"></div>
         </ion-col>
       </ion-row>
+    </div>
     </div>
   </div>
 </ion-content>

@@ -1,26 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ProfilePage } from './profile.page';
+import { NoInternetPage } from './no-internet.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: ProfilePage
+    component: NoInternetPage
   }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,ReactiveFormsModule,
+    FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ProfilePage]
+  declarations: [NoInternetPage]
 })
-export class ProfilePageModule {}
+export class NoInternetPageModule {}

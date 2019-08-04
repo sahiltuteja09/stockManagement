@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-stockout',
@@ -26,15 +27,20 @@ export class StockoutPage implements OnInit {
   isMerchantFetched: boolean = false;
   public updatestockdetail: FormGroup;
 
+  queryParmSub: any;
   constructor(
     private curdService: CurdService,
-    private appProvider: CoreAppProvider
+    private appProvider: CoreAppProvider,
+    private route: ActivatedRoute
   ) {
     this.searchControl = new FormControl();
     this.updatestockdetail = new FormGroup({
       quantity: new FormControl(),
       product_status_id: new FormControl(),
       marketplace_id: new FormControl(),
+    });
+    this.queryParmSub = this.route.queryParams.subscribe(params => {
+      this.searchTerm = params['term'];
     });
     this.getStockType();
     this.getMerchants();
@@ -181,5 +187,8 @@ export class StockoutPage implements OnInit {
         }
       );
   }
-
+  ionViewWillLeave() {
+    if(typeof this.queryParmSub == 'object')
+      this.queryParmSub.unsubscribe();
+  }
 }

@@ -21,7 +21,7 @@ import { Device } from '@ionic-native/device/ngx';
 import { Crop } from '@ionic-native/crop/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

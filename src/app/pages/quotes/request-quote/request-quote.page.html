@@ -11,14 +11,14 @@
 <ion-content>
   <ion-card>
     <ion-row>
-      <ion-col>
+      <ion-col *ngIf="result.status">
         <form>
           <ion-item lines="none">
             <ion-thumbnail>
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+              <img src="{{result.data.image == '' ? 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y' : result.data.image }}">
             </ion-thumbnail>
             <ion-item lines="none">
-              <p>result.title</p>
+              <p>{{result.data.title}}</p>
             </ion-item>
           </ion-item>
           <ion-list>

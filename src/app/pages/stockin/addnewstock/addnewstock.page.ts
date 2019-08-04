@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { ImagesService } from 'src/app/providers/upload/images.service';
+import { ScannerService } from 'src/app/providers/scanner.service';
 
 interface Stock {
   product_unique: string;
@@ -30,9 +31,20 @@ export class AddnewstockPage implements OnInit {
   imageName: string = '';
   isLoadingSubscriber;
   croppedImagepathSubscriber;
-
   public newstockdetail: FormGroup;
+
+
+
+  isFlashEnable: boolean = false;
+  isScaning: boolean = false;
+  flashIcon: string = 'flash';
+  scannerPermission: boolean = true;
+
+  scannerPermissionSubscriber;
+  isScaningSubscriber;
+  scanedTextSubscriber;
   constructor(
+    private scanService: ScannerService,
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
     private curdService: CurdService,
@@ -50,7 +62,7 @@ export class AddnewstockPage implements OnInit {
       'paytm': '',
       'product_qty': 0,
       'purchase_cost': 0,
-      'image':''
+      'image': ''
     }
     this.stock.image = 'hello';
     this.newstockdetail = formBuilder.group({
@@ -118,12 +130,12 @@ export class AddnewstockPage implements OnInit {
       this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
         this.croppedImagepath = data;
         this.imageName = this.uploadImage.imageFileName();
-        if(this.imageName){
+        if (this.imageName) {
           this.stock.image = this.imageName;
-          console.log('this.imageName if '+this.imageName);
+          console.log('this.imageName if ' + this.imageName);
         }
-       
-      console.log('this.imageName '+this.imageName);
+
+        console.log('this.imageName ' + this.imageName);
         this.isLoadingSubscriber.unsubscribe();
         if (typeof this.croppedImagepathSubscriber == 'object')
           this.croppedImagepathSubscriber.unsubscribe();
@@ -133,11 +145,78 @@ export class AddnewstockPage implements OnInit {
     this.uploadImage.pickImage();
   }
 
+
+
+  scanCode(codeType) {
+    if (!this.appProvider.isMobile()) { return false; }
+
+    if (typeof this.scannerPermissionSubscriber != 'object') {
+      this.scannerPermissionSubscriber = this.scanService.scannerPermission.subscribe((data) => {
+        this.scannerPermission = data;
+      });
+    }
+    if (typeof this.isScaningSubscriber != 'object') {
+      this.isScaningSubscriber = this.scanService.isScaning.subscribe((data) => {
+        this.isScaning = data;
+      });
+    }
+    this.scanedTextSubscriber = this.scanService.scanedText.subscribe((data) => {
+      if (data) {
+        this.scanService.setScaningFlag();
+        if (typeof this.scannerPermissionSubscriber == 'object')
+          this.scannerPermissionSubscriber.unsubscribe();
+
+        this.scanedTextSubscriber.unsubscribe();
+        switch(codeType){
+          case 'product_unique':
+              this.stock.product_unique = data;
+              break;
+              case 'amazon_asin':
+                  this.stock.amazon = data;
+                break;
+              case 'flipkart_asin':
+                  this.stock.flipkart = data;
+                break;
+              case 'paytm_asin':
+                  this.stock.paytm = data;
+                break;
+              case 'other_uid':
+                  this.stock.other_uid = data;
+                break;
+        }
+        
+      }
+    });
+    this.scanService.scanCode();
+  }
+
+  hideCamera() {
+    this.scanService.setScaningFlag();
+    this.flashIcon = this.scanService.hideCamera(this.isFlashEnable);
+  }
+  openFlash() {
+    this.isFlashEnable = !this.isFlashEnable;
+    this.flashIcon = this.scanService.openFlash(this.isFlashEnable);
+  }
+  openSetting() {
+    this.scanService.openSetting();
+  }
   ionViewWillLeave() {
+    this.scanService.setScaningFlag();
+    if (typeof this.scannerPermissionSubscriber == 'object')
+      this.scannerPermissionSubscriber.unsubscribe();
+    if (typeof this.isScaningSubscriber == 'object')
+      this.isScaningSubscriber.unsubscribe();
+    if (typeof this.scanedTextSubscriber == 'object')
+      this.scanedTextSubscriber.unsubscribe();
+
     if (typeof this.isLoadingSubscriber == 'object')
       this.isLoadingSubscriber.unsubscribe();
     if (typeof this.croppedImagepathSubscriber == 'object')
       this.croppedImagepathSubscriber.unsubscribe();
+
+    this.scanService.distroyScaner();
+
   }
 
 }

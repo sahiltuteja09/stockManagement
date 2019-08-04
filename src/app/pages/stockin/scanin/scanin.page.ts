@@ -3,8 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
-import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 import { ScannerService } from 'src/app/providers/scanner.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-scanin',
@@ -39,18 +39,25 @@ defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7
   isScaningSubscriber;
   scanedTextSubscriber;
 
+  queryParmSub: any;
+
   public updatestockdetail: FormGroup;
 
   constructor(
     private scanService: ScannerService,
     private curdService: CurdService,
-    private appProvider: CoreAppProvider
+    private appProvider: CoreAppProvider,
+    private route: ActivatedRoute
   ) {
     this.searchControl = new FormControl();
     this.updatestockdetail = new FormGroup({
       quantity: new FormControl(),
       product_status_id: new FormControl(),
       marketplace_id: new FormControl(),
+    });
+
+    this.queryParmSub = this.route.queryParams.subscribe(params => {
+      this.searchTerm = params['term'];
     });
     this.getStockType();
     this.getMerchants();
@@ -249,6 +256,9 @@ defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7
       this.isScaningSubscriber.unsubscribe();
     if (typeof this.scanedTextSubscriber == 'object')
       this.scanedTextSubscriber.unsubscribe();
+
+      if(typeof this.queryParmSub == 'object')
+      this.queryParmSub.unsubscribe();
 
     this.scanService.distroyScaner();
 

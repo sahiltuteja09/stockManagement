@@ -1,0 +1,58 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="myquotes"></ion-back-button>
+      </ion-buttons>
+      <ion-title>
+        My Quotes
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
+          refreshingText="Refreshing...">
+        </ion-refresher-content>
+      </ion-refresher>
+  <div *ngIf="(myquotes.status); else noData">
+    <ion-list *ngFor="let myquote of myquotes.data">
+      <ion-card>
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <img [src]="myquote.image">
+          </ion-thumbnail>
+          <ion-label>
+            <p>{{myquote.title}}</p>
+            <ion-col size="3" size-sm align-items-end>
+              <small class="deal_price">Seller:<b> {{myquote.name}}</b>  -- Date:<b> {{myquote.date_added}}</b></small>
+            </ion-col>
+            <ion-col size="6" size-sm>
+              <ion-button (click)="gotoChat(myquote)" float-right color="danger" shape="round" size="small">
+                <ion-icon name="eye"></ion-icon> Details
+              </ion-button>
+            </ion-col>
+          </ion-label>
+          
+        </ion-item>
+        <ion-row>
+            <ion-col size="12" size-sm>
+              <p>
+                {{myquote.detail}}
+              </p>
+            </ion-col>
+          </ion-row>
+      </ion-card>
+
+    </ion-list>
+  </div>
+  <ng-template #noData>
+    <div class="ion-text-center">
+      {{noDataFound}}
+    </div>
+  </ng-template>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>

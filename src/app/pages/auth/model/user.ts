@@ -5,4 +5,9 @@ export class User {
   email: string;
   mobile: string;
   token: string;
+  city:string;
+  state:string;
+  address:string;
+  store_name:string;
+  image:string;
 }
