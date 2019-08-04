@@ -69,19 +69,29 @@ export class AppComponent {
     private configService: ConfigServiceService,
     private appProvider: CoreAppProvider,
     private authenticationService: AuthenticationService,
-    private router: Router, private route: ActivatedRoute,
+    private router: Router,
     private location: Location,
-    public events: Events
+   
   ) {
     this.initializeApp();
     router.events.subscribe((event: Event) => {
       this.loggedin = this.authenticationService.isLoggedin();
       if (event instanceof NavigationStart) {
         // Show loading indicator
+        let isOnline = this.appProvider.isOnline();
+    console.log('isOnline app ' + isOnline);
       }
 
       if (event instanceof NavigationEnd) {
         // Hide loading indicator
+        let isOnline = this.appProvider.isOnline();
+    console.log('isOnline app hide ' + isOnline);
+
+    let routePage = this.router.routerState.snapshot.url;
+        console.log('routePage => '+routePage);
+        if(routePage != '/no-internet' && !isOnline){
+          this.router.navigate(['/no-internet'], { replaceUrl: true });
+        }
       }
 
       if (event instanceof NavigationError) {
@@ -97,9 +107,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-
-
-      this.checkNetworkStatus();
+      this.exitApp() ;
       setTimeout(() => {
         this.configs = this.configService.configValue;
         if (this.configs != undefined) {
@@ -112,37 +120,11 @@ export class AppComponent {
     });
   }
 
-  checkNetworkStatus() {
-    this.appProvider.initializeNetworkEvents();
-    console.log(this.router.routerState.snapshot.url);
-    this.events.subscribe('network:offline', () => {
-      if (this.router.url != '/no-internet') {
-        let routePage = this.router.routerState.snapshot.url;
-        if (this.router.routerState.snapshot.url) {
-          this.router.navigate(['/no-internet'], { queryParams: { returnUrl: routePage } });
-        } else {
-          this.router.navigate(['/no-internet']);
-        }
-      }
-
-    });
-    this.events.subscribe('network:online', () => {
-      if (this.router.url == '/no-internet') {
-        // get param
-        let redirectUrl = this.route.snapshot.queryParams["returnUrl"];
-        console.log('redirectUrl '+redirectUrl);
-        if (redirectUrl) {
-          this.router.navigate(['/' + redirectUrl]);
-        } else {
-          this.router.navigate(['/home']);
-        }
-      }
-    });
-  }
+  
   exitApp() {
     this.platform.backButton.subscribe(async () => {
       // this does work
-      if (this.router.url === '/' || this.router.url == '/home') {
+      if (this.router.url === '/' || this.router.url == '/home' || this.router.url == '/no-internet' ) {
         if (new Date().getTime() - this.lastTimeBackPress < this.timePeriodToExit) {
           // this.platform.exitApp(); // Exit from app
           navigator['app'].exitApp(); // work in ionic 4
