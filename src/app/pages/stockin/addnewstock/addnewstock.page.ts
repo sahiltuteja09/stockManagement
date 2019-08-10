@@ -43,6 +43,8 @@ export class AddnewstockPage implements OnInit {
   scannerPermissionSubscriber;
   isScaningSubscriber;
   scanedTextSubscriber;
+
+  isMobileDevice: boolean = true;
   constructor(
     private scanService: ScannerService,
     public formBuilder: FormBuilder,
@@ -78,7 +80,9 @@ export class AddnewstockPage implements OnInit {
       image: [this.imageName]
     });
   }
-
+  ionViewWillEnter() {
+    this.isMobileDevice = this.appProvider.isMobile();
+  }
   ngOnInit() {
   }
   // get the form contorls in a f object

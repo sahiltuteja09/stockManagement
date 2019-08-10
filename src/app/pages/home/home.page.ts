@@ -5,6 +5,7 @@ import { TimeAgoPipe } from 'time-ago-pipe';
 import { AuthenticationService } from '../auth/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Events } from '@ionic/angular';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,10 @@ export class HomePage {
   noDataFound: string = 'Fetching records...';
   defaultImage: string = 'http://placehold.it/300x200';
   userID: number = 0;
+
+  secondsCounter = interval(30000);
+  counter:any = '';
+  unreadMsgSub:any;
   constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider, 
@@ -29,6 +34,20 @@ export class HomePage {
     const currentUser = this.authenticationService.currentUserValue;
     this.userID = currentUser.id;
     this.checkNetworkStatus();
+    this.checkUpdates();
+    this.unreadMsgSub = this.secondsCounter.subscribe(x => { // will execute every 30 seconds
+      this.checkUpdates();
+    });
+  }
+
+  checkUpdates() {
+    this.curdService.getData('unreadMsg')
+      .subscribe((data: any) => {
+        if (data.status) {
+          this.counter = +(data.data);
+        }
+      }
+      );
   }
 
   // https://medium.com/google-developer-experts/angular-supercharge-your-router-transitions-using-new-animation-features-v4-3-3eb341ede6c8
@@ -140,5 +159,8 @@ export class HomePage {
         }
       }
     });
+  }
+  ionViewWillLeave(){
+    this.unreadMsgSub.unsubscribe();
   }
 }

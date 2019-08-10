@@ -4,6 +4,7 @@ import { AuthenticationService } from '../../auth/authentication.service';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { ImagesService } from 'src/app/providers/upload/images.service';
+import { CoreConfigConstant } from 'src/configconstants';
 
 @Component({
   selector: 'app-profile',
@@ -63,9 +64,10 @@ export class ProfilePage implements OnInit {
     this.profile.state = currentUser.state;
     this.profile.address = currentUser.address;
     this.profile.image = currentUser.image;
-if(this.profile.image){
-    this.croppedImagepath = currentUser.image;
-}
+    if (this.profile.image) {
+      this.croppedImagepath = CoreConfigConstant.uploadedPath+currentUser.image;
+      
+    }
     this.updateDetails = formBuilder.group({
       store_name: ['', Validators.compose([Validators.maxLength(50), Validators.pattern('[a-zA-Z ]*')])],
       city: ['', Validators.compose([Validators.maxLength(50), Validators.pattern('[a-zA-Z ]*')])],

@@ -30,6 +30,13 @@
                         </ion-thumbnail>
                       </ion-item>
                     </ion-list>
+                    <ion-list *ngIf="!isLoading && croppedImagepath">
+                      <ion-item class="ion-text-center">
+                        <ion-thumbnail>
+                          <ion-img [src]="croppedImagepath"></ion-img>
+                        </ion-thumbnail>
+                      </ion-item>
+                    </ion-list>
 
                 <ion-button *ngIf="!isLoading && !croppedImagepath" (click)="pickImage()" color="primary" small
                   color="tertiary" shape="round">Upload Image</ion-button>
@@ -39,13 +46,7 @@
 
               
 
-              <ion-list *ngIf="!isLoading && croppedImagepath">
-                <ion-item class="ion-text-center">
-                  <ion-thumbnail>
-                    <ion-img [src]="croppedImagepath"></ion-img>
-                  </ion-thumbnail>
-                </ion-item>
-              </ion-list>
+              
               <ion-input type="text" formControlName="image" [(ngModel)]="profile.image" name="image"></ion-input>
             </ion-row>
             <ion-item>
