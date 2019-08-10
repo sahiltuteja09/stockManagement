@@ -38,7 +38,7 @@
           <div [ngClass]="{ 'name-row-parent-right': (conv.msg_from == userID ? 1 : 0),'name-row-parent-left': (conv.msg_from == userID ? 0 : 1)}">
             <div class="no-padding" [ngClass]="{ 'name-row-right': (conv.msg_from == userID ? 1 : 0),'name-row-left': (conv.msg_from == userID ? 0 : 1)}">
               {{conv.msg_from == userID ? conv.sender_name :  (conv.msg_from == userID ? conv.reciver_name : conv.sender_name) }}
-              <div [ngClass]="{ 'timer-right': (conv.msg_from == userID ? 1 : 0),'timer-left': (conv.msg_from == userID ? 0 : 1)}">{{conv.date_added}} mins ago
+              <div [ngClass]="{ 'timer-right': (conv.msg_from == userID ? 1 : 0),'timer-left': (conv.msg_from == userID ? 0 : 1)}">{{conv.date_added | timeAgo}}
                 <ion-icon *ngIf="conv.msg_from == userID ? 1 : 0" name="checkmark" [color]="conv.mark_read ? 'success': 'light'"
                   class="first-tick"></ion-icon>
                 <ion-icon *ngIf="conv.msg_from == userID ? 1 : 0" name="checkmark" [color]="conv.mark_read ? 'success': 'light'"

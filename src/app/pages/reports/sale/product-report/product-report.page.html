@@ -22,7 +22,7 @@
             <p>{{product_report.title}}</p>
             <ion-col size="3" size-sm align-items-end>
               <small class="deal_price"><b>Product added on:- </b>
-                <ion-text color="primary"> {{product_report.addedDate}}</ion-text>
+                <ion-text color="primary"> {{product_report.addedDate | timeAgo}}</ion-text>
               </small>
             </ion-col>
             <ion-col size="6" size-sm>
@@ -136,7 +136,7 @@
               </ion-col>
               <ion-col size="3">
                   <div class="ion-text-center">
-                      {{product_report.historyDate}}
+                      {{product_report.historyDate | timeAgo}}
                   </div>
                 </ion-col>
             </ion-row>

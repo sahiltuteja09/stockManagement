@@ -26,12 +26,23 @@
             </ion-thumbnail>
             <ion-label>
               <p>{{product.title}}</p>
-              <ion-col size="3" size-sm align-items-end>
+              <ion-row>
+              <ion-col size="9" size-sm align-items-end>
                 <small class="deal_price">
-                  {{product.likes}} Likes | Purchase Cost : {{product.purchase_cost}} | Remaining Quantity : {{product.quantity}} 
-                  | Added date : {{product.date_added}} 
+                  {{product.likes}} Likes | Available : {{product.quantity}}
+                  | Live date : {{product.date_added | timeAgo}} 
                 </small>
               </ion-col>
+            </ion-row>
+          <ion-row>
+              <ion-col size="9" size-sm align-items-end>
+                <small class="deal_price">
+                  Sold : {{totalSold[product.id]}} 
+                  | Return : {{totalReturn[product.id]}} | Loss : {{totalLoss[product.id]}} | Damages :  {{totalDamage[product.id]}}
+                </small>
+              </ion-col>
+            </ion-row>
+
               <ion-col size="3" size-sm>
                 <ion-button (click)="goto('scanin',product)" float-right color="danger" shape="round" size="small">
                   <ion-icon name="eye"></ion-icon> Stock in
@@ -42,6 +53,7 @@
                   <ion-icon name="eye"></ion-icon> Stock out
                 </ion-button>
               </ion-col>
+              
             </ion-label>
             
           </ion-item>

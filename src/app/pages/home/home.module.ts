@@ -5,13 +5,13 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
-import { TimeAgoPipe } from 'time-ago-pipe';
+import { SharedPipesModule } from 'src/app/services/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
+    IonicModule,SharedPipesModule,
     RouterModule.forChild([
       {
         path: '',
@@ -19,6 +19,6 @@ import { TimeAgoPipe } from 'time-ago-pipe';
       }
     ])
   ],
-  declarations: [HomePage, TimeAgoPipe]
+  declarations: [HomePage]
 })
 export class HomePageModule {}

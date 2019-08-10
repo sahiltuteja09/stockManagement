@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
-import { TimeAgoPipe } from 'time-ago-pipe';
 import { AuthenticationService } from '../auth/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Events } from '@ionic/angular';

@@ -7,6 +7,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
+//import { TimeAgoPipe } from 'time-ago-pipe';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreAppProvider } from './providers/app';
 import { QRScanner } from '@ionic-native/qr-scanner/ngx';
@@ -22,6 +23,8 @@ import { Crop } from '@ionic-native/crop/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+import { SharedPipesModule } from './services/shared.module';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -29,7 +32,8 @@ import { FileTransfer } from '@ionic-native/file-transfer/ngx';
     BrowserModule,FormsModule, ReactiveFormsModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedPipesModule
   ],
   providers: [
     StatusBar,

@@ -25,7 +25,7 @@
           <ion-label>
             <p>{{myquote.title}}</p>
             <ion-col size="3" size-sm align-items-end>
-              <small class="deal_price">Seller: <b>{{myquote.name}}</b> -- Date:<b> {{myquote.date_added}}</b></small>
+              <small class="deal_price">Seller: <b>{{myquote.name}}</b> -- Time : <b> {{myquote.date_added | timeAgo}}</b></small>
             </ion-col>
             <ion-col size="6" size-sm>
               <ion-button (click)="gotoChat(myquote)" float-right color="danger" shape="round" size="small">

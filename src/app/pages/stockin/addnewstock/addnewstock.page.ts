@@ -218,7 +218,7 @@ export class AddnewstockPage implements OnInit {
       this.isLoadingSubscriber.unsubscribe();
     if (typeof this.croppedImagepathSubscriber == 'object')
       this.croppedImagepathSubscriber.unsubscribe();
-
+this.hideCamera();
     this.scanService.distroyScaner();
 
   }

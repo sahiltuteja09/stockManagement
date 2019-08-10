@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { RequestbymequotesPage } from './requestbymequotes.page';
+import { SharedPipesModule } from 'src/app/services/shared.module';
 
 const routes: Routes = [
   {
@@ -18,7 +19,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
+    IonicModule,SharedPipesModule,
     RouterModule.forChild(routes)
   ],
   declarations: [RequestbymequotesPage]

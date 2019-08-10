@@ -11,6 +11,10 @@ export class MyproductsPage implements OnInit {
 
   page: number = 1;
   myproducts: any = [];
+  totalSold:any= [];
+  totalReturn:any= [];
+  totalLoss:any= [];
+  totalDamage:any= [];
   noDataFound: string = 'Fetching records...';
   defaultImage: string = 'http://placehold.it/300x200';
   constructor(private appProvider: CoreAppProvider, private curdService: CurdService) { }
@@ -21,6 +25,7 @@ export class MyproductsPage implements OnInit {
 
   products() {
     this.myproducts = [];
+    this.totalSold = [];
     this.page = 1;
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
@@ -33,6 +38,11 @@ export class MyproductsPage implements OnInit {
               this.myproducts = [];
             } else {
               this.myproducts = data;
+              this.totalSold = data.total_sold;
+              this.totalReturn = data.total_return;
+              this.totalLoss = data.total_loss;
+              this.totalDamage = data.total_damage;
+              console.log(data.total_sold);
               this.page = this.page + 1;
             }
             this.appProvider.dismissLoading();
@@ -70,6 +80,10 @@ export class MyproductsPage implements OnInit {
               for (let i = 0; i < result.data.length; i++) {
                 this.myproducts.data.push(result.data[i]);
               }
+              Object.assign(this.totalSold, result.total_sold);
+              Object.assign(this.totalReturn, result.total_return);
+              Object.assign(this.totalLoss, result.total_loss);
+              Object.assign(this.totalDamage, result.total_damage);
               this.page = this.page + 1;
             }
           },
