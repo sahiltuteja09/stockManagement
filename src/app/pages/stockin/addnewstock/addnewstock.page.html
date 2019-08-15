@@ -165,7 +165,11 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-button color="success" [disabled]="form.invalid" type="submit" block>Add</ion-button>
+
+    <ion-button color="success" [disabled]="form.invalid" type="submit" block>
+      <span *ngIf="product_id > 0 else addBlock">Update</span>
+      <ng-template #addBlock>Add</ng-template>
+      </ion-button>
   </form>
 
 </ion-content>

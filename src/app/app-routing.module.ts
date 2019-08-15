@@ -21,6 +21,10 @@ const routes: Routes = [
     loadChildren: './pages/stockin/addnewstock/addnewstock.module#AddnewstockPageModule', canActivate: [AuthguardService]
   },
   {
+    path: 'addnewstock/:product_id',
+    loadChildren: './pages/stockin/addnewstock/addnewstock.module#AddnewstockPageModule', canActivate: [AuthguardService]
+  },
+  {
     path: 'scanin',
     loadChildren: './pages/stockin/scanin/scanin.module#ScaninPageModule', canActivate: [AuthguardService]
   },
@@ -41,7 +45,8 @@ const routes: Routes = [
   { path: 'product-report/:product_id', loadChildren: './pages/reports/sale/product-report/product-report.module#ProductReportPageModule', canActivate: [AuthguardService] },
   { path: 'requestbymequotes', loadChildren: './pages/quotes/requestbymequotes/requestbymequotes.module#RequestbymequotesPageModule' , canActivate: [AuthguardService]},
   { path: 'requestbyotherquotes', loadChildren: './pages/quotes/requestbyotherquotes/requestbyotherquotes.module#RequestbyotherquotesPageModule', canActivate: [AuthguardService] },
-  { path: 'myproducts', loadChildren: './pages/myproducts/myproducts.module#MyproductsPageModule', canActivate: [AuthguardService] },  { path: 'no-internet', loadChildren: './pages/no-internet/no-internet.module#NoInternetPageModule' },
+  { path: 'myproducts', loadChildren: './pages/myproducts/myproducts.module#MyproductsPageModule', canActivate: [AuthguardService] },
+  { path: 'no-internet', loadChildren: './pages/no-internet/no-internet.module#NoInternetPageModule' },
 
 
 

@@ -259,7 +259,7 @@ defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7
 
       if(typeof this.queryParmSub == 'object')
       this.queryParmSub.unsubscribe();
-this.hideCamera();
+
     this.scanService.distroyScaner();
 
   }

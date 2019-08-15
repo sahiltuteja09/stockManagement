@@ -4,6 +4,8 @@ import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { ImagesService } from 'src/app/providers/upload/images.service';
 import { ScannerService } from 'src/app/providers/scanner.service';
+import { ActivatedRoute } from '@angular/router';
+import { CoreConfigConstant } from 'src/configconstants';
 
 interface Stock {
   product_unique: string;
@@ -45,12 +47,16 @@ export class AddnewstockPage implements OnInit {
   scanedTextSubscriber;
 
   isMobileDevice: boolean = true;
+
+  routSub: any;
+  product_id: number = 0;
   constructor(
     private scanService: ScannerService,
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
     private curdService: CurdService,
-    private uploadImage: ImagesService
+    private uploadImage: ImagesService,
+    private route: ActivatedRoute
   ) {
 
 
@@ -79,11 +85,62 @@ export class AddnewstockPage implements OnInit {
       other_uid: ['', Validators.compose([Validators.maxLength(30)])],
       image: [this.imageName]
     });
+
+    this.routSub = this.route.params.subscribe((params) => {
+      this.product_id = +params['product_id'];
+
+    });
   }
   ionViewWillEnter() {
     this.isMobileDevice = this.appProvider.isMobile();
   }
   ngOnInit() {
+
+    if (this.product_id > 0) {
+      this.getProductDetail();
+    }
+  }
+  getProductDetail() {
+
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        let productId = { 'product_id': this.product_id };
+        this.curdService.getData('getProduct', productId)
+          .subscribe((data: any) => {
+
+            if (data.status) {
+
+              this.stock = {
+                'product_unique': data.ids.app_unique,
+                'product_name': data.data.title,
+                'other_uid': data.ids.other_uid,
+                'amazon': data.ids.amazon,
+                'description': data.data.description,
+                'flipkart': data.ids.flipkart,
+                'paytm': data.ids.paytm,
+                'product_qty': data.data.quantity,
+                'purchase_cost': data.data.purchase_cost,
+                'image': data.data.image
+              },
+                this.croppedImagepath = CoreConfigConstant.uploadedPath + data.data.image;
+
+            } else {
+              this.appProvider.showToast(data.msg);
+            }
+            setTimeout(() => {
+              this.appProvider.dismissLoading();
+            }, 2000);
+
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            },
+            () => {
+            }
+          );
+      });
+    });
   }
   // get the form contorls in a f object
   get f() { return this.newstockdetail.controls; }
@@ -97,12 +154,27 @@ export class AddnewstockPage implements OnInit {
 
       this.appProvider.showLoading().then(loading => {
         loading.present().then(() => {
-          this.curdService.postData('save_product', this.stock)
+          let apiMethod = 'save_product';
+          let merged;
+          let updateStock;
+          if (this.product_id > 0) {
+            apiMethod = 'update_product';
+            updateStock = { 'id': this.product_id };
+          }else{
+            updateStock = { 'id': 0};
+          }
+          merged = { ...updateStock, ...this.stock };
+
+          this.curdService.postData(apiMethod, merged)
             .subscribe((data: any) => {
 
               if (data.status) {
                 this.appProvider.showToast(data.data);
                 this.newstockdetail.reset();
+                if(this.product_id > 0){
+                  this.appProvider.goto('addnewstock');
+                }
+                
               } else {
                 this.appProvider.showToast(data.msg);
               }
@@ -171,24 +243,24 @@ export class AddnewstockPage implements OnInit {
           this.scannerPermissionSubscriber.unsubscribe();
 
         this.scanedTextSubscriber.unsubscribe();
-        switch(codeType){
+        switch (codeType) {
           case 'product_unique':
-              this.stock.product_unique = data;
-              break;
-              case 'amazon_asin':
-                  this.stock.amazon = data;
-                break;
-              case 'flipkart_asin':
-                  this.stock.flipkart = data;
-                break;
-              case 'paytm_asin':
-                  this.stock.paytm = data;
-                break;
-              case 'other_uid':
-                  this.stock.other_uid = data;
-                break;
+            this.stock.product_unique = data;
+            break;
+          case 'amazon_asin':
+            this.stock.amazon = data;
+            break;
+          case 'flipkart_asin':
+            this.stock.flipkart = data;
+            break;
+          case 'paytm_asin':
+            this.stock.paytm = data;
+            break;
+          case 'other_uid':
+            this.stock.other_uid = data;
+            break;
         }
-        
+
       }
     });
     this.scanService.scanCode();
@@ -218,7 +290,9 @@ export class AddnewstockPage implements OnInit {
       this.isLoadingSubscriber.unsubscribe();
     if (typeof this.croppedImagepathSubscriber == 'object')
       this.croppedImagepathSubscriber.unsubscribe();
-this.hideCamera();
+
+    if (typeof this.routSub == 'object')
+      this.routSub.unsubscribe();
     this.scanService.distroyScaner();
 
   }
