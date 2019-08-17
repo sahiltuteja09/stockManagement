@@ -29,15 +29,15 @@ defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7
 
   merchants: any = [];
   isMerchantFetched: boolean = false;
+  scannerbarCode;
+  // isFlashEnable: boolean = false;
+  // isScaning: boolean = false;
+  // flashIcon: string = 'flash';
+  // scannerPermission: boolean = true;
 
-  isFlashEnable: boolean = false;
-  isScaning: boolean = false;
-  flashIcon: string = 'flash';
-  scannerPermission: boolean = true;
-
-  scannerPermissionSubscriber;
-  isScaningSubscriber;
-  scanedTextSubscriber;
+  // scannerPermissionSubscriber;
+  // isScaningSubscriber;
+  // scanedTextSubscriber;
 
   queryParmSub: any;
 
@@ -209,58 +209,87 @@ defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7
       );
   }
 
-  scanCode() {
+  scanCode(){
     if (!this.appProvider.isMobile()) { return false; }
 
-    if (typeof this.scannerPermissionSubscriber != 'object') {
-      this.scannerPermissionSubscriber = this.scanService.scannerPermission.subscribe((data) => {
-        this.scannerPermission = data;
-      });
-    }
-    if (typeof this.isScaningSubscriber != 'object') {
-    this.isScaningSubscriber = this.scanService.isScaning.subscribe((data) => {
-      this.isScaning = data;
-    });
-  }
-    this.scanedTextSubscriber = this.scanService.scanedText.subscribe((data) => {
-      if (data) {
-        this.scanService.setScaningFlag();
-        if (typeof this.scannerPermissionSubscriber == 'object')
-          this.scannerPermissionSubscriber.unsubscribe();
+      if (typeof this.scannerbarCode != 'object') {
+        this.scannerbarCode = this.scanService.barCodeText.subscribe((data) => {
+          
+          if(data.status){
 
-        this.scanedTextSubscriber.unsubscribe();
-        this.searchTerm = data;
-        this.searchProduct();
+            this.searchTerm = data.msg;
+         this.searchProduct();
+          }else{
+            if(data.msg != ''){
+              this.appProvider.showToast(data.msg);
+            }
+          }
+  
+        });
       }
-    });
-    this.searchTerm = '';
-    this.scanService.scanCode();
+      this.searchTerm = '';
+      this.scanService.scanBarCode();
+  
   }
 
-  hideCamera() {
-    this.scanService.setScaningFlag();
-    this.flashIcon = this.scanService.hideCamera(this.isFlashEnable);
-  }
-  openFlash() {
-    this.isFlashEnable = !this.isFlashEnable;
-    this.flashIcon = this.scanService.openFlash(this.isFlashEnable);
-  }
-  openSetting() {
-    this.scanService.openSetting();
-  }
+  // scanCode() {
+  //   if (!this.appProvider.isMobile()) { return false; }
+
+  //   if (typeof this.scannerPermissionSubscriber != 'object') {
+  //     this.scannerPermissionSubscriber = this.scanService.scannerPermission.subscribe((data) => {
+  //       this.scannerPermission = data;
+  //     });
+  //   }
+  //   if (typeof this.isScaningSubscriber != 'object') {
+  //   this.isScaningSubscriber = this.scanService.isScaning.subscribe((data) => {
+  //     this.isScaning = data;
+  //   });
+  // }
+  //   this.scanedTextSubscriber = this.scanService.scanedText.subscribe((data) => {
+  //     if (data) {
+  //       this.scanService.setScaningFlag();
+  //       if (typeof this.scannerPermissionSubscriber == 'object')
+  //         this.scannerPermissionSubscriber.unsubscribe();
+
+  //       this.scanedTextSubscriber.unsubscribe();
+  //       this.searchTerm = data;
+  //       this.searchProduct();
+  //     }
+  //   });
+  //   this.searchTerm = '';
+  //   this.scanService.scanCode();
+  // }
+
+  // hideCamera() {
+  //   this.scanService.setScaningFlag();
+  //  // this.flashIcon = this.scanService.hideCamera(this.isFlashEnable);
+  // }
+  // openFlash() {
+  //   this.isFlashEnable = !this.isFlashEnable;
+  //  // this.flashIcon = this.scanService.openFlash(this.isFlashEnable);
+  // }
+  // openSetting() {
+  //   this.scanService.openSetting();
+  // }
   ionViewWillLeave() {
-    this.scanService.setScaningFlag();
-    if (typeof this.scannerPermissionSubscriber == 'object')
-      this.scannerPermissionSubscriber.unsubscribe();
-    if (typeof this.isScaningSubscriber == 'object')
-      this.isScaningSubscriber.unsubscribe();
-    if (typeof this.scanedTextSubscriber == 'object')
-      this.scanedTextSubscriber.unsubscribe();
+    // this.scanService.setScaningFlag();
+    // if (typeof this.scannerPermissionSubscriber == 'object')
+    //   this.scannerPermissionSubscriber.unsubscribe();
+    // if (typeof this.isScaningSubscriber == 'object')
+    //   this.isScaningSubscriber.unsubscribe();
+    // if (typeof this.scanedTextSubscriber == 'object')
+    //   this.scanedTextSubscriber.unsubscribe();
+
+    //   this.scanService.distroyScaner();
 
       if(typeof this.queryParmSub == 'object')
       this.queryParmSub.unsubscribe();
 
-    this.scanService.distroyScaner();
+      if (typeof this.scannerbarCode == 'object') {
+        this.scanService.emptyText();
+        this.scannerbarCode.unsubscribe();
+        
+      }
 
   }
 }

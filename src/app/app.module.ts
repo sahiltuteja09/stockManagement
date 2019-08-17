@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 //import { TimeAgoPipe } from 'time-ago-pipe';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreAppProvider } from './providers/app';
-import { QRScanner } from '@ionic-native/qr-scanner/ngx';
+//import { QRScanner } from '@ionic-native/qr-scanner/ngx';
 import { ConfigServiceService, loadConfigurations } from 'src/config';
 import {  HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,6 +24,7 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { SharedPipesModule } from './services/shared.module';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,7 +40,8 @@ import { SharedPipesModule } from './services/shared.module';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-     QRScanner,
+     //QRScanner,
+     BarcodeScanner,
     ConfigServiceService,InAppBrowser,Network,AuthenticationService,
     {
       provide: APP_INITIALIZER,

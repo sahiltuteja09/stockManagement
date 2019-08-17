@@ -4,6 +4,7 @@ import { debounceTime } from 'rxjs/operators';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { ActivatedRoute } from '@angular/router';
+import { ScannerService } from 'src/app/providers/scanner.service';
 
 @Component({
   selector: 'app-stockout',
@@ -28,7 +29,14 @@ export class StockoutPage implements OnInit {
   public updatestockdetail: FormGroup;
 
   queryParmSub: any;
+
+  isMobileDevice: boolean = true;
+  defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
+
+  scannerbarCode;
+
   constructor(
+    private scanService: ScannerService,
     private curdService: CurdService,
     private appProvider: CoreAppProvider,
     private route: ActivatedRoute
@@ -45,7 +53,9 @@ export class StockoutPage implements OnInit {
     this.getStockType();
     this.getMerchants();
   }
-
+  ionViewWillEnter() {
+    this.isMobileDevice = this.appProvider.isMobile();
+  }
   ngOnInit() {
     this.searchControl.valueChanges.pipe(debounceTime(2000)).subscribe(value => { this.searching = false; this.searchProduct() });
   }
@@ -187,8 +197,37 @@ export class StockoutPage implements OnInit {
         }
       );
   }
+
+  scanCode(){
+    if (!this.appProvider.isMobile()) { return false; }
+
+      if (typeof this.scannerbarCode != 'object') {
+        this.scannerbarCode = this.scanService.barCodeText.subscribe((data) => {
+          
+          if(data.status){
+
+            this.searchTerm = data.msg;
+         this.searchProduct();
+          }else{
+            if(data.msg != ''){
+              this.appProvider.showToast(data.msg);
+            }
+          }
+  
+        });
+      }
+      this.searchTerm = '';
+      this.scanService.scanBarCode();
+  
+  }
   ionViewWillLeave() {
     if(typeof this.queryParmSub == 'object')
       this.queryParmSub.unsubscribe();
+
+      if (typeof this.scannerbarCode == 'object') {
+        this.scanService.emptyText();
+        this.scannerbarCode.unsubscribe();
+        
+      }
   }
 }

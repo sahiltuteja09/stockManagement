@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 
 @Component({
   selector: 'app-stockin',
@@ -8,7 +7,7 @@ import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 })
 export class StockinPage implements OnInit {
 
-  constructor(private qrScanner: QRScanner) { }
+  constructor() { }
 
   ngOnInit() {
   }

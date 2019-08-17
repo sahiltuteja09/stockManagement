@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
@@ -28,6 +28,8 @@ interface Stock {
 export class AddnewstockPage implements OnInit {
   stock: Stock = <Stock>{};
 
+  @ViewChild('productUnique') productUnique : string;
+
   isLoading: boolean = false;
   croppedImagepath: string = '';
   imageName: string = '';
@@ -35,21 +37,12 @@ export class AddnewstockPage implements OnInit {
   croppedImagepathSubscriber;
   public newstockdetail: FormGroup;
 
-
-
-  isFlashEnable: boolean = false;
-  isScaning: boolean = false;
-  flashIcon: string = 'flash';
-  scannerPermission: boolean = true;
-
-  scannerPermissionSubscriber;
-  isScaningSubscriber;
-  scanedTextSubscriber;
-
   isMobileDevice: boolean = true;
+  scannerbarCode;
 
   routSub: any;
   product_id: number = 0;
+  scanType:string = '';
   constructor(
     private scanService: ScannerService,
     public formBuilder: FormBuilder,
@@ -90,6 +83,7 @@ export class AddnewstockPage implements OnInit {
       this.product_id = +params['product_id'];
 
     });
+    
   }
   ionViewWillEnter() {
     this.isMobileDevice = this.appProvider.isMobile();
@@ -222,78 +216,61 @@ export class AddnewstockPage implements OnInit {
   }
 
 
+scanCode(codeType){
+  if (!this.appProvider.isMobile()) { return false; }
 
-  scanCode(codeType) {
-    if (!this.appProvider.isMobile()) { return false; }
-
-    if (typeof this.scannerPermissionSubscriber != 'object') {
-      this.scannerPermissionSubscriber = this.scanService.scannerPermission.subscribe((data) => {
-        this.scannerPermission = data;
-      });
-    }
-    if (typeof this.isScaningSubscriber != 'object') {
-      this.isScaningSubscriber = this.scanService.isScaning.subscribe((data) => {
-        this.isScaning = data;
-      });
-    }
-    this.scanedTextSubscriber = this.scanService.scanedText.subscribe((data) => {
-      if (data) {
-        this.scanService.setScaningFlag();
-        if (typeof this.scannerPermissionSubscriber == 'object')
-          this.scannerPermissionSubscriber.unsubscribe();
-
-        this.scanedTextSubscriber.unsubscribe();
-        switch (codeType) {
-          case 'product_unique':
-            this.stock.product_unique = data;
-            break;
-          case 'amazon_asin':
-            this.stock.amazon = data;
-            break;
-          case 'flipkart_asin':
-            this.stock.flipkart = data;
-            break;
-          case 'paytm_asin':
-            this.stock.paytm = data;
-            break;
-          case 'other_uid':
-            this.stock.other_uid = data;
-            break;
+this.scanType =  codeType;
+    if (typeof this.scannerbarCode != 'object') {
+      this.scannerbarCode = this.scanService.barCodeText.subscribe((data) => {
+        console.log(data);
+        if(data.status){
+          console.log(this.scanType);
+      switch (this.scanType) {
+            case 'product_unique':
+             this.stock.product_unique = data.msg;
+             //self.productUnique = data;
+              break;
+            case 'amazon_asin':
+              this.stock.amazon = data.msg;
+              break;
+            case 'flipkart_asin':
+              this.stock.flipkart = data.msg;
+              break;
+            case 'paytm_asin':
+              this.stock.paytm = data.msg;
+              break;
+            case 'other_uid':
+              this.stock.other_uid = data.msg;
+              break;
+          }
+          
+        }else{
+          if(data.msg != ''){
+            this.appProvider.showToast(data.msg);
+          }
         }
 
-      }
-    });
-    this.scanService.scanCode();
-  }
+      });
+    }
 
-  hideCamera() {
-    this.scanService.setScaningFlag();
-    this.flashIcon = this.scanService.hideCamera(this.isFlashEnable);
-  }
-  openFlash() {
-    this.isFlashEnable = !this.isFlashEnable;
-    this.flashIcon = this.scanService.openFlash(this.isFlashEnable);
-  }
-  openSetting() {
-    this.scanService.openSetting();
-  }
+    this.scanService.scanBarCode();
+
+}
   ionViewWillLeave() {
-    this.scanService.setScaningFlag();
-    if (typeof this.scannerPermissionSubscriber == 'object')
-      this.scannerPermissionSubscriber.unsubscribe();
-    if (typeof this.isScaningSubscriber == 'object')
-      this.isScaningSubscriber.unsubscribe();
-    if (typeof this.scanedTextSubscriber == 'object')
-      this.scanedTextSubscriber.unsubscribe();
-
     if (typeof this.isLoadingSubscriber == 'object')
       this.isLoadingSubscriber.unsubscribe();
+
     if (typeof this.croppedImagepathSubscriber == 'object')
       this.croppedImagepathSubscriber.unsubscribe();
 
     if (typeof this.routSub == 'object')
       this.routSub.unsubscribe();
-    this.scanService.distroyScaner();
+   
+      if (typeof this.scannerbarCode == 'object') {
+        this.scanService.emptyText();
+        this.scannerbarCode.unsubscribe();
+        
+      }
 
   }
 

@@ -19,17 +19,13 @@
       </ion-input>
 
       <div slot="end" *ngIf="isMobileDevice">
-        <ion-button (click)="scanCode('product_unique')" color="success" shape="round" *ngIf="scannerPermission">
+        <ion-button (click)="scanCode('product_unique')" color="success" shape="round">
           <ion-icon slot="start" name="qr-scanner"></ion-icon>
           Scan
         </ion-button>
       </div>
     </ion-item>
-    <ion-item>
-      <ion-button (click)="openSetting()" color="success" shape="round" *ngIf="!scannerPermission">
-        <ion-icon slot="start" name="settings"></ion-icon> Allow Permission to Scan
-      </ion-button>
-    </ion-item>
+
     <div *ngIf=" f.product_unique.errors && f.product_unique.touched" class="invalid-feedback">
       <div *ngIf="f.product_unique.errors.required">UID field is required</div>
       <div *ngIf="f.product_unique.errors.maxlength">UID cannot be greater than 30 characters.</div>
@@ -98,13 +94,13 @@
     </ion-row>
 
     <ion-row>
-      <ion-col size="6" size-sm>
+      <ion-col size="12" size-sm>
         <ion-item>
           <ion-label position="floating">Amazon ASIN</ion-label>
           <ion-input type="text" formControlName="amazon" [(ngModel)]="stock.amazon" name="amazon">
           </ion-input>
           <div slot="end" *ngIf="isMobileDevice">
-            <ion-button (click)="scanCode('amazon_asin')" color="success" shape="round" *ngIf="scannerPermission">
+            <ion-button (click)="scanCode('amazon_asin')" color="success" shape="round">
               <ion-icon slot="start" name="qr-scanner"></ion-icon>
               Scan
             </ion-button>
@@ -114,13 +110,13 @@
           <div *ngIf="f.amazon.errors.maxlength">Amazon ASIN cannot be greater than 30 characters.</div>
         </div>
       </ion-col>
-      <ion-col size="6" size-sm>
+      <ion-col size="12" size-sm>
         <ion-item>
           <ion-label position="floating">Flipkart FNSKU</ion-label>
           <ion-input type="text" formControlName="flipkart" [(ngModel)]="stock.flipkart" name="flipkart">
           </ion-input>
           <div slot="end" *ngIf="isMobileDevice">
-            <ion-button (click)="scanCode('flipkart_asin')" color="success" shape="round" *ngIf="scannerPermission">
+            <ion-button (click)="scanCode('flipkart_asin')" color="success" shape="round">
               <ion-icon slot="start" name="qr-scanner"></ion-icon>
               Scan
             </ion-button>
@@ -132,13 +128,13 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="6" size-sm>
+      <ion-col size="12" size-sm>
         <ion-item>
           <ion-label position="floating">Paytm SKU</ion-label>
           <ion-input type="text" formControlName="paytm" [(ngModel)]="stock.paytm" name="paytm">
           </ion-input>
           <div slot="end" *ngIf="isMobileDevice">
-            <ion-button (click)="scanCode('paytm_asin')" color="success" shape="round" *ngIf="scannerPermission">
+            <ion-button (click)="scanCode('paytm_asin')" color="success" shape="round" >
               <ion-icon slot="start" name="qr-scanner"></ion-icon>
               Scan
             </ion-button>
@@ -148,13 +144,13 @@
           <div *ngIf="f.paytm.errors.maxlength">Paytm ASIN cannot be greater than 30 characters.</div>
         </div>
       </ion-col>
-      <ion-col size="6" size-sm>
+      <ion-col size="12" size-sm>
         <ion-item>
           <ion-label position="floating">Other UID</ion-label>
           <ion-input type="text" formControlName="other_uid" [(ngModel)]="stock.other_uid" name="other_uid" value="">
           </ion-input>
           <div slot="end" *ngIf="isMobileDevice">
-            <ion-button (click)="scanCode('other_uid')" color="success" shape="round" *ngIf="scannerPermission">
+            <ion-button (click)="scanCode('other_uid')" color="success" shape="round">
               <ion-icon slot="start" name="qr-scanner"></ion-icon>
               Scan
             </ion-button>
@@ -169,7 +165,7 @@
     <ion-button color="success" [disabled]="form.invalid" type="submit" block>
       <span *ngIf="product_id > 0 else addBlock">Update</span>
       <ng-template #addBlock>Add</ng-template>
-      </ion-button>
+    </ion-button>
   </form>
 
 </ion-content>
