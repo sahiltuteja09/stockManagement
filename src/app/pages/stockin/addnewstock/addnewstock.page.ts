@@ -18,6 +18,7 @@ interface Stock {
   product_qty: number;
   purchase_cost: number;
   image: string;
+  product_placed:string
 }
 
 @Component({
@@ -63,9 +64,10 @@ export class AddnewstockPage implements OnInit {
       'paytm': '',
       'product_qty': 0,
       'purchase_cost': 0,
-      'image': ''
+      'image': '',
+      product_placed: ''
     }
-    this.stock.image = 'hello';
+    this.stock.image = '';
     this.newstockdetail = formBuilder.group({
       product_unique: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       purchase_cost: ['', Validators.compose([Validators.maxLength(5), Validators.required])],
@@ -76,7 +78,8 @@ export class AddnewstockPage implements OnInit {
       flipkart: ['', Validators.compose([Validators.maxLength(30)])],
       paytm: ['', Validators.compose([Validators.maxLength(30)])],
       other_uid: ['', Validators.compose([Validators.maxLength(30)])],
-      image: [this.imageName]
+      image: [this.imageName],
+      product_placed:['']
     });
 
     this.routSub = this.route.params.subscribe((params) => {
@@ -114,8 +117,10 @@ export class AddnewstockPage implements OnInit {
                 'paytm': data.ids.paytm,
                 'product_qty': data.data.quantity,
                 'purchase_cost': data.data.purchase_cost,
-                'image': data.data.image
-              },
+                'image': data.data.image,
+                'product_placed': data.data.product_placed
+              }
+              if(data.data.image)
                 this.croppedImagepath = CoreConfigConstant.uploadedPath + data.data.image;
 
             } else {
@@ -166,7 +171,7 @@ export class AddnewstockPage implements OnInit {
                 this.appProvider.showToast(data.data);
                 this.newstockdetail.reset();
                 if(this.product_id > 0){
-                  this.appProvider.goto('addnewstock');
+                  this.appProvider.goto('myproducts');
                 }
                 
               } else {

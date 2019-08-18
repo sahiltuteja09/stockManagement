@@ -78,7 +78,13 @@
                   </ion-select>
                 </ion-item>
               </ion-list>
-              <ion-button color="success" (click)="updateStock(qtyInput.value, result.id,product_status_id.value, marketplace_id.value)" type="submit" block>Update</ion-button>
+              <ion-list>
+                  <ion-item>
+                      <ion-label  position="floating">Enter more information here...</ion-label>
+                    <ion-textarea name="reason" #reason></ion-textarea>
+                  </ion-item>
+                </ion-list>
+              <ion-button color="success" (click)="updateStock(qtyInput.value, result.id,product_status_id.value, marketplace_id.value, reason.value)" type="submit" block>Update</ion-button>
               <ion-button color="danger" type="button" block routerLink="/addnewstock/{{result.id}}">Edit</ion-button>
             </form>
           </ion-col>

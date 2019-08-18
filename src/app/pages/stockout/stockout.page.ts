@@ -123,14 +123,14 @@ export class StockoutPage implements OnInit {
     }, 2000);
   }
 
-  updateStock(quantity, productId, product_status_id, marketplace_id) {
+  updateStock(quantity, productId, product_status_id, marketplace_id, reason) {
 
     if (quantity > 0) {
       if (product_status_id == '') {
         this.appProvider.showToast('Stock type is required.');
         return;
       }
-      let stock = { 'quantity': quantity, 'id': productId, 'product_status_id': product_status_id, 'marketplace_id': marketplace_id, 'stockType': 2 }
+      let stock = { 'quantity': quantity, 'id': productId, 'product_status_id': product_status_id, 'marketplace_id': marketplace_id, 'stockType': 2, 'reason': reason }
       this.appProvider.showLoading().then(loading => {
         loading.present().then(() => {
           this.curdService.postData('updateStock', stock)

@@ -134,14 +134,14 @@ defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7
     }, 2000);
   }
 
-  updateStock(quantity, productId, product_status_id, marketplace_id) {
+  updateStock(quantity, productId, product_status_id, marketplace_id, reason) {
 
     if (quantity > 0) {
       if (product_status_id == '') {
         this.appProvider.showToast('Stock type is required.');
         return;
       }
-      let stock = { 'quantity': quantity, 'id': productId, 'product_status_id': product_status_id, 'marketplace_id': marketplace_id, 'stockType': 1 }
+      let stock = { 'quantity': quantity, 'id': productId, 'product_status_id': product_status_id, 'marketplace_id': marketplace_id, 'stockType': 1, 'reason': reason }
       this.appProvider.showLoading().then(loading => {
         loading.present().then(() => {
           this.curdService.postData('updateStock', stock)
