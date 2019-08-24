@@ -19,7 +19,7 @@ export class ImagesService {
   public isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public croppedImagepath: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  imagefileName = '';
+  imageFileNames = '';
   constructor(
     private appProvider: CoreAppProvider,
     private crop: Crop,
@@ -30,17 +30,33 @@ export class ImagesService {
 
   pickImage() {
     //https://devdactic.com/ionic-4-image-upload-storage/
-    this.imagePicker.requestReadPermission().then(res => {
-      this.imagePicker.getPictures(this.imagePickerOptions).then((results) => {
-
-        if (typeof results != 'string') {
-          for (var i = 0; i < results.length; i++) {
-            this.cropImage(results[i]);
-          }
-        }
-      }, (err) => {
-      });
+let self = this;
+    this.imagePicker.hasReadPermission().then((status) => {
+      console.log('haspermission '+status);
+      if(!status){
+        this.imagePicker.requestReadPermission().then((res) => {
+          console.log('requestReadPermission ' + res);
+        }, (err) => {
+          console.log('Error pickImage image ' + err);
+        });
+      }else{
+        self.getPic();
+      }
     });
+    
+  }
+  getPic(){
+    // solution of  crashing https://github.com/Telerik-Verified-Plugins/ImagePicker/issues/86
+    this.imagePicker.getPictures(this.imagePickerOptions).then((results) => {
+      console.log('results '+results);
+              if (typeof results != 'string') {
+                for (var i = 0; i < results.length; i++) {
+                  this.cropImage(results[i]);
+                }
+              }
+            }, (err) => {
+              console.log('Error pickImage image ' + err);
+            });
   }
 
   cropImage(imgPath) {
@@ -50,7 +66,7 @@ export class ImagesService {
           this.showCroppedImage(newPath.split('?')[0])
         },
         error => {
-          //alert('Error cropping image' + error);
+          console.log('Error cropping image ' + error);
         }
       );
   }
@@ -61,7 +77,7 @@ export class ImagesService {
     var splitPath = copyPath.split('/');
     var imageName = splitPath[splitPath.length - 1];
     var filePath = ImagePath.split(imageName)[0];
-    this.imagefileName = imageName;
+    this.imageFileNames = imageName;
     this.file.readAsDataURL(filePath, imageName).then(base64 => {
       this.croppedImagepath.next(base64);
       this.uploadPic(base64, imageName);
@@ -74,7 +90,7 @@ export class ImagesService {
   }
 
   uploadPic(croppedImagepath, fileName: any) {
-    this.imagefileName = fileName;
+    this.imageFileNames = fileName;
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
         const fileTransfer: FileTransferObject = this.transfer.create();
@@ -103,7 +119,7 @@ export class ImagesService {
   }
 
   imageFileName(){
-    let n = this.imagefileName
+    let n = this.imageFileNames;
     return n;
   }
 }

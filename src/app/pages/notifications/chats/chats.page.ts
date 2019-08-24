@@ -158,6 +158,8 @@ export class ChatsPage implements OnInit {
           error => {
             this.appProvider.showToast(error);
             this.appProvider.dismissLoading();
+            this.activateChatMonitor();
+          this.sending_text = 'SEND';
           },
           () => {
             this.sending_text = 'SEND';

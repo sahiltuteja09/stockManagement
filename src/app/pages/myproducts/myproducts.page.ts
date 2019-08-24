@@ -20,6 +20,9 @@ export class MyproductsPage implements OnInit {
   constructor(private appProvider: CoreAppProvider, private curdService: CurdService) { }
 
   ngOnInit() {
+    
+  }
+  ionViewWillEnter() {
     this.products();
   }
 
@@ -62,7 +65,7 @@ export class MyproductsPage implements OnInit {
 
   doRefresh(event) {
     setTimeout(() => {
-      this.myproducts();
+      this.products();
       event.target.complete();
     }, 2000);
   }

@@ -34,7 +34,7 @@ export class ProductReportPage implements OnInit {
   // for drop down filter
   stockStatus: any = [];
   merchants: any = [];
- 
+ showReason = '';
 
   // for name maping dynamically
 stockmap: any = [];
@@ -228,6 +228,14 @@ merchantmap:any = [];
         );
       infiniteScroll.target.complete();
     }, 2000);
+  }
+
+  showHide(pid){
+    if(this.showReason != '') 
+    this.showReason = '';
+    else
+    this.showReason = pid;
+
   }
 
 }

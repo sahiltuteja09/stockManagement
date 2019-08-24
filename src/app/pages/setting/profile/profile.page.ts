@@ -133,12 +133,18 @@ export class ProfilePage implements OnInit {
         if (this.imageName) {
           this.profile.image = this.imageName;
           console.log('this.imageName if ' + this.imageName);
+
+         
+          if (typeof this.croppedImagepathSubscriber == 'object'){
+            this.isLoading = false;
+            this.croppedImagepathSubscriber.unsubscribe();
+            this.isLoadingSubscriber.unsubscribe();
+          }
+            
         }
 
         console.log('this.imageName ' + this.imageName);
-        this.isLoadingSubscriber.unsubscribe();
-        if (typeof this.croppedImagepathSubscriber == 'object')
-          this.croppedImagepathSubscriber.unsubscribe();
+       
       });
     }
 

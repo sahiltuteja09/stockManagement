@@ -21,7 +21,7 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'Products',
+      title: 'My Products',
       url: '/myproducts',
       icon: 'list'
     },
@@ -106,6 +106,8 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
+      // set status bar to color
+this.statusBar.backgroundColorByHexString('#3880ff');
       this.splashScreen.hide();
       this.exitApp() ;
       setTimeout(() => {

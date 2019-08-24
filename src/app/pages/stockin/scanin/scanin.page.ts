@@ -155,6 +155,8 @@ defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7
               }
               setTimeout(() => {
                 this.appProvider.dismissLoading();
+                if (data.status)
+                this.appProvider.goto('myproducts');
               }, 2000);
 
             },

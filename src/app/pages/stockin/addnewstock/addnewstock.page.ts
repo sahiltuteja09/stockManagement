@@ -170,15 +170,16 @@ export class AddnewstockPage implements OnInit {
               if (data.status) {
                 this.appProvider.showToast(data.data);
                 this.newstockdetail.reset();
-                if(this.product_id > 0){
-                  this.appProvider.goto('myproducts');
-                }
+                
                 
               } else {
                 this.appProvider.showToast(data.msg);
               }
               setTimeout(() => {
+                
                 this.appProvider.dismissLoading();
+                if (data.status)
+                this.appProvider.goto('myproducts');
               }, 2000);
 
             },
@@ -195,29 +196,33 @@ export class AddnewstockPage implements OnInit {
   }
 
   pickImage() {
-
+    this.uploadImage.pickImage();
     if (typeof this.isLoadingSubscriber != 'object') {
       this.isLoadingSubscriber = this.uploadImage.isLoading.subscribe((data) => {
+        console.log('isLoadingSubscriber '+data);
         this.isLoading = data;
       });
     }
     if (typeof this.croppedImagepathSubscriber != 'object') {
       this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
+        console.log('croppedImagepathSubscriber '+data);
         this.croppedImagepath = data;
         this.imageName = this.uploadImage.imageFileName();
         if (this.imageName) {
           this.stock.image = this.imageName;
           console.log('this.imageName if ' + this.imageName);
+          if (typeof this.croppedImagepathSubscriber == 'object'){
+            this.isLoading = false;
+            this.croppedImagepathSubscriber.unsubscribe();
+            this.isLoadingSubscriber.unsubscribe();
+          }
         }
 
         console.log('this.imageName ' + this.imageName);
-        this.isLoadingSubscriber.unsubscribe();
-        if (typeof this.croppedImagepathSubscriber == 'object')
-          this.croppedImagepathSubscriber.unsubscribe();
       });
     }
 
-    this.uploadImage.pickImage();
+    
   }
 
 

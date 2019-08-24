@@ -144,6 +144,8 @@ export class StockoutPage implements OnInit {
               }
               setTimeout(() => {
                 this.appProvider.dismissLoading();
+                if (data.status)
+                this.appProvider.goto('myproducts');
               }, 2000);
 
             },
