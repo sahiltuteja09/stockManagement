@@ -37,8 +37,7 @@
         </ion-item>
         <ion-row>
             <ion-col size="12" size-sm>
-              <p>
-                {{myquote.detail}}
+              <p [innerHTML]="myquote.detail | safehtml">
               </p>
             </ion-col>
           </ion-row>

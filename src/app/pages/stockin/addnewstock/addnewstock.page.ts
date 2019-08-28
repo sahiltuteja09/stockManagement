@@ -65,7 +65,7 @@ export class AddnewstockPage implements OnInit {
       'product_qty': 0,
       'purchase_cost': 0,
       'image': '',
-      product_placed: ''
+      'product_placed': ''
     }
     this.stock.image = '';
     this.newstockdetail = formBuilder.group({
@@ -179,7 +179,7 @@ export class AddnewstockPage implements OnInit {
                 
                 this.appProvider.dismissLoading();
                 if (data.status)
-                this.appProvider.goto('myproducts');
+                this.appProvider.goto('myproducts', 1);
               }, 2000);
 
             },

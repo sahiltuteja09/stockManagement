@@ -26,10 +26,10 @@
         <ion-card>
           <ion-item>
             <ion-thumbnail slot="start">
-              <img [src]="product.image ? product.image : defaultImage">
+              <img [src]="product.image ? img_base+product.image : defaultImage">
             </ion-thumbnail>
             <ion-label>
-              <p>{{product.title}}</p>
+              <p><ion-icon name="create" routerLink="/addnewstock/{{product.id}}"></ion-icon> {{product.title}} </p>
               <ion-row>
               <ion-col size="9" size-sm align-items-end>
                 <small class="deal_price">
@@ -46,12 +46,6 @@
                 </small>
               </ion-col>
             </ion-row>
-
-            <ion-col size="3" size-sm>
-              <ion-button routerLink="/addnewstock/{{product.id}}" float-right color="success" shape="round" size="small">
-                <ion-icon name="add"></ion-icon> Update
-              </ion-button>
-            </ion-col>
               <ion-col size="3" size-sm>
                 <ion-button (click)="goto('scanin',product)" float-right color="tertiary" shape="round" size="small">
                   <ion-icon name="add"></ion-icon> Stock in
@@ -59,7 +53,7 @@
               </ion-col>
               <ion-col size="3" size-sm>
                 <ion-button (click)="goto('stockout',product)" float-right color="danger" shape="round" size="small">
-                  <ion-icon name="add"></ion-icon> Stock out
+                  <ion-icon name="remove-circle-outline"></ion-icon> Stock out
                 </ion-button>
               </ion-col>
               
@@ -68,8 +62,8 @@
           </ion-item>
           <ion-row>
               <ion-col size="12" size-sm>
-                <p>
-                  {{product.description}}
+                <p [innerHTML]="product.description | safehtml">
+              
                 </p>
               </ion-col>
             </ion-row>

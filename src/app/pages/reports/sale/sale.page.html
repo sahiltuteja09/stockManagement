@@ -69,7 +69,7 @@
         <ion-card>
             <ion-item>
               <ion-thumbnail slot="start">
-                <img [src]="product_report.image">
+                <img [src]="product_report.image ? img_base+product_report.image  : defaultImage">
               </ion-thumbnail>
               <ion-label>
                 <p>{{product_report.title}}</p>

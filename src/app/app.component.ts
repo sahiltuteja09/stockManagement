@@ -77,6 +77,7 @@ export class AppComponent {
     router.events.subscribe((event: Event) => {
       this.loggedin = this.authenticationService.isLoggedin();
       if (event instanceof NavigationStart) {
+        
         // Show loading indicator
         let isOnline = this.appProvider.isOnline();
     console.log('isOnline app ' + isOnline);
@@ -88,6 +89,14 @@ export class AppComponent {
     console.log('isOnline app hide ' + isOnline);
 
     let routePage = this.router.routerState.snapshot.url;
+
+// if(routePage != '/login' && routePage != '/register'){
+//   this.loggedin = this.authenticationService.isLoggedin();
+//   console.log('in if routePage '+this.loggedin );
+//   if(!this.loggedin)
+//   this.appProvider.goto('login', 1);
+// }
+
         console.log('routePage => '+routePage);
         if(routePage != '/no-internet' && !isOnline){
           this.router.navigate(['/no-internet'], { replaceUrl: true });
@@ -105,6 +114,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.statusBar.overlaysWebView(false);
       this.statusBar.styleDefault();
       // set status bar to color
 this.statusBar.backgroundColorByHexString('#3880ff');

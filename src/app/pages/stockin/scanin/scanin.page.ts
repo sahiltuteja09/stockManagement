@@ -5,6 +5,7 @@ import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { ScannerService } from 'src/app/providers/scanner.service';
 import { ActivatedRoute } from '@angular/router';
+import { CoreConfigConstant } from 'src/configconstants';
 
 @Component({
   selector: 'app-scanin',
@@ -15,6 +16,7 @@ export class ScaninPage implements OnInit {
 
   isMobileDevice: boolean = true;
 defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
+img_base: string = CoreConfigConstant.uploadedPath;
   searchTerm: string = "";
   searching: boolean = false;
   searchControl: FormControl;
@@ -165,6 +167,7 @@ defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7
                 this.appProvider.dismissLoading();
               },
               () => {
+                console.log('complete');
               }
             );
         });

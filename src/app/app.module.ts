@@ -25,6 +25,7 @@ import { File } from '@ionic-native/file/ngx';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { SharedPipesModule } from './services/shared.module';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,7 +43,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
      //QRScanner,
      BarcodeScanner,
-    ConfigServiceService,InAppBrowser,Network,AuthenticationService,
+    ConfigServiceService,InAppBrowser,Network,AuthenticationService,LocalNotifications,
     {
       provide: APP_INITIALIZER,
       useFactory: loadConfigurations,

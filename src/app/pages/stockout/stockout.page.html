@@ -40,7 +40,7 @@
             <form [formGroup]="updatestockdetail">
               <ion-item lines="none">
                 <ion-thumbnail>
-                  <img src="{{result.image == '' ? defaultImage : result.image}}">
+                  <img src="{{result.image == '' ? defaultImage : img_base+result.image}}">
                 </ion-thumbnail>
                 <ion-item lines="none">
                   <p>{{result.title}}</p>

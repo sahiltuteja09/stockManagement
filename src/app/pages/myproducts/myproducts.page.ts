@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
+import { CoreConfigConstant } from 'src/configconstants';
 
 @Component({
   selector: 'app-myproducts',
@@ -17,6 +18,7 @@ export class MyproductsPage implements OnInit {
   totalDamage:any= [];
   noDataFound: string = 'Fetching records...';
   defaultImage: string = 'http://placehold.it/300x200';
+  img_base: string = CoreConfigConstant.uploadedPath;
   constructor(private appProvider: CoreAppProvider, private curdService: CurdService) { }
 
   ngOnInit() {
@@ -45,7 +47,6 @@ export class MyproductsPage implements OnInit {
               this.totalReturn = data.total_return;
               this.totalLoss = data.total_loss;
               this.totalDamage = data.total_damage;
-              console.log(data.total_sold);
               this.page = this.page + 1;
             }
             this.appProvider.dismissLoading();

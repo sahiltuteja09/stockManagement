@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
+import { CoreConfigConstant } from 'src/configconstants';
 
 @Component({
   selector: 'app-sale',
@@ -22,6 +23,8 @@ export class SalePage implements OnInit {
   stockStatus: any = [];
   isStockStatusFetched: boolean = false;
   merchants: any = [];
+  defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
+  img_base: string = CoreConfigConstant.uploadedPath;
   constructor(private appProvider: CoreAppProvider, private curdService: CurdService) { }
 
   ngOnInit() {

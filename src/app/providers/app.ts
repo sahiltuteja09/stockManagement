@@ -108,7 +108,8 @@ export class CoreAppProvider {
             message: 'Please wait...',
             translucent: true,
             keyboardClose: true,
-            cssClass: 'custom-class custom-loading'
+            cssClass: 'custom-class custom-loading',
+            duration: 25000
         });
     }
 

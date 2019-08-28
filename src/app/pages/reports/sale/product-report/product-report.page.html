@@ -16,16 +16,21 @@
       <ion-card *ngIf="first">
         <ion-item>
           <ion-thumbnail slot="start">
-            <img [src]="product_report.image">
+            <img [src]="product_report.image ? img_base+product_report.image : defaultImage">
           </ion-thumbnail>
           <ion-label>
             <p>{{product_report.title}}</p>
+            <ion-col size="3" size-sm align-items-end>
+              <small class="deal_price"><b>Remaining:- </b>
+                <ion-text color="primary"> {{product_report.remaining_quantity}}</ion-text>
+              </small>
+            </ion-col>
             <ion-col size="3" size-sm align-items-end>
               <small class="deal_price"><b>Product added on:- </b>
                 <ion-text color="primary"> {{product_report.addedDate | timeAgo}}</ion-text>
               </small>
             </ion-col>
-            <ion-col size="6" size-sm>
+            <ion-col size="3" size-sm>
 
             </ion-col>
           </ion-label>
@@ -142,7 +147,7 @@
             </ion-row>
             <ion-row *ngIf="showReason == product_report.id">
               <ion-col size="12">
-{{product_report.reason}}
+                  <div [innerHTML]="product_report.reason | safehtml"></div>
               </ion-col>
             </ion-row>
           </ion-grid>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
+import { CoreConfigConstant } from 'src/configconstants';
 
 @Component({
   selector: 'app-product-report',
@@ -35,6 +36,9 @@ export class ProductReportPage implements OnInit {
   stockStatus: any = [];
   merchants: any = [];
  showReason = '';
+
+ defaultImage: string = 'http://placehold.it/300x200';
+ img_base: string = CoreConfigConstant.uploadedPath;
 
   // for name maping dynamically
 stockmap: any = [];

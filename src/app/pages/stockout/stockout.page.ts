@@ -5,6 +5,7 @@ import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { ActivatedRoute } from '@angular/router';
 import { ScannerService } from 'src/app/providers/scanner.service';
+import { CoreConfigConstant } from 'src/configconstants';
 
 @Component({
   selector: 'app-stockout',
@@ -32,6 +33,7 @@ export class StockoutPage implements OnInit {
 
   isMobileDevice: boolean = true;
   defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
+  img_base: string = CoreConfigConstant.uploadedPath;
 
   scannerbarCode;
 
