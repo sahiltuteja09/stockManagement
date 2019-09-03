@@ -46,6 +46,7 @@ export class AuthenticationService {
           .subscribe((user: any) => {
             if (user.status) {
               if (this.generateToken(loginData.appid,loginData.deviceId, user.data.id) == user.data.token) {
+                this.appProvider.dismissLoading();
                  this.saveUser(user.data);
               }
             }else{
@@ -112,7 +113,7 @@ export class AuthenticationService {
       this.currentUserSubject.next(user);
       this.appProvider.goto('home', 1);
     }
-    return user;
+    //return user;
   }
   updateUser(user) {
     localStorage.setItem('currentUser', JSON.stringify(user));

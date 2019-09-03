@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, Events } from '@ionic/angular';
+import { Platform, Events, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ConfigServiceService } from 'src/config';
@@ -71,36 +71,38 @@ export class AppComponent {
     private authenticationService: AuthenticationService,
     private router: Router,
     private location: Location,
-   
+    public menuCtrl: MenuController
   ) {
     this.initializeApp();
     router.events.subscribe((event: Event) => {
-      this.loggedin = this.authenticationService.isLoggedin();
+     // this.loggedin = this.authenticationService.isLoggedin();
+     this.menuControl();
       if (event instanceof NavigationStart) {
         
         // Show loading indicator
         let isOnline = this.appProvider.isOnline();
-    console.log('isOnline app ' + isOnline);
+        this.menuControl();
+      console.log('isOnline app ' + isOnline);
       }
 
       if (event instanceof NavigationEnd) {
         // Hide loading indicator
         let isOnline = this.appProvider.isOnline();
+        this.menuControl();
     console.log('isOnline app hide ' + isOnline);
 
     let routePage = this.router.routerState.snapshot.url;
-
-// if(routePage != '/login' && routePage != '/register'){
-//   this.loggedin = this.authenticationService.isLoggedin();
-//   console.log('in if routePage '+this.loggedin );
-//   if(!this.loggedin)
-//   this.appProvider.goto('login', 1);
-// }
-
         console.log('routePage => '+routePage);
         if(routePage != '/no-internet' && !isOnline){
           this.router.navigate(['/no-internet'], { replaceUrl: true });
         }
+
+        if(routePage == '/login' || routePage == '/register' || routePage == '/forgot' || routePage == '/no-internet'){
+          this.menuCtrl.enable(false);
+        }else{
+          this.menuCtrl.enable(true);
+        }
+
       }
 
       if (event instanceof NavigationError) {
@@ -117,7 +119,7 @@ export class AppComponent {
       this.statusBar.overlaysWebView(false);
       this.statusBar.styleDefault();
       // set status bar to color
-this.statusBar.backgroundColorByHexString('#3880ff');
+      this.statusBar.backgroundColorByHexString('#3880ff');
       this.splashScreen.hide();
       this.exitApp() ;
       setTimeout(() => {

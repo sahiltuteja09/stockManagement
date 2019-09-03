@@ -26,9 +26,9 @@ export class CoreAppProvider {
 
     goto(page: string, removeHistory?: any) {
         if (removeHistory) {
-            this.router.navigate([page], { replaceUrl: true });
+            this.router.navigate(['/'+page], { replaceUrl: true });
         } else {
-            this.router.navigate([page]);
+            this.router.navigate(['/'+page]);
         }
 
     }
@@ -85,6 +85,12 @@ export class CoreAppProvider {
     isMobile(): boolean {
         return this.platform.is('cordova');
     }
+    isAndroid(): boolean {
+        return this.platform.is('android');
+    }
+    isIos(): boolean {
+        return this.platform.is('ios');
+    }
 
     /**
      * Checks if the current window is wider than a mobile.
@@ -103,6 +109,7 @@ export class CoreAppProvider {
         return this.isOnline() && !this.isNetworkAccessLimited();
     }
     async showLoading() {
+        this.dismissLoading();
         this.isLoading = true;
         return await this.loadingController.create({
             message: 'Please wait...',

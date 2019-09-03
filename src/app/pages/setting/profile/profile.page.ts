@@ -53,6 +53,7 @@ export class ProfilePage implements OnInit {
   ) {
 
     const currentUser = this.authenticationService.currentUserValue;
+    if(currentUser == undefined) return;
     this.userID = currentUser.id;
 
     this.username = currentUser.username;

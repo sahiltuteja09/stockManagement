@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CoreConfigConstant } from '../../../../configconstants';
 import { AuthenticationService } from '../authentication.service';
+import { MenuController } from '@ionic/angular';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -11,14 +12,12 @@ export class LoginPage implements OnInit {
   public loginDetails: FormGroup;
   submitAttempt: boolean = false;
   appId: string;
-  constructor(public formBuilder: FormBuilder, private authenticationService: AuthenticationService) {
-    
-
-    this.appId = CoreConfigConstant.appID;
+  constructor(public formBuilder: FormBuilder, private authenticationService: AuthenticationService,  menu: MenuController) {
+    //this.appId = CoreConfigConstant.appID;
     this.loginDetails = formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
       password: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(20)])],
-      appid: [this.appId]
+      appid: [CoreConfigConstant.appID]
     });
   }
 
@@ -26,6 +25,8 @@ export class LoginPage implements OnInit {
     
   }
   ionViewDidEnter(){
+    this.loginDetails.controls["email"].setValue('');
+    this.loginDetails.controls["password"].setValue('');
 // check login
 this.authenticationService.isLoggedin('home');
   }
@@ -45,6 +46,10 @@ this.authenticationService.isLoggedin('home');
      
       //this.f.email.value, this.f.password.value
     }
+  }
+
+  ionViewWillLeave(){
+
   }
 
 }

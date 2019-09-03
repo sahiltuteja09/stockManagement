@@ -1,5 +1,5 @@
 export class CoreConfigConstant {
-   // static apiUrl = 'http://localhost/personal/php-stockmanagement/api/v1/'; 
+   //static apiUrl = 'http://localhost/personal/php-stockmanagement/api/v1/'; 
     static apiUrl = 'http://viaraaa.com/apis/api/v1/'; 
     static uploadedPath = 'http://viaraaa.com/apis/uploads/'; 
     static appID = 'stockmanagementcom';

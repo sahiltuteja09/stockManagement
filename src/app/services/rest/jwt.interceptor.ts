@@ -17,7 +17,8 @@ export class JwtInterceptor implements HttpInterceptor {
                 setHeaders: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    Authorization: `${currentUser.token}`
+                    Authorization: `${currentUser.token}`,
+                    'appid': `${CoreConfigConstant.appID}`
                 }
             });
         }else{
@@ -25,7 +26,8 @@ export class JwtInterceptor implements HttpInterceptor {
                 setHeaders: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    Authorization: `${CoreConfigConstant.token}`
+                    Authorization: `${CoreConfigConstant.token}`,
+                    'appid': `${CoreConfigConstant.appID}`
                 }
             });
         }
