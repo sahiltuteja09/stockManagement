@@ -15,7 +15,7 @@
         <form>
           <ion-item lines="none">
             <ion-thumbnail>
-              <img src="{{result.data.image == '' ? 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y' : result.data.image }}">
+              <img src="{{ result.data.image == '' ? 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y' : img_base + result.data.image }}">
             </ion-thumbnail>
             <ion-item lines="none">
               <p>{{result.data.title}}</p>

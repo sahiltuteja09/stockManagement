@@ -26,6 +26,11 @@ export class AppComponent {
       icon: 'list'
     },
     {
+      title: 'My Purchases',
+      url: '/mypurchases',
+      icon: 'list'
+    },
+    {
       title: 'Stock In',
       url: '/stockin',
       icon: 'list'
@@ -35,6 +40,7 @@ export class AppComponent {
       url: '/stockout',
       icon: 'list'
     },
+    
     {
       title: 'Reports',
       url: '/sale',

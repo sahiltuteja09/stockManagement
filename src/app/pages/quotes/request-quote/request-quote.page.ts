@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { ActivatedRoute } from '@angular/router';
+import { CoreConfigConstant } from 'src/configconstants';
 
 @Component({
   selector: 'app-request-quote',
@@ -13,6 +14,7 @@ export class RequestQuotePage implements OnInit {
   comment: any = '';
   product_id: string = '';
   user_id: string = '';
+  img_base: string = CoreConfigConstant.uploadedPath;
   constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider, private route: ActivatedRoute

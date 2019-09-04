@@ -26,6 +26,7 @@ import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { SharedPipesModule } from './services/shared.module';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { ImageModalPageModule } from './pages/image-modal/image-modal.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,7 +36,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    SharedPipesModule
+    SharedPipesModule,
+    ImageModalPageModule
   ],
   providers: [
     StatusBar,

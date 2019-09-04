@@ -47,6 +47,11 @@ const routes: Routes = [
   { path: 'requestbyotherquotes', loadChildren: './pages/quotes/requestbyotherquotes/requestbyotherquotes.module#RequestbyotherquotesPageModule', canActivate: [AuthguardService] },
   { path: 'myproducts', loadChildren: './pages/myproducts/myproducts.module#MyproductsPageModule', canActivate: [AuthguardService] },
   { path: 'no-internet', loadChildren: './pages/no-internet/no-internet.module#NoInternetPageModule' },
+  { path: 'purchases', loadChildren: './pages/purchases/purchases.module#PurchasesPageModule' },
+  { path: 'purchases/:purchase_id', loadChildren: './pages/purchases/purchases.module#PurchasesPageModule' },  { path: 'mypurchases', loadChildren: './pages/purchases/mypurchases/mypurchases.module#MypurchasesPageModule' },
+  { path: 'image-modal', loadChildren: './pages/image-modal/image-modal.module#ImageModalPageModule' },
+
+
   
 ];
 
