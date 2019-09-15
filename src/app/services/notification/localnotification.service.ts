@@ -8,17 +8,17 @@ import { CurdService } from '../rest/curd.service';
 })
 export class LocalnotificationService {
 
-  notificationSound:string = 'file://assets/sound/bell.mp3';
+  notificationSound: string = 'file://assets/sound/bell.mp3';
   constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider,
     private localNotifications: LocalNotifications
   ) {
-    if(this.appProvider.isMobile()){
-      this.notificationSound = this.appProvider.isIos() ? 'file://src/assets/sound/notification.m4r': 'file://src/assets/sound/bell.mp3';
+    if (this.appProvider.isMobile()) {
+      this.notificationSound = this.appProvider.isIos() ? 'file://src/assets/sound/notification.m4r' : 'file://src/assets/sound/bell.mp3';
     }
-    
-   }
+
+  }
 
   stockReminder() {
     if (this.appProvider.isMobile()) {
@@ -120,7 +120,7 @@ export class LocalnotificationService {
   }
 
   stockQuantityNotification() {
-    if (!this.appProvider.isMobile()) {return;}
+    if (!this.appProvider.isMobile()) { return; }
     this.curdService.getData('quantityLow')
       .subscribe((data: any) => {
 
@@ -128,7 +128,7 @@ export class LocalnotificationService {
 
           if (!isScheduled && data.status) {
             this.setQuantityReminder(data, 0);
-          }else if (isScheduled && data.status){
+          } else if (isScheduled && data.status) {
             this.setQuantityReminder(data, 1);
           }
 
@@ -164,16 +164,28 @@ export class LocalnotificationService {
           sound: this.notificationSound
         }
       ];
-      if(update == 0){
-        console.log('in insert');
-        this.localNotifications.schedule(notifications);
-      }else{
-        console.log('in updates');
-        this.localNotifications.update(notifications[0]);
-        this.localNotifications.update(notifications[1]);
-      }
-    
+    if (update == 0) {
+      console.log('in insert');
+      this.localNotifications.schedule(notifications);
+    } else {
+      console.log('in updates');
+      this.localNotifications.update(notifications[0]);
+      this.localNotifications.update(notifications[1]);
+    }
+  }
 
+  sendNotification(msg) {
+    if (this.appProvider.isMobile()) {
+      // Schedule a single notification
+      this.localNotifications.schedule({
+        id: 101,
+        text: msg,
+        vibrate: true,
+        foreground: true,
+        sound: this.notificationSound,
+        trigger: { count: 1 }
+      });
+    }
   }
 
 }

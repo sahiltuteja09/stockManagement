@@ -16,6 +16,39 @@
 
 
 <ion-content>
+
+    <ion-row>
+        <ion-col size="6" size-sm align-items-start>
+            <ion-item>
+                <ion-label position="floating">Start</ion-label>
+                <ion-datetime displayFormat="DD-MM-YYYY" [(ngModel)]="startDate"></ion-datetime>
+              </ion-item>
+        </ion-col>
+        <ion-col size="6" size-sm align-items-start>
+            <ion-item>
+                <ion-label position="floating">End</ion-label>
+                <ion-datetime displayFormat="DD-MM-YYYY" [(ngModel)]="endDate"></ion-datetime>
+              </ion-item>
+        </ion-col>
+        <ion-col size="5" size-sm align-items-start>
+            <ion-item>
+                <ion-label position="floating">Keyword
+                </ion-label>
+                <ion-input type="text" [(ngModel)]="keyword" name="keyword"></ion-input>
+              </ion-item>
+        </ion-col>
+      
+        <ion-col size="7" size-sm align-items-start>
+            <ion-list>
+          <ion-button color="success" (click)="filterReport()">
+              <ion-icon slot="start" name="search"></ion-icon>
+            GO</ion-button>
+            <a color="success" (click)="clearFileter()">
+              Clear Filter</a>
+          </ion-list>
+      </ion-col>
+    </ion-row>
+
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
       refreshingText="Refreshing...">

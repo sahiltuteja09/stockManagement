@@ -7,6 +7,7 @@ import { Events } from '@ionic/angular';
 import { interval } from 'rxjs';
 import { CoreConfigConstant } from 'src/configconstants';
 import { LocalnotificationService } from 'src/app/services/notification/localnotification.service';
+import { OnesignalnotificationService } from 'src/app/services/notification/onesignalnotification.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -31,7 +32,8 @@ export class HomePage {
     private route: ActivatedRoute,
     public events: Events,
     private authenticationService: AuthenticationService,
-    private localNotification: LocalnotificationService
+    private localNotification: LocalnotificationService,
+    private oneSignalService: OnesignalnotificationService
   ) {
 
     const currentUser = this.authenticationService.currentUserValue;
@@ -46,6 +48,7 @@ export class HomePage {
   }
 
   ngOnInit() {
+    this.oneSignalService.initOneSignalPush();
     this.stockLatest();
   }
 

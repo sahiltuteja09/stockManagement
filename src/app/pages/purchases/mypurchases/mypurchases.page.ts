@@ -19,6 +19,12 @@ export class MypurchasesPage implements OnInit {
   defaultImage: string = 'http://placehold.it/300x200';
   img_base: string = CoreConfigConstant.uploadedPath;
   isFiltered = false;
+
+  startDate:string;
+  endDate: any;
+  startDate_date_format:string = '';
+  endDate_date_format:string = '';
+  keyword:string = '';
   constructor(
     private appProvider: CoreAppProvider, 
     private curdService: CurdService,
@@ -44,6 +50,7 @@ export class MypurchasesPage implements OnInit {
   }
 
   purchases() {
+    this.isFiltered = false;
     this.mypurchases = [];
     this.page = 1;
     this.appProvider.showLoading().then(loading => {
@@ -70,6 +77,66 @@ export class MypurchasesPage implements OnInit {
       });
     });
   }
+  clearFileter(){
+    this.isFiltered = false;
+    this.startDate= '';
+    this.endDate= '';
+    this.keyword= '';
+    this.purchases();
+  }
+  filterReport() {
+    this.mypurchases = [];
+    this.isFiltered = true;
+    this.page = 1;
+    let parameter = this.formatData();
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        this.curdService.getData('filterBillReport', parameter)
+          .subscribe((data: any) => {
+
+            if (data.status == false) {
+              this.appProvider.showToast(data.msg);
+              this.noDataFound = data.msg;
+            } else {
+              this.mypurchases = data;
+              this.lifeTimePurchase = data.totalcost;
+              this.page = this.page + 1;
+            }
+            setTimeout(() => {
+              this.appProvider.dismissLoading();
+            }, 2000);
+
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            },
+            () => {
+            }
+          );
+      });
+    });
+  }
+  formatData(){
+    if (this.startDate) {
+      var startdate = new Date(this.startDate);
+      this.startDate_date_format = startdate.getFullYear() + '-' + (startdate.getMonth() < 10 ? '0' + ((startdate.getMonth()) * 1 + 1) : ((startdate.getMonth()) * 1 + 1)) + '-' + (startdate.getDate() < 10 ? '0' + startdate.getDate() : startdate.getDate());
+    }else{
+     // this.appProvider.showToast('The start date field is required.');
+    //  return false;
+    }
+
+    if (this.endDate) {
+      var enddate = new Date(this.endDate);
+      this.endDate_date_format = enddate.getFullYear() + '-' + (enddate.getMonth() < 10 ? '0' + ((enddate.getMonth()) * 1 + 1) : ((enddate.getMonth()) * 1 + 1)) + '-' + (enddate.getDate() < 10 ? '0' + enddate.getDate() : enddate.getDate());
+    }else{
+     // this.appProvider.showToast('The end date field is required.');
+   //   return false;
+    }
+
+    let parameter = { 'fromDate': this.startDate_date_format, 'toDate': this.endDate_date_format, 'keyword': this.keyword, 'page':this.page };
+    return parameter;
+  }
   goto(page,product) {
 
     this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id} });
@@ -77,15 +144,26 @@ export class MypurchasesPage implements OnInit {
 
   doRefresh(event) {
     setTimeout(() => {
-      this.purchases();
+      if(this.isFiltered){
+        this.filterReport();
+      }else{
+        this.purchases();
+      }
+      
       event.target.complete();
     }, 2000);
   }
   doInfinite(infiniteScroll) {
 
     setTimeout(() => {
-      let param = { 'page': this.page };
-      this.curdService.getData('myProducts', param)
+      let param:any = { 'page': this.page };
+      let apiMethod = 'myPurchases';
+
+      if(this.isFiltered){
+        apiMethod = 'filterBillReport';
+        param = this.formatData();
+      }
+      this.curdService.getData(apiMethod, param)
         .subscribe(
           (result: any) => {
             if (result.status == false) {

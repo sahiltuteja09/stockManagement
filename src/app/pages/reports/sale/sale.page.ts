@@ -25,15 +25,14 @@ export class SalePage implements OnInit {
   merchants: any = [];
   defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
   img_base: string = CoreConfigConstant.uploadedPath;
+  page: number = 1;
   constructor(private appProvider: CoreAppProvider, private curdService: CurdService) { }
 
   ngOnInit() {
     this.getStockType();
     this.getMerchants();
   }
-  filterReport() {
-    this.reportData = [];
-    
+  formatDate(){
     if (this.startDate) {
       var startdate = new Date(this.startDate);
       this.startDate_date_format = startdate.getFullYear() + '-' + (startdate.getMonth() < 10 ? '0' + ((startdate.getMonth()) * 1 + 1) : ((startdate.getMonth()) * 1 + 1)) + '-' + (startdate.getDate() < 10 ? '0' + startdate.getDate() : startdate.getDate());
@@ -50,7 +49,16 @@ export class SalePage implements OnInit {
       return false;
     }
 
-    let parameter = { 'fromDate': this.startDate_date_format, 'toDate': this.endDate_date_format, 'stockType': this.stockType, 'merchant': this.merchant };
+    let parameter = { 'fromDate': this.startDate_date_format, 'toDate': this.endDate_date_format, 'stockType': this.stockType, 'merchant': this.merchant, 'page':this.page };
+  return parameter;
+  }
+  filterReport() {
+    this.page = 1;
+    this.reportData = [];
+    let parameter= this.formatDate();
+  if(!parameter){
+return;
+  }  
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
         this.curdService.postData('filterReport', parameter)
@@ -61,6 +69,7 @@ export class SalePage implements OnInit {
               this.noDataFound = data.msg;
             } else {
               this.reportData = data;
+              this.page = this.page+1;
             }
             setTimeout(() => {
               this.appProvider.dismissLoading();
@@ -77,6 +86,34 @@ export class SalePage implements OnInit {
       });
     });
   }
+
+  doInfinite(infiniteScroll) {
+
+    setTimeout(() => {
+      let param:any = this.formatDate();
+      let apiMethod = 'filterReport';
+
+      this.curdService.postData(apiMethod, param)
+        .subscribe(
+          (result: any) => {
+            if (result.status == false) {
+              // no product found
+              this.noDataFound = result.msg;
+            } else {
+              for (let i = 0; i < result.data.length; i++) {
+                this.reportData.data.push(result.data[i]);
+              }
+              this.page = this.page + 1;
+            }
+          },
+          error => {
+            this.appProvider.showToast(error);
+          }
+        );
+      infiniteScroll.target.complete();
+    }, 2000);
+  }
+
   getStockType() {
     this.curdService.getData('getProductStatus')
       .subscribe(

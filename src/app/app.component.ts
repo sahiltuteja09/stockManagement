@@ -26,7 +26,7 @@ export class AppComponent {
       icon: 'list'
     },
     {
-      title: 'My Purchases',
+      title: 'My Bills',
       url: '/mypurchases',
       icon: 'list'
     },
@@ -103,7 +103,7 @@ export class AppComponent {
           this.router.navigate(['/no-internet'], { replaceUrl: true });
         }
 
-        if(routePage == '/login' || routePage == '/register' || routePage == '/forgot' || routePage == '/no-internet'){
+        if(routePage == '/login' || routePage == '/login?returnUrl=%2Fhome' || routePage == '/register' || routePage == '/forgot' || routePage == '/no-internet'){
           this.menuCtrl.enable(false);
         }else{
           this.menuCtrl.enable(true);

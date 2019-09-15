@@ -27,6 +27,8 @@ import { SharedPipesModule } from './services/shared.module';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { ImageModalPageModule } from './pages/image-modal/image-modal.module';
+import { OneSignal } from '@ionic-native/onesignal/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -56,7 +58,7 @@ import { ImageModalPageModule } from './pages/image-modal/image-modal.module';
     Device,CoreAppProvider,
     Crop,
     ImagePicker,
-    File,FileTransfer,
+    File,FileTransfer,OneSignal,AndroidPermissions
   ],
   bootstrap: [AppComponent]
 })
