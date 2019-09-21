@@ -86,5 +86,7 @@ export class RequestbymequotesPage implements OnInit {
       infiniteScroll.target.complete();
     }, 2000);
   }
-
+  ionViewWillLeave() {
+    this.appProvider.dismissLoading();
+  }
 }

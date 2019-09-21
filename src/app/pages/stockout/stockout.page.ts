@@ -233,5 +233,8 @@ export class StockoutPage implements OnInit {
         this.scannerbarCode.unsubscribe();
         
       }
+
+        this.appProvider.dismissLoading();
+      
   }
 }

@@ -51,7 +51,9 @@ export class HomePage {
     this.oneSignalService.initOneSignalPush();
     this.stockLatest();
   }
-
+  ionViewWillEnter() {
+    this.stockLatest();
+  }
   checkUpdates() {
     this.curdService.getData('unreadMsg')
       .subscribe((data: any) => {
@@ -172,7 +174,12 @@ export class HomePage {
       }
     });
   }
+  goto(page,product) {
+
+    this.appProvider.searchParam(page, { queryParams: { term:  product.title} });
+  }
   ionViewWillLeave() {
     this.unreadMsgSub.unsubscribe();
+    this.appProvider.dismissLoading();
   }
 }

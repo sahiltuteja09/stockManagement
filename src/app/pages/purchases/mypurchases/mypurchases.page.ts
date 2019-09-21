@@ -48,6 +48,9 @@ export class MypurchasesPage implements OnInit {
   ionViewWillEnter() {
     this.purchases();
   }
+  ionViewWillLeave() {
+    this.appProvider.dismissLoading();
+  }
 
   purchases() {
     this.isFiltered = false;

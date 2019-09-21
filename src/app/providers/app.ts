@@ -116,7 +116,7 @@ export class CoreAppProvider {
             translucent: true,
             keyboardClose: true,
             cssClass: 'custom-class custom-loading',
-            duration: 25000
+            duration: 10000
         });
     }
 

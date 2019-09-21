@@ -57,11 +57,23 @@
 
     <ion-img class="card-image" src="{{result.image == '' ? defaultImage : img_base+result.image }}"></ion-img>
 
-    <ion-row>
+    <ion-row *ngIf="userID != result.user_id">
       <ion-col size="2" size-sm align-items-start>
       </ion-col>
       <ion-col size="10" size-sm text-end *ngIf="userID != result.user_id">
         <ion-button (click)="requestQuote(result)" color="success" shape="round" size="small">Get Quote</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="userID == result.user_id">
+      <ion-col size="6" size-sm align-items-end>
+        <ion-button (click)="goto('scanin',result)" float-right color="tertiary" shape="round" size="small">
+          <ion-icon name="add"></ion-icon> Stock in
+        </ion-button>
+      </ion-col>
+      <ion-col size="6" size-sm align-items-end>
+        <ion-button (click)="goto('stockout',result)" float-right color="danger" shape="round" size="small">
+          <ion-icon name="remove-circle-outline"></ion-icon> Stock out
+        </ion-button>
       </ion-col>
     </ion-row>
     <div class="line-divider"></div>

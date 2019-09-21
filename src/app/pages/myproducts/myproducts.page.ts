@@ -27,7 +27,9 @@ export class MyproductsPage implements OnInit {
   ionViewWillEnter() {
     this.products();
   }
-
+  ionViewWillLeave() {
+    this.appProvider.dismissLoading();
+  }
   products() {
     this.myproducts = [];
     this.totalSold = [];

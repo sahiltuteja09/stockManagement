@@ -6,12 +6,15 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ConfigServiceService } from 'src/config';
 import { CoreAppProvider } from './providers/app';
 import { AuthenticationService } from './pages/auth/authentication.service';
-import { Router, Event, NavigationStart, NavigationEnd, NavigationError, ActivatedRoute } from '@angular/router';
+import { Router, Event, NavigationStart, NavigationEnd, NavigationError, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { Location } from '@angular/common';
+import { LocalnotificationService } from './services/notification/localnotification.service';
+import { RouteanimationComponent } from './routeanimation/routeanimation.component';
 
 @Component({
   selector: 'app-root',
-  templateUrl: 'app.component.html'
+  templateUrl: 'app.component.html',
+  animations: [RouteanimationComponent()],
 })
 export class AppComponent {
   public appPages = [
@@ -77,7 +80,8 @@ export class AppComponent {
     private authenticationService: AuthenticationService,
     private router: Router,
     private location: Location,
-    public menuCtrl: MenuController
+    public menuCtrl: MenuController,
+    private localNotification: LocalnotificationService
   ) {
     this.initializeApp();
     router.events.subscribe((event: Event) => {
@@ -118,6 +122,13 @@ export class AppComponent {
         console.log(event.error);
       }
     });
+  }
+  public getRouteAnimation(outlet: RouterOutlet) {
+    const res =
+      outlet.activatedRouteData.num === undefined
+        ? -1
+        : outlet.activatedRouteData.num;
+    return res;
   }
 
   initializeApp() {
@@ -162,6 +173,7 @@ export class AppComponent {
     this.loggedin = this.authenticationService.isLoggedin();
   }
   logout() {
+    this.localNotification.cancelAllLocalNotifications();
     this.authenticationService.logout();
   }
 }

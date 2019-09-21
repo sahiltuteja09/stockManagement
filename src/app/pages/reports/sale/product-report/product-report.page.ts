@@ -241,5 +241,7 @@ merchantmap:any = [];
     this.showReason = pid;
 
   }
-
+  ionViewWillLeave() {
+    this.appProvider.dismissLoading();
+  }
 }

@@ -157,6 +157,10 @@ export class ProfilePage implements OnInit {
       this.isLoadingSubscriber.unsubscribe();
     if (typeof this.croppedImagepathSubscriber == 'object')
       this.croppedImagepathSubscriber.unsubscribe();
+
+      
+        this.appProvider.dismissLoading();
+      
   }
 
 }

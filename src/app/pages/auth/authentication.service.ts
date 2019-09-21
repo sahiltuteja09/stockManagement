@@ -51,6 +51,7 @@ export class AuthenticationService {
               }
             }else{
               if(user.device_limit > 0){
+                // particular user device limit
                 // logout from all other device except the same device
                   this.curdService.postData('logoutAll', {'user_id': user.device_limit, 'deviceid': loginData.deviceId, 'appid' : loginData.appid}).subscribe((d:any) =>{});
                   this.logout();

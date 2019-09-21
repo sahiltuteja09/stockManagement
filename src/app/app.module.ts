@@ -29,6 +29,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { ImageModalPageModule } from './pages/image-modal/image-modal.module';
 import { OneSignal } from '@ionic-native/onesignal/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { NativeAudio } from '@ionic-native/native-audio/ngx';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,7 +41,8 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
     AppRoutingModule,
     HttpClientModule,
     SharedPipesModule,
-    ImageModalPageModule
+    ImageModalPageModule,
+    BrowserAnimationsModule
   ],
   providers: [
     StatusBar,
@@ -58,7 +61,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
     Device,CoreAppProvider,
     Crop,
     ImagePicker,
-    File,FileTransfer,OneSignal,AndroidPermissions
+    File,FileTransfer,OneSignal,AndroidPermissions, NativeAudio
   ],
   bootstrap: [AppComponent]
 })

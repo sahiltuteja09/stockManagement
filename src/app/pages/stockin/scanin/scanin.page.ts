@@ -296,5 +296,8 @@ img_base: string = CoreConfigConstant.uploadedPath;
         
       }
 
+        this.appProvider.dismissLoading();
+      
+
   }
 }

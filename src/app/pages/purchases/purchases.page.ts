@@ -198,7 +198,9 @@ export class PurchasesPage implements OnInit {
 
     if (typeof this.routSub == 'object')
       this.routSub.unsubscribe();
-
+     
+        this.appProvider.dismissLoading();
+      
   }
 
 }

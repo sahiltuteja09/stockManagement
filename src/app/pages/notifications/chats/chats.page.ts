@@ -42,6 +42,7 @@ export class ChatsPage implements OnInit {
   }
   ionViewWillLeave(){
     this.deactivateChatMonitor();
+    this.appProvider.dismissLoading();
   }
   constructor(
     private appProvider: CoreAppProvider,

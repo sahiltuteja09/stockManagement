@@ -96,5 +96,8 @@ export class RequestQuotePage implements OnInit {
       });
     });
   }
+  ionViewWillLeave() {
+    this.appProvider.dismissLoading();
+  }
 
 }

@@ -59,4 +59,7 @@ export class MessagesPage implements OnInit {
 
     this.appProvider.navTo('chats', conversationId, { queryParams: { product_id: chat.product_id, requested_quotes_id: chat.requested_quotes_id, msg_from:chat.msg_from,msg_to:chat.msg_to } });
   }
+  ionViewWillLeave() {
+    this.appProvider.dismissLoading();
+  }
 }

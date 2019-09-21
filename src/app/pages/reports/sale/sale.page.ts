@@ -154,4 +154,7 @@ return;
   goforProductReport(product_history) {
     this.appProvider.navTo('product-report', product_history.product_id, { queryParams: { marketplace_id: this.merchant, product_status_id: this.stockType, start_date:this.startDate_date_format, end_date:this.endDate_date_format } });
   }
+  ionViewWillLeave() {
+    this.appProvider.dismissLoading();
+  }
 }

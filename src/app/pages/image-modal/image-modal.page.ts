@@ -126,6 +126,9 @@ downloadBill(){
   close() {
     this.modalController.dismiss();
   }
+  ionViewWillLeave() {
+    this.appProvider.dismissLoading();
+  }
 
 
 }

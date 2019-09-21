@@ -2,20 +2,22 @@ import { Injectable } from '@angular/core';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from '../rest/curd.service';
+import { NativeAudio } from '@ionic-native/native-audio/ngx';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalnotificationService {
 
-  notificationSound: string = 'file://assets/sound/bell.mp3';
+  notificationSound: string = 'assets/sound/bell.mp3';
   constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider,
-    private localNotifications: LocalNotifications
+    private localNotifications: LocalNotifications,
+    private nativeAudio: NativeAudio
   ) {
     if (this.appProvider.isMobile()) {
-      this.notificationSound = this.appProvider.isIos() ? 'file://src/assets/sound/notification.m4r' : 'file://src/assets/sound/bell.mp3';
+      this.notificationSound = this.appProvider.isIos() ? 'assets/sound/notification.m4r' : 'assets/sound/bell.mp3';
     }
 
   }
@@ -59,34 +61,31 @@ export class LocalnotificationService {
           id: 1,
           title: 'Today Stock',
           text: 'A reminder to update the today stock.',
-          trigger: { count: 1, every: { hour: 12, minute: 10 } },
+          trigger: { count: 3, every: { hour: 12, minute: 10 } },
           foreground: true,
           launch: true,
           vibrate: true,
-          badge: 1,
-          sound: this.notificationSound
+          badge: 1
         },
         {
           id: 2,
           title: 'Stock Update Reminder',
           text: 'Hey! Any updates on stock?',
-          trigger: { count: 1, every: { hour: 18, minute: 10 } },
+          trigger: { count: 3, every: { hour: 18, minute: 10 } },
           foreground: true,
           launch: true,
           vibrate: true,
-          badge: 1,
-          sound: this.notificationSound
+          badge: 1
         },
         {
           id: 3,
           title: 'Stock verify',
           text: 'Hey! Have you check today reports ?',
-          trigger: { count: 1, every: { hour: 20, minute: 10 } },
+          trigger: { count: 3, every: { hour: 20, minute: 10 } },
           foreground: true,
           launch: true,
           vibrate: true,
-          badge: 1,
-          sound: this.notificationSound
+          badge: 1
         }
         // ,
         // {
@@ -98,12 +97,24 @@ export class LocalnotificationService {
         //     launch: true,
         //     badge: 1,
         //     vibrate: true,
-        //     "sound": 'file://assets/sound/bell.mp3',
+        //     sound : 'file://assets/sound/bell.mp3',
         //     attachments: ['file://assets/chat/chat1.jpg'],
         // }
       ];
     this.localNotifications.on('click').subscribe(data => {
       console.log(data);
+    });
+    this.nativeAudio.preloadSimple('uniqueId1', this.notificationSound);
+    this.localNotifications.on('trigger').subscribe((data) => {
+      console.log(data);
+      
+      this.nativeAudio.play('uniqueId1').then((res) => {
+        console.log('nativeAudio success');
+        console.log(res);
+    }, (err) => {
+      console.log('nativeAudio error');
+        console.log(err);
+    });
     });
     this.localNotifications.schedule(notifications);
     // Cancel any existing notifications
@@ -145,7 +156,7 @@ export class LocalnotificationService {
           id: 4,
           title: data.title,
           text: data.data,
-          trigger: { count: 1, every: { hour: 21, minute: 10 } },
+          trigger: { count: 3, every: { hour: 21, minute: 10 } },
           foreground: true,
           launch: true,
           vibrate: true,
@@ -156,7 +167,7 @@ export class LocalnotificationService {
           id: 5,
           title: data.title,
           text: data.data,
-          trigger: { count: 1, every: { hour: 10, minute: 10 } },
+          trigger: { count: 3, every: { hour: 10, minute: 10 } },
           foreground: true,
           launch: true,
           vibrate: true,
@@ -183,9 +194,16 @@ export class LocalnotificationService {
         vibrate: true,
         foreground: true,
         sound: this.notificationSound,
-        trigger: { count: 1 }
+        trigger: { count: 3 }
       });
     }
+  }
+  cancelAllLocalNotifications(){
+    if (this.appProvider.isMobile()) {
+    // Cancel any existing notifications
+    this.localNotifications.cancelAll().then(() => {
+    });
+  }
   }
 
 }

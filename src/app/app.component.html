@@ -35,6 +35,8 @@
         </ion-list>
       </ion-content>
     </ion-menu>
-    <ion-router-outlet main></ion-router-outlet>
+    
+    <ion-router-outlet main [@routerAnimation]="getRouteAnimation(router)" #router="outlet"></ion-router-outlet>
+    
   </ion-split-pane>
 </ion-app>

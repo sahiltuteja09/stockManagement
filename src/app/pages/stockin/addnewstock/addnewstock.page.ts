@@ -282,6 +282,9 @@ this.scanType =  codeType;
         
       }
 
+        this.appProvider.dismissLoading();
+      
+
   }
 
 }
