@@ -7,10 +7,8 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
-//import { TimeAgoPipe } from 'time-ago-pipe';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreAppProvider } from './providers/app';
-//import { QRScanner } from '@ionic-native/qr-scanner/ngx';
 import { ConfigServiceService, loadConfigurations } from 'src/config';
 import {  HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="stockin"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      Add / Update Purchase(s)
+      Add / Update Bill(s)
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,36 +13,93 @@
 
   <form (ngSubmit)="newStock()" #form="ngForm" [formGroup]="newstockdetail">
     <ion-row>
-      <ion-col size="12" size-sm >
-          <ion-row>
-              <ion-col size="6" size-sm >
-          <ion-item>
-              <ion-label position="floating">Purchase Date</ion-label>
-              <ion-datetime displayFormat="DD-MM-YYYY" formControlName="purchase_date" [(ngModel)]="purchase.purchase_date"></ion-datetime>
+      <ion-col size="12" size-sm>
+        <ion-row>
+          <ion-col size="6" size-sm>
+            <ion-item>
+              <ion-label position="floating">Purchase from</ion-label>
+              <ion-input type="text" placeholder="Enter name" formControlName="name" required
+                [(ngModel)]="purchase.name" name="namw"></ion-input>
             </ion-item>
-          </ion-col >
-          <ion-col size="6" size-sm >
-        <ion-item>
-          <ion-label position="floating">Total Cost <ion-text color="danger">*</ion-text>
-          </ion-label>
-          <ion-input type="number" formControlName="totalcost" required [(ngModel)]="purchase.totalcost"
-            name="totalcost"></ion-input>
-        </ion-item>
-        <div *ngIf=" f.totalcost.errors && f.totalcost.touched" class="invalid-feedback">
-            <div *ngIf="f.totalcost.errors.required">Cost field is required</div>
-            <div *ngIf="f.totalcost.errors.maxlength">Cost cannot be greater than 5 digits.</div>
-          </div>
-      </ion-col>
-     </ion-row>
-        
+          </ion-col>
+          <ion-col size="6" size-sm>
+            <ion-item>
+              <ion-label position="floating">Mobile number <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-input type="text" formControlName="mobile_number" required [(ngModel)]="purchase.mobile_number"
+                name="mobile_number"></ion-input>
+            </ion-item>
+            <div *ngIf=" f.mobile_number.errors && f.mobile_number.touched" class="invalid-feedback">
+              <div *ngIf="f.mobile_number.errors.required">Cost field is required</div>
+              <div *ngIf="f.mobile_number.errors.maxlength">Cost cannot be greater than 13 digits.</div>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="6" size-sm>
+            <ion-item>
+              <ion-label position="floating">Purchase Date</ion-label>
+              <ion-datetime displayFormat="DD-MM-YYYY" formControlName="purchase_date"
+                [(ngModel)]="purchase.purchase_date"></ion-datetime>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6" size-sm>
+            <ion-item>
+              <ion-label position="floating">Purchase Amount <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-input type="number"  (ionChange)="updatePaidAmount($event)" formControlName="totalcost" required [(ngModel)]="purchase.totalcost"
+                name="totalcost"></ion-input>
+            </ion-item>
+            <div *ngIf=" f.totalcost.errors && f.totalcost.touched" class="invalid-feedback">
+              <div *ngIf="f.totalcost.errors.required">Cost field is required</div>
+              <div *ngIf="f.totalcost.errors.maxlength">Cost cannot be greater than 5 digits.</div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="6" size-sm>
+              <ion-list>
+                <ion-radio-group (ionChange)="onChangeHandler($event)">
+                  <ion-list-header>
+                    <ion-label>Amount Paid</ion-label>
+                  </ion-list-header>
+              
+                  <ion-item>
+                    <ion-label>Full</ion-label>
+                    <ion-radio slot="start" value="full" checked></ion-radio>
+                  </ion-item>
+              
+                  <ion-item>
+                    <ion-label>Other</ion-label>
+                    <ion-radio slot="start" value="other"></ion-radio>
+                  </ion-item>
+                </ion-radio-group>
+              </ion-list>
+          </ion-col>
+          <ion-col size="6" size-sm>
+            <ion-item>
+              <ion-label position="floating">Paid amount <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-input type="number" formControlName="amount_paid" required [(ngModel)]="purchase.amount_paid"
+                name="amount_paid"></ion-input>
+            </ion-item>
+            <div *ngIf=" f.amount_paid.errors && f.amount_paid.touched" class="invalid-feedback">
+              <div *ngIf="f.amount_paid.errors.required">Amount field is required</div>
+              <div *ngIf="f.amount_paid.errors.maxlength">Amount cannot be greater than 5 digits.</div>
+            </div>
+          </ion-col>
+        </ion-row>
+
         <ion-item>
           <ion-label position="floating">Description</ion-label>
-          <ion-textarea formControlName="description" [(ngModel)]="purchase.description" name="description"></ion-textarea>
+          <ion-textarea formControlName="description" [(ngModel)]="purchase.description" name="description">
+          </ion-textarea>
         </ion-item>
         <div *ngIf=" f.description.errors && f.description.touched" class="invalid-feedback">
           <div *ngIf="f.description.errors.maxlength">Description cannot be greater than 200 characters.</div>
         </div>
-<br/>
+        <br />
         <ion-button *ngIf="!isLoading" (click)="pickImage()" color="primary" small color="tertiary" shape="round">Upload
           Image</ion-button>
         <ion-button *ngIf="isLoading" color="primary" small color="tertiary" shape="round">Loading
@@ -54,8 +111,8 @@
             <ion-img [src]="croppedImagepath"></ion-img>
           </ion-item>
         </ion-list>
-          <ion-input type="hidden" formControlName="image" [(ngModel)]="purchase.image" name="image"></ion-input>   
-<br/>
+        <ion-input type="hidden" formControlName="image" [(ngModel)]="purchase.image" name="image"></ion-input>
+        <br />
         <ion-button color="success" [disabled]="form.invalid" type="submit" block>
           <span *ngIf="purchase_id > 0 else addBlock">Update</span>
           <ng-template #addBlock>Add</ng-template>
