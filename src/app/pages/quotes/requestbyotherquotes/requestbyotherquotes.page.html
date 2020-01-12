@@ -20,7 +20,7 @@
       <ion-card>
         <ion-item>
           <ion-thumbnail slot="start">
-            <img [src]="myquote.image">
+            <img [src]="myquote.image ? img_base+myquote.image  : defaultImage" (click)="openPreview(myquote.image ? img_base+myquote.image  : defaultImage)">
           </ion-thumbnail>
           <ion-label>
             <p>{{myquote.title}}</p>

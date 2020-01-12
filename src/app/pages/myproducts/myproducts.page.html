@@ -26,7 +26,7 @@
         <ion-card>
           <ion-item>
             <ion-thumbnail slot="start">
-              <img [src]="product.image ? img_base+product.image : defaultImage">
+              <img [src]="product.image ? img_base+product.image : defaultImage" tappable (click)="openPreview(product.image ? img_base+product.image : defaultImage)">
             </ion-thumbnail>
             <ion-label>
               <p><ion-icon name="create" routerLink="/addnewstock/{{product.id}}"></ion-icon> {{product.title}} </p>

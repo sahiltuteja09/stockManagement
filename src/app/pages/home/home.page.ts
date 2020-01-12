@@ -21,7 +21,7 @@ export class HomePage {
   img_base: string = CoreConfigConstant.uploadedPath;
   userID: number = 0;
 
-  secondsCounter = interval(30000);
+  secondsCounter = interval(120000);
   counter: any = '';
   unreadMsgSub: any;
  // notifications: any[] = [];
@@ -49,7 +49,7 @@ export class HomePage {
 
   ngOnInit() {
     this.oneSignalService.initOneSignalPush();
-    this.stockLatest();
+   // this.stockLatest();
   }
   ionViewWillEnter() {
     this.stockLatest();
@@ -67,7 +67,8 @@ export class HomePage {
   // https://medium.com/google-developer-experts/angular-supercharge-your-router-transitions-using-new-animation-features-v4-3-3eb341ede6c8
 
   stockLatest() {
-    this.latestStock = [];
+    this.appProvider.dismissLoading();
+    
     this.page = 1;
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
@@ -79,6 +80,7 @@ export class HomePage {
               this.noDataFound = data.msg;
               this.latestStock = [];
             } else {
+              this.latestStock = [];
               this.latestStock = data;
               this.page = this.page + 1;
             }

@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      My Khatas
+    </ion-title>
+    <ion-buttons slot="secondary" routerLink="/addcustomer">
+      <ion-button>
+        <ion-icon slot="icon-only" name="add"></ion-icon> Add Customer
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  
+    <ion-list>
+      <ion-card>
+        <ion-item>
+          <ion-col size="12" size-sm align-items-end>
+            <p>
+              <small>You'll Pay</small>
+              <ion-text [color]="'danger'">
+                 Rs. {{lifetimePaid}}/- 
+                 </ion-text>
+                </p>
+                <p>
+                  <small> You'll receive </small>
+                  <ion-text [color]="'primary'">
+                  Rs. {{lifetimeGot}}/- 
+                  </ion-text>
+            </p>
+          </ion-col>
+        </ion-item>
+      </ion-card>
+    </ion-list>
+      <ion-searchbar showCancelButton="always" animated debounce="500" [(ngModel)]="keyword" (ionChange)="filterReport()"></ion-searchbar>
+<div *ngIf="(mykhatas.status); else noData">
+    <ion-virtual-scroll [items]="mykhatas.data" >
+        <ion-item *virtualItem="let item;" (click)="goto('khata', item)">
+          <ion-avatar slot="start">
+            <text-avatar [text]="item.name"  textColor="#fff"></text-avatar>
+          </ion-avatar>
+          <ion-label>
+            <h3>{{item.name}}</h3>
+            <small>{{item.date_added  | timeAgo}}</small>
+          </ion-label>
+          <ion-text [color]="(item.you_paid - item.you_got) >= 0 ? 'primary' : 'danger'" slot="end">
+         Rs. {{(item.you_paid - item.you_got) > 0 ? item.you_paid - item.you_got : item.you_got - item.you_paid}} /-
+            <div *ngIf="(item.you_paid - item.you_got) > 0" [ngStyle]="{'color':'black'}">
+             <small>You'll receive</small> 
+            </div>
+            <div *ngIf="(item.you_got - item.you_paid) > 0" [ngStyle]="{'color':'black'}">
+            <small>    You'll pay</small> 
+            </div>
+          </ion-text>
+        </ion-item>
+    </ion-virtual-scroll>
+  </div>
+  <ng-template #noData>
+    <div class="ion-text-center danger" >
+      {{noDataFound}}
+    </div>
+  </ng-template>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

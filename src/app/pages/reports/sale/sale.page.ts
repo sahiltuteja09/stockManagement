@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { CoreConfigConstant } from 'src/configconstants';
+import { ModalController } from '@ionic/angular';
+import { ImageModalPage } from '../../image-modal/image-modal.page';
 
 @Component({
   selector: 'app-sale',
@@ -26,7 +28,7 @@ export class SalePage implements OnInit {
   defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
   img_base: string = CoreConfigConstant.uploadedPath;
   page: number = 1;
-  constructor(private appProvider: CoreAppProvider, private curdService: CurdService) { }
+  constructor(private appProvider: CoreAppProvider, private curdService: CurdService, private modalController: ModalController) { }
 
   ngOnInit() {
     this.getStockType();
@@ -86,7 +88,16 @@ return;
       });
     });
   }
-
+  openPreview(img) {
+    this.modalController.create({
+      component: ImageModalPage,
+      componentProps: {
+        img: img
+      }
+    }).then(modal => {
+      modal.present();
+    });
+  }
   doInfinite(infiniteScroll) {
 
     setTimeout(() => {

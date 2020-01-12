@@ -34,6 +34,11 @@ export class AppComponent {
       icon: 'list'
     },
     {
+      title: 'My Khata',
+      url: '/mykhatas',
+      icon: 'list'
+    },
+    {
       title: 'Stock In',
       url: '/stockin',
       icon: 'list'

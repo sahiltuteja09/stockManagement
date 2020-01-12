@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
-
+import { ModalController } from '@ionic/angular';
+import { ImageModalPage } from '../../image-modal/image-modal.page';
+import { CoreConfigConstant } from '../../../../configconstants';
 @Component({
   selector: 'app-requestbyotherquotes',
   templateUrl: './requestbyotherquotes.page.html',
@@ -12,7 +14,9 @@ export class RequestbyotherquotesPage implements OnInit {
   page: number = 1;
   otherquotes: any = [];
   noDataFound: string = 'Fetching records...';
-  constructor(private appProvider: CoreAppProvider, private curdService: CurdService) { }
+  defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
+  img_base: string = CoreConfigConstant.uploadedPath;
+  constructor(private appProvider: CoreAppProvider, private curdService: CurdService, private modalController: ModalController) { }
 
   ngOnInit() {
     this.otherQuotes();
@@ -85,6 +89,16 @@ export class RequestbyotherquotesPage implements OnInit {
         );
       infiniteScroll.target.complete();
     }, 2000);
+  }
+  openPreview(img) {
+    this.modalController.create({
+      component: ImageModalPage,
+      componentProps: {
+        img: img
+      }
+    }).then(modal => {
+      modal.present();
+    });
   }
   ionViewWillLeave() {
     this.appProvider.dismissLoading();

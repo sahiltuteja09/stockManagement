@@ -11,7 +11,10 @@ interface Purchases {
   image: string;
   totalcost: number;
   description: string;
-  purchase_date:string
+  purchase_date:string,
+  name:string,
+  mobile_number:string,
+  amount_paid:number
 }
 
 @Component({
@@ -33,6 +36,9 @@ export class PurchasesPage implements OnInit {
   routSub: any;
   purchase_id: number = 0;
   scanType:string = '';
+  selectedAmazountPaid = 'full';
+  partialChecked:boolean = false;
+  partialAmount:any =0;
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -45,12 +51,17 @@ export class PurchasesPage implements OnInit {
       'totalcost': 0,
       'image': '',
       'description': '',
-      'purchase_date':''
+      'purchase_date':'',
+      'name':'',
+      'mobile_number': '',
+      'amount_paid': 0
     };
-
     this.newstockdetail = formBuilder.group({
+      name: ['', Validators.compose([Validators.required])],
       purchase_date: ['', Validators.compose([Validators.required])],
       totalcost: ['', Validators.compose([Validators.maxLength(10), Validators.required])],
+      amount_paid: ['', Validators.compose([Validators.maxLength(10), Validators.required])],
+      mobile_number: ['', Validators.compose([Validators.maxLength(13), Validators.required])],
       image: [this.imageName],
       description: ['', Validators.compose([Validators.maxLength(200)])]
     });
@@ -59,12 +70,26 @@ export class PurchasesPage implements OnInit {
       this.purchase_id = +params['purchase_id'];
 
     });
-
+    
    }
    ionViewWillEnter() {
     this.isMobileDevice = this.appProvider.isMobile();
   }
-
+  onChangeHandler(event: any){
+    this.selectedAmazountPaid = event.detail.value;
+    if(event.detail.value == 'full'){
+      this.partialChecked = false;
+      this.purchase.amount_paid = this.purchase.totalcost;
+    }else{
+      this.partialChecked = true;
+      this.purchase.amount_paid = this.partialAmount;
+    }
+  }
+  updatePaidAmount(event: any){
+    if(this.selectedAmazountPaid == 'full'){
+      this.purchase.amount_paid = event.target.value;
+    }
+  }
   ngOnInit() {
     if (this.purchase_id > 0) {
       this.getDetail();
@@ -84,8 +109,16 @@ export class PurchasesPage implements OnInit {
                 'totalcost': data.data.totalcost,
                 'image': data.data.image,
                 'description': data.data.description,
-                'purchase_date': data.data.purchase_date
+                'purchase_date': data.data.purchase_date,
+                'name': data.data.name,
+                'mobile_number' : data.data.mobile_number,
+                'amount_paid':data.data.amount_paid
               }
+this.partialChecked = true; 
+this.partialAmount = data.data.amount_paid;
+             // setTimeout(() => {
+              //   this.purchase.amount_paid = data.data.amount_paid;
+              // }, 1000);
               if(data.data.image)
                 this.croppedImagepath = CoreConfigConstant.uploadedPath + data.data.image;
 

@@ -4,7 +4,7 @@ import { CurdService } from 'src/app/services/rest/curd.service';
 import { CoreConfigConstant } from 'src/configconstants';
 import { ModalController } from '@ionic/angular';
 import { ImageModalPage } from '../../image-modal/image-modal.page';
-
+import { CallNumber } from '@ionic-native/call-number/ngx';
 @Component({
   selector: 'app-mypurchases',
   templateUrl: './mypurchases.page.html',
@@ -28,7 +28,8 @@ export class MypurchasesPage implements OnInit {
   constructor(
     private appProvider: CoreAppProvider, 
     private curdService: CurdService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private callNumber: CallNumber
     ) { }
 
     openPreview(img) {
@@ -185,6 +186,14 @@ export class MypurchasesPage implements OnInit {
         );
       infiniteScroll.target.complete();
     }, 2000);
+  }
+
+  callToVendor(number:any){
+   if( this.appProvider.isMobile() ){
+    this.callNumber.callNumber(number, true)
+  .then(res => console.log('Launched dialer!', res))
+  .catch(err => console.log('Error launching dialer', err));
+    }
   }
 
 }

@@ -7,10 +7,8 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
-//import { TimeAgoPipe } from 'time-ago-pipe';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreAppProvider } from './providers/app';
-//import { QRScanner } from '@ionic-native/qr-scanner/ngx';
 import { ConfigServiceService, loadConfigurations } from 'src/config';
 import {  HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -31,6 +29,8 @@ import { OneSignal } from '@ionic-native/onesignal/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { NativeAudio } from '@ionic-native/native-audio/ngx';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CallNumber } from '@ionic-native/call-number/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -50,7 +50,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
      //QRScanner,
      BarcodeScanner,
-    ConfigServiceService,InAppBrowser,Network,AuthenticationService,LocalNotifications,
+    ConfigServiceService,InAppBrowser,Network,AuthenticationService,LocalNotifications,SocialSharing,
     {
       provide: APP_INITIALIZER,
       useFactory: loadConfigurations,
@@ -61,7 +61,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     Device,CoreAppProvider,
     Crop,
     ImagePicker,
-    File,FileTransfer,OneSignal,AndroidPermissions, NativeAudio
+    File,FileTransfer,OneSignal,AndroidPermissions, NativeAudio, CallNumber
   ],
   bootstrap: [AppComponent]
 })

@@ -52,7 +52,11 @@ const routes: Routes = [
   { path: 'purchases', loadChildren: './pages/purchases/purchases.module#PurchasesPageModule',  data: { num: 112 } },
   { path: 'purchases/:purchase_id', loadChildren: './pages/purchases/purchases.module#PurchasesPageModule',  data: { num: 113 } },
   { path: 'mypurchases', loadChildren: './pages/purchases/mypurchases/mypurchases.module#MypurchasesPageModule', data: { num: 103 } },
-  { path: 'image-modal', loadChildren: './pages/image-modal/image-modal.module#ImageModalPageModule',  data: { num: 201 } },
+  { path: 'image-modal', loadChildren: './pages/image-modal/image-modal.module#ImageModalPageModule',  data: { num: 201 } },  { path: 'khata', loadChildren: './pages/khata/khata.module#KhataPageModule' },
+  { path: 'mykhatas', loadChildren: './pages/khata/mykhatas/mykhatas.module#MykhatasPageModule' },
+  { path: 'khataview', loadChildren: './pages/khata/khataview/khataview.module#KhataviewPageModule' },
+  { path: 'addcustomer', loadChildren: './pages/khata/addcustomer/addcustomer.module#AddcustomerPageModule' },
+
 
 
   

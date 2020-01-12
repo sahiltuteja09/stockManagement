@@ -13,6 +13,7 @@ export enum ConnectionStatusEnum {
 export class CoreAppProvider {
     isLoading = false;
     previousStatus: any;
+    tempStorage:any;
     constructor(
         public loadingController: LoadingController,
         public toastController: ToastController,
@@ -35,6 +36,10 @@ export class CoreAppProvider {
     searchParam(page: string, para2?: any) {
         this.router.navigate([page], para2);
 
+    }
+    navigateWithState(page: string, objectItem){
+        this.tempStorage = objectItem;
+        this.goto(page);
     }
     // for chat and quotes request routes structure
     navTo(page: string, para?: any, para2?: any) {

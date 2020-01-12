@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="mykhatas"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Add / Update Customer
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form (ngSubmit)="addCustomer()" #form="ngForm" [formGroup]="addcustomer">
+    <ion-row>
+      <ion-col size="12" size-sm>
+        <ion-row>
+          <ion-col size="6" size-sm>
+            <ion-item>
+              <ion-label position="floating">Name</ion-label>
+              <ion-input type="text" placeholder="Enter name" formControlName="name" required
+                [(ngModel)]="customer.name" name="name"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6" size-sm>
+            <ion-item>
+              <ion-label position="floating">Mobile number <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-input type="text" formControlName="mobile_number" required [(ngModel)]="customer.mobile_number"
+                name="mobile_number"></ion-input>
+            </ion-item>
+            <div *ngIf=" f.mobile_number.errors && f.mobile_number.touched" class="invalid-feedback">
+              <div *ngIf="f.mobile_number.errors.required">Cost field is required</div>
+              <div *ngIf="f.mobile_number.errors.maxlength">Cost cannot be greater than 13 digits.</div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <br />
+        <ion-button color="success" [disabled]="form.invalid" type="submit" block>
+          Save
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+</ion-content>

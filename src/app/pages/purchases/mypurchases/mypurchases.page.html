@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      My Purchases
+      My Bills
     </ion-title>
     <ion-buttons slot="secondary" routerLink="/purchases">
       <ion-button>
@@ -76,6 +76,13 @@
             <p> Rs. {{purchase.totalcost}}/- is your purchase amount.<ion-icon name="create"
                 routerLink="/purchases/{{purchase.id}}"></ion-icon>
             </p>
+            <ion-row>
+              <ion-col size="9" size-sm align-items-end>
+                <small class="deal_price">
+                  Vendor : {{purchase.name}} (<a href="javascript:void(0)" (click)="callToVendor(purchase.mobile_number)"> {{purchase.mobile_number}} </a>)
+                </small>
+              </ion-col>
+            </ion-row>
             <ion-row>
               <ion-col size="9" size-sm align-items-end>
                 <small class="deal_price">

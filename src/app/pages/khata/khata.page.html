@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="mykhatas"></ion-back-button>
+      <ion-avatar>
+        <text-avatar [text]="name"  textColor="#fff" marginTop='10px'></text-avatar>
+      </ion-avatar>
+    </ion-buttons>
+    <ion-title>
+      <ion-label>
+        <h3>{{name}}</h3>
+        <small>{{mobileNumber}}</small>
+      </ion-label>
+    </ion-title>
+    <ion-buttons slot="secondary" routerLink="/khatas">
+      <ion-button>
+        <ion-icon slot="icon-only" name="add"></ion-icon> Add New
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+      <ion-item>
+        <ion-col size="12" size-sm align-items-end>
+            <small>Balance</small>
+            <ion-text [color]="'danger'">
+               Rs. {{balance}}/- 
+               </ion-text>
+               <div class="ion-float-right"><small>{{balance_text}}</small></div>
+        </ion-col>
+      </ion-item>
+    </ion-card>
+      <ion-row>
+        <ion-col size="6">
+          <div class="ion-text-center">
+            <small>ENTRIES</small>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="ion-text-center">
+            <small>YOU RECEIVE</small>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="ion-text-center">
+            <small>YOU PAY</small>
+          </div>
+        </ion-col>
+      </ion-row>
+  <div *ngIf="(mykhata.status); else noData">
+    <ion-virtual-scroll [items]="mykhata.data" >
+  <ion-list no-padding *virtualItem="let item;" >
+    <ion-card (click)="khataView(item)" [ngClass]="item.is_deleted == 1 ? 'trashclass' : ''">
+      <ion-row class="row-height-40">
+        <ion-col size="6">
+          <div class="ion-text-center">
+            <small>{{item.on_date}}</small>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="ion-text-center">
+            <ion-text class="success-color" >
+              <div *ngIf="item.you_got > 0">
+                Rs. {{item.you_got}}/-
+              </div>
+              </ion-text>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="ion-text-center">
+            <ion-text [color]="'danger'">
+              <span *ngIf="item.you_paid > 0">
+                Rs. {{item.you_paid}}/-
+              </span>
+              </ion-text>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-list >
+</ion-virtual-scroll>
+</div>
+<ng-template #noData>
+  <div class="ion-text-center padding-top-30" padding  >
+    <ion-text [color]="'danger'" >{{noDataFound}}</ion-text> 
+  </div>
+</ng-template>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
