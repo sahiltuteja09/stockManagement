@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button  ></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Purchase Details
+    </ion-title>
+    <ion-buttons slot="secondary" routerLink="/purchases/{{purchaseDetail.id}}">
+      <ion-button>
+        <ion-icon slot="icon-only" name="create"></ion-icon> Edit
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-row>
+      <ion-col class="ion-text-center" size="12">
+        
+        <ion-text class="ion-padding-top">
+        You purchase from <strong>{{purchaseDetail.name}} </strong>on <strong>{{purchaseDetail.purchase_date}}</strong>
+      </ion-text>
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+        <h6 >Bill amount
+          <ion-text [color]="'primary'">
+          Rs. {{purchaseDetail.totalcost}}/- 
+            </ion-text>
+        </h6>
+        <h6>
+          Paid amount
+          <ion-text [color]="'success'">
+          Rs. {{purchaseDetail.amount_paid}}/- 
+            </ion-text>
+        </h6>
+        <h6>Pending amount   
+          <ion-text [color]="'danger'">
+         Rs. {{purchaseDetail.totalcost*1 - purchaseDetail.amount_paid*1}}/- 
+            </ion-text>
+        </h6>
+      </ion-col>
+      
+    </ion-row>
+
+  </ion-card>
+<ion-item>
+  <ion-col size="12">
+    {{purchaseDetail.description}}
+  </ion-col>
+  </ion-item>
+  <ion-item>
+    <ion-thumbnail slot="start">
+      <img [src]="purchaseDetail.image ? img_base+purchaseDetail.image : defaultImage" tappable (click)="openPreview(purchaseDetail.image ? img_base+purchaseDetail.image : defaultImage)">
+    </ion-thumbnail>
+    </ion-item>
+</ion-content>
+
+<ion-footer no-border>
+  <ion-list *ngIf="this.isMobile" >
+    <ion-item (click)="shareViaWhatsAppToReceiver()">
+      <ion-button slot="start" color="success">  <ion-icon name="logo-whatsapp">  </ion-icon> </ion-button>
+      <ion-label>Share on WhatsApp</ion-label>
+      <ion-icon name="arrow-dropright" class="end"></ion-icon>
+    </ion-item>
+    <ion-item (click)="shareSocial()">
+      <ion-button slot="start" color="success"> <ion-icon name="share-alt"></ion-icon></ion-button>
+      <ion-label>Share</ion-label>
+      <ion-icon name="arrow-dropright" class="end"></ion-icon>
+    </ion-item>
+  </ion-list>
+    <ion-button (click)="deleteTransaction()" expand="full" color="danger" class="ion-text-uppercase">Delete Transaction</ion-button>
+</ion-footer>

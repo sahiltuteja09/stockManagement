@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="mykhatas"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Add Khata
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form #form="ngForm" [formGroup]="addkhata" (ngSubmit)="saveKhata()">
+    <ion-grid>
+      <ion-row color="primary" justify-content-center>
+        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          <div text-center>
+            <h3>You are paying Rs {{khata.amount}} to {{name | titlecase}}</h3>
+          </div>
+          <div padding>
+            
+            <ion-item>
+              <ion-input placeholder="Amount" name="amount" type="number" [(ngModel)]="khata.amount" formControlName="amount" required autofocus="true" autocomplete="off" ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-textarea placeholder="Enter more information here..." [(ngModel)]="khata.description" formControlName="description"></ion-textarea>
+            </ion-item>
+            <ion-item>
+              <ion-datetime displayFormat="DD-MMM-YYYY" formControlName="purchase_date"
+                [(ngModel)]="khata.purchase_date" placeholder="Date"></ion-datetime>
+            </ion-item>
+          </div>
+          <div padding>
+            <ion-button size="large" type="submit" [disabled]="form.invalid" expand="block" >
+              Save </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

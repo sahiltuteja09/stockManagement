@@ -41,6 +41,9 @@ export class CoreAppProvider {
         this.tempStorage = objectItem;
         this.goto(page);
     }
+     tempData(data){
+        this.tempStorage = data;
+    }
     // for chat and quotes request routes structure
     navTo(page: string, para?: any, para2?: any) {
 

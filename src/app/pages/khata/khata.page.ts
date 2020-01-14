@@ -95,6 +95,10 @@ export class KhataPage implements OnInit {
   khataView(item){
      this.appProvider.navigateWithState('khataview', item);
   }
+  addkhata(type:number){
+    this.appProvider.tempData({'name':this.name});
+    this.appProvider.searchParam('addkhata', { queryParams: { 'type':type, 'mobile': this.searchTerm} });
+  }
   ionViewWillLeave() {
       this.queryParmSub.unsubscribe();
   }

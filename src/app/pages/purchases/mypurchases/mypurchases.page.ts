@@ -195,5 +195,8 @@ export class MypurchasesPage implements OnInit {
   .catch(err => console.log('Error launching dialer', err));
     }
   }
+  purchaseview(data:any){
+    this.appProvider.navigateWithState('purchasesview', data);
+  }
 
 }

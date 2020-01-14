@@ -50,7 +50,7 @@
             <text-avatar [text]="item.name"  textColor="#fff"></text-avatar>
           </ion-avatar>
           <ion-label>
-            <h3>{{item.name}}</h3>
+            <h3>{{item.name | titlecase}}</h3>
             <small>{{item.date_added  | timeAgo}}</small>
           </ion-label>
           <ion-text [color]="(item.you_paid - item.you_got) >= 0 ? 'primary' : 'danger'" slot="end">

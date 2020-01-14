@@ -56,6 +56,8 @@ const routes: Routes = [
   { path: 'mykhatas', loadChildren: './pages/khata/mykhatas/mykhatas.module#MykhatasPageModule' },
   { path: 'khataview', loadChildren: './pages/khata/khataview/khataview.module#KhataviewPageModule' },
   { path: 'addcustomer', loadChildren: './pages/khata/addcustomer/addcustomer.module#AddcustomerPageModule' },
+  { path: 'addkhata', loadChildren: './pages/khata/addkhata/addkhata.module#AddkhataPageModule' },
+  { path: 'purchasesview', loadChildren: './pages/purchases/purchasesview/purchasesview.module#PurchasesviewPageModule' },
 
 
 

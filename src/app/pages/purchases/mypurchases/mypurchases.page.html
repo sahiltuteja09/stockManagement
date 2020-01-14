@@ -72,37 +72,38 @@
           <ion-thumbnail slot="start">
             <img [src]="purchase.image ? img_base+purchase.image : defaultImage" tappable (click)="openPreview(purchase.image ? img_base+purchase.image : defaultImage)">
           </ion-thumbnail>
-          <ion-label>
-            <p> Rs. {{purchase.totalcost}}/- is your purchase amount.<ion-icon name="create"
-                routerLink="/purchases/{{purchase.id}}"></ion-icon>
+          <ion-label (click)="purchaseview(purchase)">
+            <p> Rs. {{purchase.totalcost}}/- is your purchase amount.
+              <!-- <ion-icon name="create"
+                routerLink="/purchases/{{purchase.id}}"></ion-icon> -->
             </p>
             <ion-row>
-              <ion-col size="9" size-sm align-items-end>
+              <ion-col size="12" size-sm align-items-end>
                 <small class="deal_price">
                   Vendor : {{purchase.name}} (<a href="javascript:void(0)" (click)="callToVendor(purchase.mobile_number)"> {{purchase.mobile_number}} </a>)
                 </small>
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col size="9" size-sm align-items-end>
+              <ion-col size="12" size-sm align-items-end>
                 <small class="deal_price">
                   Purchase Date : {{purchase.purchase_date}}
                 </small>
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col size="9" size-sm align-items-end>
+              <ion-col size="12" size-sm align-items-end>
                 <small class="deal_price">
                   Last updated on - {{purchase.date_modify | timeAgo}}
                 </small>
               </ion-col>
             </ion-row>
-            <ion-col size="3" size-sm>
+            <!-- <ion-col size="3" size-sm>
               <ion-button routerLink="/purchases/{{purchase.id}}" float-right color="tertiary" shape="round"
                 size="small">
                 <ion-icon name="create"></ion-icon> Edit
               </ion-button>
-            </ion-col>
+            </ion-col> -->
           </ion-label>
 
         </ion-item>
