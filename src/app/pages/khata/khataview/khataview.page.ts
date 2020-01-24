@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import {CoreConfigConstant} from '../../../../configconstants';
 import { CurdService } from 'src/app/services/rest/curd.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-khataview',
   templateUrl: './khataview.page.html',
@@ -14,12 +15,20 @@ export class KhataviewPage implements OnInit {
   backButtonSub:any;
   isMobile:boolean = true;
   noDataFound:string = '';
+
+  queryParmSub: any;
+  khata_id:number = 0;
   constructor(
     public appProvider: CoreAppProvider, 
     public platform:Platform, 
     private socialSharing: SocialSharing,
-    private curdService: CurdService
-    ) { }
+    private curdService: CurdService,
+    private route: ActivatedRoute
+    ) {
+      this.queryParmSub = this.route.queryParams.subscribe(params => {
+        this.khata_id = params['khata_id'];
+      });
+     }
 
   ngOnInit() {
     console.log(JSON.stringify(this.appProvider.tempStorage));
@@ -29,12 +38,46 @@ export class KhataviewPage implements OnInit {
   this.backButtonSub =  this.platform.backButton.subscribe(async () => {
       this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number} });
     });
+
+    if(typeof this.khataDetail == 'undefined')
+      this.khataDetails();
   }
-  BackButtonAction(){
-    this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number} });
+  khataDetails(){
+    this.khataDetail = {
+      'you_got' : 0,
+      'name' : '',
+      'you_paid':0,
+      'description': '',
+      'purchase_id':0,
+      'mobile_number':'',
+    }
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        let param = { 'id':this.khata_id };
+        this.curdService.getData('myKhataDetail', param)
+          .subscribe((data: any) => {
+            if (data.status == false) {
+              // no product found
+              this.noDataFound = data.msg;
+            } else {
+              this.khataDetail = [];
+              this.khataDetail = data.data;
+            }
+            this.appProvider.dismissLoading();
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            }
+          );
+      });
+    });
   }
-  iionViewWillLeave() {
-    this.backButtonSub.unsubscribe();
+editKhatas(){
+  // let type = this.khataDetail.you_got  > 0 ? '2' : '1';
+  // let amount =  this.khataDetail.you_got  > 0 ? this.khataDetail.you_got : this.khataDetail.you_paid;
+  // this.appProvider.tempData({'name':this.khataDetail.name,'id':this.khataDetail.id, 'type':type, 'mobile': this.khataDetail.mobile_number, 'amount': amount,'description': this.khataDetail.description,purchase_date:new Date().toISOString()});
+  //   this.appProvider.searchParam('addkhata');
 }
 shareViaWhatsAppToReceiver(){
   let txt = '';
@@ -77,5 +120,16 @@ deleteTransaction(){
           }
         );
 }
+viewBill(data:any){
+  this.appProvider.tempData(data);
+  this.appProvider.searchParam('purchasesview', { queryParams: { purchase_id:  this.khataDetail.purchase_id} });
+}
 
+BackButtonAction(){
+  this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number} });
+}
+ionViewWillLeave() {
+  this.backButtonSub.unsubscribe();
+  this.queryParmSub.unsubscribe();
+}
 }

@@ -6,11 +6,11 @@
     <ion-title>
       Entry Details
     </ion-title>
-    <ion-buttons slot="secondary" routerLink="/khatas">
+    <!-- <ion-buttons slot="secondary" (click)="editKhatas()">
       <ion-button>
         <ion-icon slot="icon-only" name="create"></ion-icon> Edit
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
@@ -20,7 +20,7 @@
       <ion-col class="ion-text-center" size="12">
         
         <ion-text class="ion-padding-top">
-        {{khataDetail.name}} {{khataDetail.you_got > 0 ? 'Paid' : 'took'}}
+        {{khataDetail.name}} {{khataDetail.you_got > 0 ? 'Paid' : 'Took'}}
       </ion-text>
       <ion-icon name="checkmark-circle-outline"></ion-icon>
         <h6 *ngIf="khataDetail.you_got > 0 ">
@@ -56,6 +56,13 @@
     <ion-item (click)="shareSocial()">
       <ion-button slot="start" color="success"> <ion-icon name="share-alt"></ion-icon></ion-button>
       <ion-label>Share</ion-label>
+      <ion-icon name="arrow-dropright" class="end"></ion-icon>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="khataDetail.purchase_id > 0">
+    <ion-item (click)="viewBill(khataDetail)">
+      <ion-button slot="start" color="success"> <ion-icon name="cash"></ion-icon></ion-button>
+      <ion-label>Bill related to this transaction</ion-label>
       <ion-icon name="arrow-dropright" class="end"></ion-icon>
     </ion-item>
   </ion-list>

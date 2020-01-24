@@ -29,6 +29,17 @@
               <ion-datetime displayFormat="DD-MMM-YYYY" formControlName="purchase_date"
                 [(ngModel)]="khata.purchase_date" placeholder="Date"></ion-datetime>
             </ion-item>
+            <ion-list *ngIf="!isLoading && croppedImagepath.length > 0">
+              <ion-item class="ion-text-center" *ngFor="let imges of  croppedImagepath">
+                <ion-img [src]="img_url + imges"></ion-img>
+              </ion-item>
+            </ion-list>
+           
+            <br />
+            <ion-button *ngIf="!isLoading" (click)="pickImage()" color="primary" small color="tertiary" shape="round">Upload
+              Image</ion-button>
+            <ion-button *ngIf="isLoading" color="primary" small color="tertiary" shape="round">Loading
+              ...</ion-button>
           </div>
           <div padding>
             <ion-button size="large" type="submit" [disabled]="form.invalid" expand="block" >

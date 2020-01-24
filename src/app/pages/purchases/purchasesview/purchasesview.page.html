@@ -8,7 +8,7 @@
     </ion-title>
     <ion-buttons slot="secondary" routerLink="/purchases/{{purchaseDetail.id}}">
       <ion-button>
-        <ion-icon slot="icon-only" name="create"></ion-icon> Edit
+        <ion-icon slot="icon-only" name="create"></ion-icon> Edit 
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -68,6 +68,10 @@
       <ion-label>Share</ion-label>
       <ion-icon name="arrow-dropright" class="end"></ion-icon>
     </ion-item>
+    <ion-item (click)="call()">
+      <ion-button slot="start" color="success">  <ion-icon name="call">  </ion-icon> </ion-button>
+      <ion-label>Call</ion-label>
+      <ion-icon name="arrow-dropright" class="end"></ion-icon>
+    </ion-item>
   </ion-list>
-    <ion-button (click)="deleteTransaction()" expand="full" color="danger" class="ion-text-uppercase">Delete Transaction</ion-button>
 </ion-footer>

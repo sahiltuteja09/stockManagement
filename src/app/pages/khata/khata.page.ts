@@ -93,11 +93,13 @@ export class KhataPage implements OnInit {
     }, 2000);
   }
   khataView(item){
-     this.appProvider.navigateWithState('khataview', item);
+    this.appProvider.tempData(item);console.log(item);
+    this.appProvider.searchParam('khataview', { queryParams: { khata_id:  item.id} });
+     //this.appProvider.navigateWithState('khataview', item);
   }
   addkhata(type:number){
-    this.appProvider.tempData({'name':this.name});
-    this.appProvider.searchParam('addkhata', { queryParams: { 'type':type, 'mobile': this.searchTerm} });
+    this.appProvider.tempData({'name':this.name,'khata_id':0, 'type':type, 'mobile': this.searchTerm, 'amount': 0,'description': '',purchase_date:new Date().toISOString()});
+    this.appProvider.searchParam('addkhata');
   }
   ionViewWillLeave() {
       this.queryParmSub.unsubscribe();
