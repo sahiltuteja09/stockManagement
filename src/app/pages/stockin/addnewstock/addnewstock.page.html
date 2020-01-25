@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content>
-
+<ion-card>
   <form (ngSubmit)="newStock()" #form="ngForm" [formGroup]="newstockdetail">
     <ion-item>
       <ion-label position="floating">Unique ID <ion-text color="danger">*</ion-text>
@@ -92,14 +92,16 @@
         <ion-input type="hidden" formControlName="image" [(ngModel)]="stock.image" name="image"></ion-input>
       </ion-item>
     </ion-row>
-
+    <ion-row>
+      <ion-col size="12" size-sm>
     <ion-item>
-        <ion-label position="floating">Racked
+        <ion-label position="floating">Product Placed at
         </ion-label>
         <ion-input type="text" formControlName="product_placed" [(ngModel)]="stock.product_placed" name="product_placed"></ion-input>
       </ion-item>
-
-    <ion-row>
+    </ion-col>
+  </ion-row>
+    <ion-row [hidden]="1==1">
       <ion-col size="12" size-sm>
         <ion-item>
           <ion-label position="floating">Amazon ASIN</ion-label>
@@ -133,7 +135,7 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row  [hidden]="1==1">
       <ion-col size="12" size-sm>
         <ion-item>
           <ion-label position="floating">Paytm SKU</ion-label>
@@ -168,10 +170,14 @@
       </ion-col>
     </ion-row>
 
-    <ion-button color="success" [disabled]="form.invalid" type="submit" block>
+  <ion-row>
+    <ion-col size="12" size-sm>
+    <ion-button  float-right color="success" [disabled]="form.invalid" type="submit" block>
       <span *ngIf="product_id > 0 else addBlock">Update</span>
       <ng-template #addBlock>Add</ng-template>
     </ion-button>
+  </ion-col>
+  </ion-row>
   </form>
-
+</ion-card>
 </ion-content>

@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button ></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Product Details
+    </ion-title>
+    <!-- <ion-buttons slot="secondary" (click)="editKhatas()">
+      <ion-button>
+        <ion-icon slot="icon-only" name="create"></ion-icon> Edit
+      </ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-row>
+      <ion-col class="ion-text-center" size="12">
+        
+        <ion-text class="ion-padding-top">
+        {{product.product.title}}
+      </ion-text>
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <ion-row>
+            <ion-col size="12" size-sm align-items-end>
+              <small class="deal_price">
+                Sold : {{product.totalSold}} 
+                | Return : {{product.totalReturn}} | Loss : {{product.totalLoss}} | Damages :  {{product.totalDamage}}
+              </small>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" size-sm align-items-end>
+              <small class="deal_price">
+                {{product.product.likes}} Likes | Available : {{product.product.quantity}}
+                | Live date : {{product.product.date_added | timeAgo}} 
+              </small>
+            </ion-col>
+          </ion-row>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+  <ion-item *ngIf="product.product.description">
+    <p [innerHTML]="product.product.description | safehtml"></p>
+  </ion-item>
+  <ion-item *ngIf="product.product.product_placed">
+    Product Placed at : 
+    <span [innerHTML]="product.product.product_placed | safehtml"></span>
+  </ion-item>
+  <ion-item>
+    <ion-thumbnail slot="start">
+      <img [src]="product.product.image ? img_base+product.product.image : defaultImage" tappable (click)="openPreview(product.product.image ? img_base+product.product.image : defaultImage)">
+    </ion-thumbnail>
+    </ion-item>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
+      <ion-fab-button color="danger" routerDirection="forward" data-desc="Edit" routerLink="/addnewstock/{{product.product.id}}">
+        <ion-icon name="create"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+</ion-content>
+
+<ion-footer no-border>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+          <ion-button (click)="goto('scanin')" expand="full" color="danger" class="ion-text-uppercase">Stock In </ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button (click)="goto('stockout')" expand="full" color="success" class="ion-text-uppercase">Stock Out</ion-button>
+    </ion-col>
+    </ion-row>
+  </ion-grid>
+ 
+</ion-footer>

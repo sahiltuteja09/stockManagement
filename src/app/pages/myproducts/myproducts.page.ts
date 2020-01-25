@@ -77,10 +77,20 @@ export class MyproductsPage implements OnInit {
       });
     });
   }
-  goto(page,product) {
-
-    this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id} });
+  productView(product, totalSold, totalReturn, totalLoss, totalDamage){
+    let data = {
+      'product': product,
+      'totalSold' : totalSold,
+      'totalReturn': totalReturn,
+      'totalLoss': totalLoss,
+      'totalDamage': totalDamage
+    }
+    this.appProvider.navigateWithState('productview', data);
   }
+  // goto(page,product) {
+
+  //   this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id} });
+  // }
 
   doRefresh(event) {
     setTimeout(() => {

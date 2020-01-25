@@ -84,40 +84,40 @@ export class AddkhataPage implements OnInit {
       });
     });
   }
-  saveKhataImage(id){
-let param = {'id': id};
-let images = {'image':  this.croppedImagepath};
+  saveKhataImage(id) {
+    let param = { 'id': id };
+    let images = { 'image': this.croppedImagepath };
 
-let merged = {...param, ...images};
-this.appProvider.showLoading().then(loading => {
-  loading.present().then(() => {
-    let apiMethod = 'saveKhataImage';
-    this.curdService.postData(apiMethod, merged)
-      .subscribe((data: any) => {
+    let merged = { ...param, ...images };
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        let apiMethod = 'saveKhataImage';
+        this.curdService.postData(apiMethod, merged)
+          .subscribe((data: any) => {
 
-        if (data.status) {
-          this.appProvider.showToast(data.data);
+            if (data.status) {
+              this.appProvider.showToast(data.data);
 
-        } else {
-          this.appProvider.showToast(data.msg);
-        }
-        setTimeout(() => {
-          
-          this.appProvider.dismissLoading();
-         if (data.status)
-         this.appProvider.goto('mypurchases', 1);
-        }, 2000);
+            } else {
+              this.appProvider.showToast(data.msg);
+            }
+            setTimeout(() => {
 
-      },
-        error => {
-          this.appProvider.showToast(error);
-          this.appProvider.dismissLoading();
-        },
-        () => {
-        }
-      );
-  });
-});
+              this.appProvider.dismissLoading();
+              if (data.status)
+                this.appProvider.goto('mypurchases', 1);
+            }, 2000);
+
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            },
+            () => {
+            }
+          );
+      });
+    });
   }
   ionViewWillEnter(){
     if(this.appProvider.tempStorage){
