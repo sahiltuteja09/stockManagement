@@ -9,6 +9,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <ion-card>
   <form (ngSubmit)="newStock()" #form="ngForm" [formGroup]="newstockdetail">
     <ion-row>
       <ion-col size="12" size-sm>
@@ -111,12 +112,12 @@
         </ion-list>
         <ion-input type="hidden" formControlName="image" [(ngModel)]="purchase.image" name="image"></ion-input>
         <br />
-        <ion-button color="success" [disabled]="form.invalid" type="submit" block>
+        <ion-button float-right color="success" [disabled]="form.invalid" type="submit" block>
           <span *ngIf="purchase_id > 0 else addBlock">Update</span>
           <ng-template #addBlock>Add</ng-template>
         </ion-button>
       </ion-col>
     </ion-row>
   </form>
-
+</ion-card>
 </ion-content>

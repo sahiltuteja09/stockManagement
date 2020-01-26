@@ -6,11 +6,6 @@
     <ion-title>
       Purchase Details
     </ion-title>
-    <ion-buttons slot="secondary" routerLink="/purchases/{{purchaseDetail.id}}">
-      <ion-button>
-        <ion-icon slot="icon-only" name="create"></ion-icon> Edit 
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -46,7 +41,7 @@
   </ion-card>
 <ion-item>
   <ion-col size="12">
-    {{purchaseDetail.description}}
+    <p [innerHTML]="purchaseDetail.description | safehtml"></p>
   </ion-col>
   </ion-item>
   <ion-item>
@@ -54,6 +49,12 @@
       <img [src]="purchaseDetail.image ? img_base+purchaseDetail.image : defaultImage" tappable (click)="openPreview(purchaseDetail.image ? img_base+purchaseDetail.image : defaultImage)">
     </ion-thumbnail>
     </ion-item>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
+      <ion-fab-button color="danger" routerDirection="forward" data-desc="Edit" routerLink="/purchases/{{purchaseDetail.id}}">
+        <ion-icon name="create"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
 </ion-content>
 
 <ion-footer no-border>

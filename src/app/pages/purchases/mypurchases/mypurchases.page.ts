@@ -5,6 +5,10 @@ import { CoreConfigConstant } from 'src/configconstants';
 import { ModalController } from '@ionic/angular';
 import { ImageModalPage } from '../../image-modal/image-modal.page';
 import { CallNumber } from '@ionic-native/call-number/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { LocalnotificationService } from 'src/app/services/notification/localnotification.service';
 @Component({
   selector: 'app-mypurchases',
   templateUrl: './mypurchases.page.html',
@@ -25,11 +29,21 @@ export class MypurchasesPage implements OnInit {
   startDate_date_format:string = '';
   endDate_date_format:string = '';
   keyword:string = '';
+  selectedValue: string[];
+
+  isMobile:boolean = false;
+  downloadPath:string = '';
+  isAndroid: boolean = false;
+  downloadFolder:string = 'Download';
   constructor(
     private appProvider: CoreAppProvider, 
     private curdService: CurdService,
     private modalController: ModalController,
-    private callNumber: CallNumber
+    private callNumber: CallNumber,
+    private transfer: FileTransfer, 
+     private file: File,
+     private androidPermissions: AndroidPermissions,
+     private localNotification: LocalnotificationService
     ) { }
 
     openPreview(img) {
@@ -44,7 +58,13 @@ export class MypurchasesPage implements OnInit {
     }
 
   ngOnInit() {
-    
+    this.isMobile = this.appProvider.isMobile();
+    this.isAndroid = this.appProvider.isAndroid();
+    if(this.isAndroid){
+      this.downloadPath = this.file.externalRootDirectory;
+    }else{
+      this.downloadPath = this.file.documentsDirectory;
+    }
   }
   ionViewWillEnter() {
     this.purchases();
@@ -197,6 +217,111 @@ export class MypurchasesPage implements OnInit {
   }
   purchaseview(data:any){
     this.appProvider.navigateWithState('purchasesview', data);
+  }
+  
+  selectedValues(){
+    let items = this.mypurchases.data;
+    const checkedOptions = items.filter(x => x.checked);
+    this.selectedValue = checkedOptions.map(x => x.image);
+  }
+  zipFileName:string = '';
+  bulkDownload(){
+    if( typeof this.selectedValue == 'undefined'){
+      this.appProvider.showToast('Please select a bill to download.');
+      return false;
+    }
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        this.curdService.postData('bulkDownloadBills', {'purchase_ids': this.selectedValue } )
+          .subscribe((data: any) => {
+
+            if (data.status) {
+              this.appProvider.showToast(data.msg);
+              this.zipFileName = this.img_base + data.zipname +'.zip';
+              if(this.isMobile)
+              this.download();
+            } else {
+              this.appProvider.showToast(data.msg);
+            }
+            this.appProvider.dismissLoading();
+
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            },
+            () => {
+            }
+          );
+      });
+    });
+  }
+
+  download() {
+  
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
+      .then(status => {
+        console.log(status);
+        if (status.hasPermission) {
+          this.downloadFile();
+        } 
+        else {
+          this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
+            .then(status => {
+              console.log(status);
+              if(status.hasPermission) {
+                this.downloadFile();
+              }
+            });
+        }
+      });
+  }
+  
+  downloadFile() {
+  
+    this.file.checkDir(this.downloadPath , this.downloadFolder).then(response => {
+      console.log('Directory exists'+response);
+      this.downloadBill();
+    }).catch(err => {
+      console.log('Directory doesn\'t exist'+JSON.stringify(err));
+      this.file.createDir(this.downloadPath ,this.downloadFolder , false).then(response => {
+        console.log('Directory create'+response);
+        this.downloadBill();
+      }).catch(err => {
+        console.log('Directory no create'+JSON.stringify(err));
+      }); 
+    });
+  
+    
+  }
+  downloadBill(){
+    let imageURL = this.zipFileName;
+    console.log(imageURL);
+    const dot = imageURL.lastIndexOf('.');
+    let ext = '';
+    if (dot > -1) {
+      ext = imageURL.substr(dot + 1).toLowerCase();
+    }
+  
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+  
+    const fileTransfer: FileTransferObject = this.transfer.create();
+    fileTransfer.download(imageURL, this.downloadPath  + 
+      '/'+this.downloadFolder+'/' + "bill-"+Math.round(Math.random() * 10000) +"."+ext, true).then((entry) => {
+      console.log('download complete: ' + entry.toURL());
+      this.appProvider.dismissLoading();
+      this.appProvider.showToast('Your bill has been downloaded successfully.');
+      this.localNotification.sendNotification('Your bill has been downloaded successfully.');
+    }, (error) => {
+      // handle error
+      console.log(error);
+      this.appProvider.dismissLoading();
+      this.appProvider.showToast('Sorry!! Unable to download the bill.');
+     
+    });
+    });
+  });
   }
 
 }

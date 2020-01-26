@@ -6,11 +6,6 @@
     <ion-title>
       My Bills
     </ion-title>
-    <ion-buttons slot="secondary" routerLink="/purchases">
-      <ion-button>
-        <ion-icon slot="icon-only" name="add"></ion-icon> Add New
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -66,56 +61,66 @@
         </ion-item>
       </ion-card>
     </ion-list>
+    <ion-row>
+      <ion-col  size="12" size-sm >
+        <ion-button color="danger" float-right (click)="bulkDownload();">  <ion-icon name="cloud-download"></ion-icon></ion-button>
+      </ion-col>
+    </ion-row>
     <ion-list *ngFor="let purchase of mypurchases.data">
-      <ion-card>
-        <ion-item>
-          <ion-thumbnail slot="start">
-            <img [src]="purchase.image ? img_base+purchase.image : defaultImage" tappable (click)="openPreview(purchase.image ? img_base+purchase.image : defaultImage)">
-          </ion-thumbnail>
-          <ion-label (click)="purchaseview(purchase)">
-            <p> Rs. {{purchase.totalcost}}/- is your purchase amount.
-              <!-- <ion-icon name="create"
-                routerLink="/purchases/{{purchase.id}}"></ion-icon> -->
-            </p>
-            <ion-row>
-              <ion-col size="12" size-sm align-items-end>
-                <small class="deal_price">
-                  Vendor : {{purchase.name}} (<a href="javascript:void(0)" (click)="callToVendor(purchase.mobile_number)"> {{purchase.mobile_number}} </a>)
-                </small>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="12" size-sm align-items-end>
-                <small class="deal_price">
-                  Purchase Date : {{purchase.purchase_date}}
-                </small>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="12" size-sm align-items-end>
-                <small class="deal_price">
-                  Last updated on - {{purchase.date_modify | timeAgo}}
-                </small>
-              </ion-col>
-            </ion-row>
-            <!-- <ion-col size="3" size-sm>
-              <ion-button routerLink="/purchases/{{purchase.id}}" float-right color="tertiary" shape="round"
-                size="small">
-                <ion-icon name="create"></ion-icon> Edit
-              </ion-button>
-            </ion-col> -->
-          </ion-label>
+    <ion-card>
+          <ion-row>
+            <ion-col size="11" size-sm>
+          <ion-item lines="none">
+            <ion-thumbnail >
+              <img [src]="purchase.image ? img_base+purchase.image : defaultImage" tappable (click)="openPreview(purchase.image ? img_base+purchase.image : defaultImage)">
+            </ion-thumbnail>
+                <ion-label >
+                  <ion-row (click)="purchaseview(purchase)">
+                    <ion-col size="12" size-sm>
+                    <ion-text>
+                      Rs. {{purchase.totalcost}}/- is your purchase amount.
+                    </ion-text>
+                  </ion-col>
+                    <ion-col size="12" size-sm >
+                      <small class="deal_price">
+                        Vendor : {{purchase.name}} (<a href="javascript:void(0)" (click)="callToVendor(purchase.mobile_number)"> {{purchase.mobile_number}} </a>)
+                      </small>
+                    </ion-col>
+                  
+                    <ion-col size="12" size-sm >
+                      <small class="deal_price">
+                        Purchase Date : {{purchase.purchase_date}}
+                      </small>
+                    </ion-col>
+                    <ion-col size="12" size-sm >
+                      <small class="deal_price">
+                        Last updated on - {{purchase.date_modify | timeAgo}}
+                      </small>
+                    </ion-col>
+                  </ion-row>
 
-        </ion-item>
-        <ion-row>
-          <ion-col size="12" size-sm>
-            <p [innerHTML]="purchase.description | safehtml">
-
-            </p>
-          </ion-col>
-        </ion-row>
-      </ion-card>
-
+                  <!-- <ion-col size="3" size-sm>
+                    <ion-button routerLink="/purchases/{{purchase.id}}" float-right color="tertiary" shape="round"
+                      size="small">
+                      <ion-icon name="create"></ion-icon> Edit
+                    </ion-button>
+                  </ion-col> -->
+                </ion-label>
+                
+          </ion-item>
+        </ion-col>
+            <ion-col size="1" size-sm align-self-end>
+              <ion-checkbox color="danger" [value]="purchase.id" [(ngModel)]="purchase.checked" (ionChange)="selectedValues()"></ion-checkbox>
+              </ion-col>
+          </ion-row>
+          <!-- <ion-row>
+            <ion-col size="12" size-sm>
+              <p [innerHTML]="purchase.description | safehtml">
+  
+              </p>
+            </ion-col>
+          </ion-row> -->
+        </ion-card>
     </ion-list>
   </div>
   <ng-template #noData>
@@ -127,4 +132,10 @@
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
+    <ion-fab-button color="danger" routerDirection="forward" data-desc="add New" routerLink="/purchases">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
