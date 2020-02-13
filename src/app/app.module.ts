@@ -31,6 +31,7 @@ import { NativeAudio } from '@ionic-native/native-audio/ngx';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -49,7 +50,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
      //QRScanner,
-     BarcodeScanner,
+     BarcodeScanner,Camera,
     ConfigServiceService,InAppBrowser,Network,AuthenticationService,LocalNotifications,SocialSharing,
     {
       provide: APP_INITIALIZER,

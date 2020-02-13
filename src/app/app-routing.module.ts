@@ -59,6 +59,7 @@ const routes: Routes = [
   { path: 'addkhata', loadChildren: './pages/khata/addkhata/addkhata.module#AddkhataPageModule' },
   { path: 'purchasesview', loadChildren: './pages/purchases/purchasesview/purchasesview.module#PurchasesviewPageModule' },
   { path: 'productview', loadChildren: './pages/myproducts/productview/productview.module#ProductviewPageModule' },
+  { path: 'mybills', loadChildren: './pages/purchases/mybills/mybills.module#MybillsPageModule' },
 
 
 

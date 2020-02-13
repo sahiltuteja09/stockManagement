@@ -5,6 +5,7 @@ import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { ImagesService } from 'src/app/providers/upload/images.service';
 import { CoreConfigConstant } from 'src/configconstants';
+import { ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -49,7 +50,8 @@ export class ProfilePage implements OnInit {
     public authenticationService: AuthenticationService,
     private appProvider: CoreAppProvider,
     private curdService: CurdService,
-    private uploadImage: ImagesService
+    private uploadImage: ImagesService,
+    public actionSheetController: ActionSheetController
   ) {
 
     const currentUser = this.authenticationService.currentUserValue;
@@ -120,7 +122,38 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  pickImage() {
+  async pickImage() {
+    const actionSheet = await this.actionSheetController.create({
+      buttons: [{
+        text: 'Camera',
+        role: 'destructive',
+        icon: 'camera',
+        handler: () => {
+          console.log('Delete clicked');
+          this.imageSelector('camera');
+        }
+      }, {
+        text: 'Photo albums',
+        icon: 'images',
+        handler: () => {
+          this.imageSelector();
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+  imageSelector(type?:string) {
+    if(type== 'camera')
+    this.uploadImage.captureImage();
+    else
+  this.uploadImage.pickImage();
 
     if (typeof this.isLoadingSubscriber != 'object') {
       this.isLoadingSubscriber = this.uploadImage.isLoading.subscribe((data) => {

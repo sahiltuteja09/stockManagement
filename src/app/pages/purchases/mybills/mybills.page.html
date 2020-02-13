@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>mybills</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-row>
+    <ion-col size="6">
+      <div class="ion-text-center">
+        <small>Bill</small>
+      </div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center">
+        <small>Email</small>
+      </div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center">
+        <small>Download</small>
+      </div>
+    </ion-col>
+  </ion-row>
+<div *ngIf="(mybills.status); else noData">
+<ion-virtual-scroll [items]="mybills.data" >
+<ion-list no-padding *virtualItem="let item;" >
+<ion-card >
+  <ion-row class="row-height-40">
+    <ion-col size="6">
+      <div class="ion-text-center">
+        <small>{{item.path}}</small>
+      </div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center">
+        <ion-text class="success-color" >
+          <ion-icon name="mail"></ion-icon>
+          </ion-text>
+      </div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center">
+        <ion-text [color]="'danger'" (click)="downloadBill()">
+          <ion-icon name="cloud-download"></ion-icon>
+          </ion-text>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-card>
+</ion-list >
+</ion-virtual-scroll>
+</div>
+<ng-template #noData>
+<div class="ion-text-center padding-top-30" padding  >
+<ion-text [color]="'danger'" >{{noDataFound}}</ion-text> 
+</div>
+</ng-template>
+<ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+<ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+</ion-infinite-scroll-content>
+</ion-infinite-scroll>
+</ion-content>

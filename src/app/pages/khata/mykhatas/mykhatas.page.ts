@@ -75,8 +75,9 @@
             .subscribe((data: any) => {
   
               if (data.status == false) {
-                this.appProvider.showToast(data.msg);
-                this.noDataFound = data.msg;
+                this.mykhatas = [];
+                //this.appProvider.showToast(data.msg);
+                //this.noDataFound = data.msg;
               } else {
                 this.mykhatas = [];
                 this.mykhatas = data;
@@ -128,6 +129,7 @@
           .subscribe(
             (result: any) => {
               if (result.status == false) {
+                
                 // no product found
                 this.noDataFound = result.msg;
               } else {

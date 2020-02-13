@@ -5,6 +5,7 @@ import { CurdService } from 'src/app/services/rest/curd.service';
 import { ImagesService } from 'src/app/providers/upload/images.service';
 import { ActivatedRoute } from '@angular/router';
 import { CoreConfigConstant } from 'src/configconstants';
+import { ActionSheetController } from '@ionic/angular';
 
 
 interface Purchases {
@@ -44,7 +45,8 @@ export class PurchasesPage implements OnInit {
     private appProvider: CoreAppProvider,
     private curdService: CurdService,
     private uploadImage: ImagesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public actionSheetController: ActionSheetController
   ) {
 
     this.purchase = {
@@ -194,8 +196,38 @@ this.partialAmount = data.data.amount_paid;
     }
   }
 
-  pickImage() {
-    this.uploadImage.pickImage();
+  async pickImage() {
+    const actionSheet = await this.actionSheetController.create({
+      buttons: [{
+        text: 'Camera',
+        role: 'destructive',
+        icon: 'camera',
+        handler: () => {
+          console.log('Delete clicked');
+          this.imageSelector('camera');
+        }
+      }, {
+        text: 'Photo albums',
+        icon: 'images',
+        handler: () => {
+          this.imageSelector();
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+  imageSelector(type?:string) {
+    if(type== 'camera')
+    this.uploadImage.captureImage();
+    else
+  this.uploadImage.pickImage();
     if (typeof this.isLoadingSubscriber != 'object') {
       this.isLoadingSubscriber = this.uploadImage.isLoading.subscribe((data) => {
         console.log('isLoadingSubscriber '+data);

@@ -195,7 +195,8 @@ export class CoreAppProvider {
 
     public openURL(url: string) {
         if (this.platform.is('cordova')) {
-        }
+        
         this.iab.create(url, '_system');
+        }
     }
 }

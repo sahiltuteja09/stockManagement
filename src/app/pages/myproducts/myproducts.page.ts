@@ -21,6 +21,8 @@ export class MyproductsPage implements OnInit {
   noDataFound: string = 'Fetching records...';
   defaultImage: string = 'http://placehold.it/300x200';
   img_base: string = CoreConfigConstant.uploadedPath;
+  isFiltered:boolean = false;
+  keyword:string = '';
   constructor(
     private appProvider: CoreAppProvider, 
     private curdService: CurdService,
@@ -41,12 +43,17 @@ export class MyproductsPage implements OnInit {
     
   }
   ionViewWillEnter() {
+    console.log(this.keyword);
+    if(this.keyword)
+    this.filterProduct();
+    else
     this.products();
   }
   ionViewWillLeave() {
     this.appProvider.dismissLoading();
   }
   products() {
+    this.isFiltered = false;
     this.myproducts = [];
     this.totalSold = [];
     this.page = 1;
@@ -92,16 +99,58 @@ export class MyproductsPage implements OnInit {
   //   this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id} });
   // }
 
+  filterProduct() {
+      
+    this.page = 1;
+    this.isFiltered = true;
+    let parameter = { 'page': this.page, 'keyword' : this.keyword };
+    // this.appProvider.showLoading().then(loading => {
+    //   loading.present().then(() => {
+        this.curdService.getData('myProducts', parameter)
+          .subscribe((data: any) => {
+
+            if (data.status == false) {
+              this.myproducts = [];
+              //this.appProvider.showToast(data.msg);
+              //this.noDataFound = data.msg;
+            } else {
+              this.myproducts = [];
+              this.myproducts = data;
+              this.page = this.page + 1;
+            }
+            setTimeout(() => {
+           //   this.appProvider.dismissLoading();
+            }, 2000);
+
+          },
+            error => {
+              this.appProvider.showToast(error);
+          //    this.appProvider.dismissLoading();
+            },
+            () => {
+            }
+          );
+    //   });
+    // });
+  }
+
   doRefresh(event) {
     setTimeout(() => {
-      this.products();
+      if(this.isFiltered){
+        this.filterProduct();
+      }else{
+        this.products();
+      }
       event.target.complete();
     }, 2000);
   }
   doInfinite(infiniteScroll) {
 
     setTimeout(() => {
-      let param = { 'page': this.page };
+      let param:any = { 'page': this.page };
+      if(this.isFiltered){
+        param = { 'page': this.page, 'keyword' : this.keyword };
+      }
       this.curdService.getData('myProducts', param)
         .subscribe(
           (result: any) => {

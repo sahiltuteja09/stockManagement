@@ -29,7 +29,7 @@ export class AppComponent {
       icon: 'list'
     },
     {
-      title: 'My Bills',
+      title: 'My Purchases',
       url: '/mypurchases',
       icon: 'list'
     },

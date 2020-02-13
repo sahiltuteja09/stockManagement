@@ -35,6 +35,7 @@ export class MypurchasesPage implements OnInit {
   downloadPath:string = '';
   isAndroid: boolean = false;
   downloadFolder:string = 'Download';
+  zipFileName:string = '';
   constructor(
     private appProvider: CoreAppProvider, 
     private curdService: CurdService,
@@ -224,12 +225,35 @@ export class MypurchasesPage implements OnInit {
     const checkedOptions = items.filter(x => x.checked);
     this.selectedValue = checkedOptions.map(x => x.image);
   }
-  zipFileName:string = '';
+  
   bulkDownload(){
-    if( typeof this.selectedValue == 'undefined'){
+    if( typeof this.selectedValue == 'undefined' || Object.keys(this.selectedValue).length === 0){
       this.appProvider.showToast('Please select a bill to download.');
       return false;
     }
+    if(!this.isMobile)
+    return false;
+
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
+      .then(status => {
+        console.log(status);
+        if (status.hasPermission) {
+          this.createZip();
+        } 
+        else {
+          this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
+            .then(status => {
+              console.log(status);
+              if(status.hasPermission) {
+                this.createZip();
+              }
+            });
+        }
+      });
+  }
+
+  createZip() {
+  
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
         this.curdService.postData('bulkDownloadBills', {'purchase_ids': this.selectedValue } )
@@ -239,7 +263,7 @@ export class MypurchasesPage implements OnInit {
               this.appProvider.showToast(data.msg);
               this.zipFileName = this.img_base + data.zipname +'.zip';
               if(this.isMobile)
-              this.download();
+              this.downloadFile();
             } else {
               this.appProvider.showToast(data.msg);
             }
@@ -255,26 +279,6 @@ export class MypurchasesPage implements OnInit {
           );
       });
     });
-  }
-
-  download() {
-  
-    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
-      .then(status => {
-        console.log(status);
-        if (status.hasPermission) {
-          this.downloadFile();
-        } 
-        else {
-          this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
-            .then(status => {
-              console.log(status);
-              if(status.hasPermission) {
-                this.downloadFile();
-              }
-            });
-        }
-      });
   }
   
   downloadFile() {

@@ -32,6 +32,10 @@ img_base: string = CoreConfigConstant.uploadedPath;
   merchants: any = [];
   isMerchantFetched: boolean = false;
   scannerbarCode;
+  inFiniteLoop:boolean = false;
+  products:any = [];
+  product_image:string = '';
+  availableQuantity:number = 0;
   // isFlashEnable: boolean = false;
   // isScaning: boolean = false;
   // flashIcon: string = 'flash';
@@ -56,6 +60,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
       quantity: new FormControl(),
       product_status_id: new FormControl(),
       marketplace_id: new FormControl(),
+      product_id: new FormControl()
     });
 
     this.queryParmSub = this.route.queryParams.subscribe(params => {
@@ -77,6 +82,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
   }
   searchProduct() {
     if (this.searchTerm) {
+      this.inFiniteLoop = false;
       this.page = 1;
       this.appProvider.showLoading().then(loading => {
         loading.present().then(() => {
@@ -93,6 +99,9 @@ img_base: string = CoreConfigConstant.uploadedPath;
                 // no product found
                 this.noDataFound = data.msg;
                 this.searchData = [];
+                if(Object.keys(this.products).length === 0){
+                  this.getProductsList();
+                }
               } else {
                 this.searchData = data;
                 this.page = this.page + 1;
@@ -112,7 +121,8 @@ img_base: string = CoreConfigConstant.uploadedPath;
     }
   }
   doInfinite(infiniteScroll) {
-
+    this.inFiniteLoop = true;
+    this.noDataFound = '';
     setTimeout(() => {
       let param = { 'page': this.page, 'term': this.searchTerm };
       this.curdService.getData(this.searchApi, param)
@@ -136,14 +146,24 @@ img_base: string = CoreConfigConstant.uploadedPath;
     }, 2000);
   }
 
-  updateStock(quantity, productId, product_status_id, marketplace_id, reason) {
+  updateStock(quantity, productId, product_status_id, marketplace_id, reason, noUIDFOUND?:number) {
 
     if (quantity > 0) {
       if (product_status_id == '') {
         this.appProvider.showToast('Stock type is required.');
         return;
       }
-      let stock = { 'quantity': quantity, 'id': productId, 'product_status_id': product_status_id, 'marketplace_id': marketplace_id, 'stockType': 1, 'reason': reason }
+      let stock = { 'save_to_product_uids': 0, 'quantity': quantity, 'id': productId, 'product_status_id': product_status_id, 'marketplace_id': marketplace_id, 'stockType': 1, 'reason': reason }
+     
+      if(noUIDFOUND == 1){
+        if (marketplace_id == '') {
+          this.appProvider.showToast('Please select the merchant.');
+          return;
+        }
+        let product_uids_type = {'save_to_product_uids': 1, 'marketplace_unique_id' : this.searchTerm}; 
+        stock = {...stock , ...product_uids_type};
+      }
+     
       this.appProvider.showLoading().then(loading => {
         loading.present().then(() => {
           this.curdService.postData('updateStock', stock)
@@ -157,8 +177,14 @@ img_base: string = CoreConfigConstant.uploadedPath;
               }
               setTimeout(() => {
                 this.appProvider.dismissLoading();
-                if (data.status)
-                this.appProvider.goto('myproducts');
+                if (data.status){
+                  if(typeof this.queryParmSub == 'object')
+                      this.queryParmSub.unsubscribe();
+                      
+                      this.searchTerm = '';
+                  this.appProvider.goto('myproducts',1);
+                }
+                
               }, 2000);
 
             },
@@ -235,6 +261,26 @@ img_base: string = CoreConfigConstant.uploadedPath;
       this.searchTerm = '';
       this.scanService.scanBarCode();
   
+  }
+  getProductsList() {
+    this.curdService.getData('myProductsList')
+      .subscribe(
+        (data: any) => {
+          if (data.status == false) {
+            // no product found
+            this.products = [];
+          } else {
+            this.products = data;
+          }
+        },
+        error => {
+        }
+      );
+  }
+  setProductView(product:any){
+    console.log(product);
+    this.availableQuantity = product.detail.value.quantity;
+    this.product_image = product.detail.value.image;
   }
 
   // scanCode() {

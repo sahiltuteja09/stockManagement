@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      My Bills
+      My purchases
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -64,6 +64,7 @@
     <ion-row>
       <ion-col  size="12" size-sm >
         <ion-button color="danger" float-right (click)="bulkDownload();">  <ion-icon name="cloud-download"></ion-icon></ion-button>
+        <ion-button color="primary" float-right routerLink="/mybills"> My Bills</ion-button>
       </ion-col>
     </ion-row>
     <ion-list *ngFor="let purchase of mypurchases.data">

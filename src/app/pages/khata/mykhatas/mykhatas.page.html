@@ -67,11 +67,17 @@
   </div>
   <ng-template #noData>
     <div class="ion-text-center danger" >
-      {{noDataFound}}
+      <ion-button color="primary" small color="tertiary" shape="round" routerLink="/addcustomer">Add New</ion-button>
     </div>
   </ng-template>
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
+    <ion-fab-button color="danger" routerDirection="forward" data-desc="Add New" routerLink="/addcustomer">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

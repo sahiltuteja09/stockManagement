@@ -6,6 +6,8 @@ import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-nati
 import { CoreAppProvider } from '../app';
 import { BehaviorSubject } from 'rxjs';
 import { CoreConfigConstant } from '../../../configconstants';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,9 +15,9 @@ export class ImagesService {
   END_POINT: string = CoreConfigConstant.apiUrl;
   imagePickerOptions = {
     maximumImagesCount: 1,
-    quality: 50
+    quality: 100
   };
-
+  
   public isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public croppedImagepath: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
@@ -25,7 +27,8 @@ export class ImagesService {
     private crop: Crop,
     private imagePicker: ImagePicker,
     private file: File,
-    private transfer: FileTransfer
+    private transfer: FileTransfer,
+    private camera: Camera
   ) { }
 
   pickImage() {
@@ -59,6 +62,24 @@ let self = this;
             });
   }
 
+captureImage(){
+  const options: CameraOptions = {
+    quality: 100,
+    destinationType: this.camera.DestinationType.FILE_URI,
+    encodingType: this.camera.EncodingType.JPEG,
+    mediaType: this.camera.MediaType.PICTURE
+  }
+  
+  this.camera.getPicture(options).then((imageData) => {
+   // imageData is either a base64 encoded string or a file URI
+   // If it's base64 (DATA_URL):
+  // let base64Image = 'data:image/jpeg;base64,' + imageData;
+   this.cropImage(imageData);
+  }, (err) => {
+   // Handle error
+  });
+}
+
   cropImage(imgPath) {
     this.crop.crop(imgPath, { quality: 50 })
       .then(
@@ -79,7 +100,7 @@ let self = this;
     var filePath = ImagePath.split(imageName)[0];
     this.imageFileNames = imageName;
     this.file.readAsDataURL(filePath, imageName).then(base64 => {
-      this.croppedImagepath.next(base64);
+      //this.croppedImagepath.next(base64);
       this.uploadPic(base64, imageName);
       this.isLoading.next(false);
       
@@ -107,6 +128,7 @@ let self = this;
           this.appProvider.dismissLoading();
           let d = data.response;
           let detail = JSON.parse(d);
+          this.croppedImagepath.next(croppedImagepath);
           this.appProvider.showToast(detail.msg);
 
         }, error => {
