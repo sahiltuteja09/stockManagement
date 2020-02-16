@@ -3,6 +3,7 @@ import { CoreAppProvider } from 'src/app/providers/app';
 import { CoreConfigConstant } from '../../../../configconstants'
 import { ImageModalPage } from '../../image-modal/image-modal.page';
 import { ModalController } from '@ionic/angular';
+import { AuthenticationService } from '../../auth/authentication.service';
 
 @Component({
   selector: 'app-productview',
@@ -15,7 +16,15 @@ export class ProductviewPage implements OnInit {
   defaultImage: string = 'http://placehold.it/300x200';
   img_base: string = CoreConfigConstant.uploadedPath;
 
-  constructor(private appProvider: CoreAppProvider, private modalController: ModalController) { }
+  constructor(
+    private appProvider: CoreAppProvider, 
+    private modalController: ModalController, 
+    public authenticationService: AuthenticationService) { 
+      
+    const currentUser = this.authenticationService.currentUserValue;
+        const imgUserID = currentUser.id;
+        this.img_base = this.img_base + imgUserID + 'assets/';
+  }
 
   ngOnInit() {
    this.product = this.appProvider.tempStorage;

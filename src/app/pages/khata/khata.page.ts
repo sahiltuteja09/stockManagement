@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
-
+import { CoreConfigConstant } from 'src/configconstants';
+import { AuthenticationService } from '../auth/authentication.service';
+import { ImageModalPage } from '../image-modal/image-modal.page';
+import { ModalController } from '@ionic/angular';
 @Component({
   selector: 'app-khata',
   templateUrl: './khata.page.html',
@@ -18,9 +21,18 @@ export class KhataPage implements OnInit {
   noDataFound:string = 'Record not found.';
   balance:number = 0;
   balance_text :string = '';
-  constructor( private route: ActivatedRoute, private appProvider: CoreAppProvider, private curdService: CurdService) { 
+  customerImg:string = '';
+  img_base: string = CoreConfigConstant.uploadedPath;
+  constructor( private route: ActivatedRoute, private appProvider: CoreAppProvider, private curdService: CurdService, 
+    public authenticationService: AuthenticationService, 
+    private modalController: ModalController
+    ) { 
+      const currentUser = this.authenticationService.currentUserValue;
+      const imgUserID = currentUser.id;
+      this.img_base = this.img_base + imgUserID + 'assets/'; 
     this.queryParmSub = this.route.queryParams.subscribe(params => {
       this.searchTerm = params['mobile'];
+      this.customerImg = params['img'];
     });
   }
 
@@ -103,6 +115,16 @@ export class KhataPage implements OnInit {
   }
   ionViewWillLeave() {
       this.queryParmSub.unsubscribe();
+  }
+  openPreview(img) {
+    this.modalController.create({
+      component: ImageModalPage,
+      componentProps: {
+        img: img
+      }
+    }).then(modal => {
+      modal.present();
+    });
   }
 
 }

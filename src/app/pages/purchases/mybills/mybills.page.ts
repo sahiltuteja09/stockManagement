@@ -6,6 +6,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { CoreConfigConstant } from 'src/configconstants'
+import { AuthenticationService } from '../../auth/authentication.service';
 
 @Component({
   selector: 'app-mybills',
@@ -24,7 +25,13 @@ export class MybillsPage implements OnInit {
   img_base:string= CoreConfigConstant.uploadedPath;
   constructor(public appProvider : CoreAppProvider, public curdService: CurdService,private androidPermissions: AndroidPermissions,
     private localNotification: LocalnotificationService,private transfer: FileTransfer, 
-    private file: File) { }
+    private file: File, 
+    public authenticationService: AuthenticationService) { 
+      
+    const currentUser = this.authenticationService.currentUserValue;
+        const imgUserID = currentUser.id;
+        this.img_base = this.img_base + imgUserID + 'assets/';
+    }
 
   ngOnInit() {
     this.myBills();

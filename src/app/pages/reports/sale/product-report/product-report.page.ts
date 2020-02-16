@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { CoreConfigConstant } from 'src/configconstants';
+import { AuthenticationService } from 'src/app/pages/auth/authentication.service';
 
 @Component({
   selector: 'app-product-report',
@@ -45,8 +46,14 @@ stockmap: any = [];
 merchantmap:any = [];
   constructor(private route: ActivatedRoute,
     private appProvider: CoreAppProvider,
-    private curdService: CurdService
-  ) { }
+    private curdService: CurdService, 
+    public authenticationService: AuthenticationService) { 
+      
+    const currentUser = this.authenticationService.currentUserValue;
+        const imgUserID = currentUser.id;
+        this.img_base = this.img_base + imgUserID + 'assets/';
+
+  }
   // Prevent memory leaks
   ngOnDestroy() {
     this.routSub.unsubscribe();

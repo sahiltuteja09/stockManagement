@@ -32,6 +32,22 @@
               <div *ngIf="f.mobile_number.errors.maxlength">Cost cannot be greater than 13 digits.</div>
             </div>
           </ion-col>
+          <ion-col size="12" size-sm >
+
+            
+              <ion-list *ngIf="!isLoading && croppedImagepath">
+                <ion-item >
+                  <ion-thumbnail>
+                    <ion-img [src]="croppedImagepath"></ion-img>
+                  </ion-thumbnail>
+                </ion-item>
+              </ion-list>
+            <ion-button *ngIf="!isLoading" (click)="pickImage()" color="primary" small
+                  color="tertiary" shape="round">Upload Image</ion-button>
+                <ion-button *ngIf="isLoading && !croppedImagepath" color="primary" small color="tertiary" shape="round">
+                  Loading ...</ion-button>
+              <ion-input type="hidden" formControlName="image" [(ngModel)]="customer.image" name="image"></ion-input>
+          </ion-col>
         </ion-row>
 
         <br />

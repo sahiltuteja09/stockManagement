@@ -7,6 +7,7 @@ import { CallNumber } from '@ionic-native/call-number/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { ActivatedRoute } from '@angular/router';
 import { CurdService } from 'src/app/services/rest/curd.service';
+import { AuthenticationService } from '../../auth/authentication.service';
 @Component({
   selector: 'app-purchasesview',
   templateUrl: './purchasesview.page.html',
@@ -29,8 +30,19 @@ export class PurchasesviewPage implements OnInit {
   img_base: string = CoreConfigConstant.uploadedPath;
   queryParmSub:any;
   searchTerm:string;
-  constructor(private appProvider: CoreAppProvider,private modalController: ModalController,
-    private callNumber: CallNumber,private socialSharing: SocialSharing, private route: ActivatedRoute, private curdService: CurdService) { 
+  constructor(
+    private appProvider: CoreAppProvider,
+    private modalController: ModalController,
+    private callNumber: CallNumber,
+    private socialSharing: SocialSharing, 
+    private route: ActivatedRoute,
+     private curdService: CurdService, 
+     public authenticationService: AuthenticationService) { 
+       
+     const currentUser = this.authenticationService.currentUserValue;
+         const imgUserID = currentUser.id;
+         this.img_base = this.img_base + imgUserID + 'assets/';
+
     this.isMobile = this.appProvider.isMobile();
 
     this.queryParmSub = this.route.queryParams.subscribe(params => {

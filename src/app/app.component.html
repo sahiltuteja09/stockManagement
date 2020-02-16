@@ -25,6 +25,14 @@
             </ion-item>
           </ion-menu-toggle>
           <ion-menu-toggle auto-hide="false" >
+            <ion-item [routerLink]="'/change-password'">
+                <ion-icon slot="start" name="list"></ion-icon>
+                <ion-label>
+                  Change Password
+                </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false" >
           <ion-item *ngIf="loggedin" (click)="logout()">
               <ion-icon slot="start" name="list"></ion-icon>
               <ion-label>

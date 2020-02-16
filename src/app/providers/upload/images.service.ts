@@ -7,6 +7,7 @@ import { CoreAppProvider } from '../app';
 import { BehaviorSubject } from 'rxjs';
 import { CoreConfigConstant } from '../../../configconstants';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { AuthenticationService } from 'src/app/pages/auth/authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,8 @@ export class ImagesService {
     private imagePicker: ImagePicker,
     private file: File,
     private transfer: FileTransfer,
-    private camera: Camera
+    private camera: Camera,
+    private authenticationService: AuthenticationService,
   ) { }
 
   pickImage() {
@@ -123,8 +125,9 @@ captureImage(){
           chunkedMode: false,
           headers: {}
         }
-
-        fileTransfer.upload(croppedImagepath, this.END_POINT+'uploadProductImg', options).then(data => {
+        const currentUser = this.authenticationService.currentUserValue;
+        let userID = currentUser.id;
+        fileTransfer.upload(croppedImagepath, this.END_POINT+'uploadProductImg/'+userID, options).then(data => {
           this.appProvider.dismissLoading();
           let d = data.response;
           let detail = JSON.parse(d);

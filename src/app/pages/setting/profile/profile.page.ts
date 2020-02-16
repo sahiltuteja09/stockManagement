@@ -45,19 +45,19 @@ export class ProfilePage implements OnInit {
   imageName: string = '';
   isLoadingSubscriber;
   croppedImagepathSubscriber;
+  img_base: string = CoreConfigConstant.uploadedPath;
   constructor(
     public formBuilder: FormBuilder,
     public authenticationService: AuthenticationService,
     private appProvider: CoreAppProvider,
     private curdService: CurdService,
     private uploadImage: ImagesService,
-    public actionSheetController: ActionSheetController
-  ) {
-
+    public actionSheetController: ActionSheetController) { 
+      
     const currentUser = this.authenticationService.currentUserValue;
     if(currentUser == undefined) return;
     this.userID = currentUser.id;
-
+    this.img_base = this.img_base + this.userID + 'assets/';
     this.username = currentUser.username;
     this.email = currentUser.email;
     this.mobile = currentUser.mobile;
@@ -68,7 +68,7 @@ export class ProfilePage implements OnInit {
     this.profile.address = currentUser.address;
     this.profile.image = currentUser.image;
     if (this.profile.image) {
-      this.croppedImagepath = CoreConfigConstant.uploadedPath+currentUser.image;
+      this.croppedImagepath = this.img_base+currentUser.image;
       
     }
     this.updateDetails = formBuilder.group({
@@ -181,8 +181,6 @@ export class ProfilePage implements OnInit {
        
       });
     }
-
-    this.uploadImage.pickImage();
   }
 
   ionViewWillLeave() {

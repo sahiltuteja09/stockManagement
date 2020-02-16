@@ -4,6 +4,7 @@ import { CurdService } from 'src/app/services/rest/curd.service';
 import { CoreConfigConstant } from 'src/configconstants';
 import { ModalController } from '@ionic/angular';
 import { ImageModalPage } from '../../image-modal/image-modal.page';
+import { AuthenticationService } from '../../auth/authentication.service';
 
 @Component({
   selector: 'app-sale',
@@ -28,7 +29,17 @@ export class SalePage implements OnInit {
   defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
   img_base: string = CoreConfigConstant.uploadedPath;
   page: number = 1;
-  constructor(private appProvider: CoreAppProvider, private curdService: CurdService, private modalController: ModalController) { }
+  constructor(
+    private appProvider: CoreAppProvider,
+     private curdService: CurdService, 
+     private modalController: ModalController, 
+     public authenticationService: AuthenticationService) { 
+       
+     const currentUser = this.authenticationService.currentUserValue;
+         const imgUserID = currentUser.id;
+         this.img_base = this.img_base + imgUserID + 'assets/';
+
+     }
 
   ngOnInit() {
     this.getStockType();

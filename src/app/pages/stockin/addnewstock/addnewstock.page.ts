@@ -7,6 +7,7 @@ import { ScannerService } from 'src/app/providers/scanner.service';
 import { ActivatedRoute } from '@angular/router';
 import { CoreConfigConstant } from 'src/configconstants';
 import { ActionSheetController } from '@ionic/angular';
+import { AuthenticationService } from '../../auth/authentication.service';
 
 interface Stock {
   product_unique: string;
@@ -45,6 +46,7 @@ export class AddnewstockPage implements OnInit {
   routSub: any;
   product_id: number = 0;
   scanType:string = '';
+  img_base: string = CoreConfigConstant.uploadedPath;
   constructor(
     private scanService: ScannerService,
     public formBuilder: FormBuilder,
@@ -52,9 +54,12 @@ export class AddnewstockPage implements OnInit {
     private curdService: CurdService,
     private uploadImage: ImagesService,
     private route: ActivatedRoute,
-    public actionSheetController: ActionSheetController
-  ) {
-
+    public actionSheetController: ActionSheetController, 
+    public authenticationService: AuthenticationService) { 
+      
+    const currentUser = this.authenticationService.currentUserValue;
+        const imgUserID = currentUser.id;
+        this.img_base = this.img_base + imgUserID + 'assets/';
 
     this.stock = {
       'product_unique': '',
@@ -123,7 +128,7 @@ export class AddnewstockPage implements OnInit {
                 'product_placed': data.data.product_placed
               }
               if(data.data.image)
-                this.croppedImagepath = CoreConfigConstant.uploadedPath + data.data.image;
+                this.croppedImagepath = this.img_base + data.data.image;
 
             } else {
               this.appProvider.showToast(data.msg);

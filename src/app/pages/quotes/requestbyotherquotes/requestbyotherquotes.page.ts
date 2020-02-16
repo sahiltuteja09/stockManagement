@@ -4,6 +4,7 @@ import { CurdService } from 'src/app/services/rest/curd.service';
 import { ModalController } from '@ionic/angular';
 import { ImageModalPage } from '../../image-modal/image-modal.page';
 import { CoreConfigConstant } from '../../../../configconstants';
+import { AuthenticationService } from '../../auth/authentication.service';
 @Component({
   selector: 'app-requestbyotherquotes',
   templateUrl: './requestbyotherquotes.page.html',
@@ -16,7 +17,17 @@ export class RequestbyotherquotesPage implements OnInit {
   noDataFound: string = 'Fetching records...';
   defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
   img_base: string = CoreConfigConstant.uploadedPath;
-  constructor(private appProvider: CoreAppProvider, private curdService: CurdService, private modalController: ModalController) { }
+  constructor(
+    private appProvider: CoreAppProvider, 
+    private curdService: CurdService, 
+    private modalController: ModalController, 
+    public authenticationService: AuthenticationService) { 
+      
+    const currentUser = this.authenticationService.currentUserValue;
+        const imgUserID = currentUser.id;
+        this.img_base = this.img_base + imgUserID + 'assets/';
+
+     }
 
   ngOnInit() {
     this.otherQuotes();

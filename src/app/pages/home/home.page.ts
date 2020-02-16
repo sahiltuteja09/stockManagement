@@ -38,6 +38,7 @@ export class HomePage {
 
     const currentUser = this.authenticationService.currentUserValue;
     this.userID = currentUser.id;
+    this.img_base = this.img_base + this.userID + 'assets/';
     this.checkNetworkStatus();
     this.checkUpdates();
     this.unreadMsgSub = this.secondsCounter.subscribe(x => { // will execute every 30 seconds

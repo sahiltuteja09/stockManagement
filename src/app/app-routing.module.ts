@@ -60,6 +60,7 @@ const routes: Routes = [
   { path: 'purchasesview', loadChildren: './pages/purchases/purchasesview/purchasesview.module#PurchasesviewPageModule' },
   { path: 'productview', loadChildren: './pages/myproducts/productview/productview.module#ProductviewPageModule' },
   { path: 'mybills', loadChildren: './pages/purchases/mybills/mybills.module#MybillsPageModule' },
+  { path: 'change-password', loadChildren: './pages/setting/change-password/change-password.module#ChangePasswordPageModule' },
 
 
 

@@ -6,11 +6,6 @@
     <ion-title>
       My Khatas
     </ion-title>
-    <ion-buttons slot="secondary" routerLink="/addcustomer">
-      <ion-button>
-        <ion-icon slot="icon-only" name="add"></ion-icon> Add Customer
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -47,7 +42,12 @@
     <ion-virtual-scroll [items]="mykhatas.data" >
         <ion-item *virtualItem="let item;" (click)="goto('khata', item)">
           <ion-avatar slot="start">
+            <span *ngIf="customerImages[item.mobile_number]">
+              <img [src]="img_base + customerImages[item.mobile_number]">
+            </span>
+            <span *ngIf="!customerImages[item.mobile_number]">
             <text-avatar [text]="item.name"  textColor="#fff"></text-avatar>
+          </span>
           </ion-avatar>
           <ion-label>
             <h3>{{item.name | titlecase}}</h3>
@@ -76,7 +76,7 @@
   </ion-infinite-scroll>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
-    <ion-fab-button color="danger" routerDirection="forward" data-desc="Add New" routerLink="/addcustomer">
+    <ion-fab-button color="danger" routerDirection="forward" data-desc="Add Customer" routerLink="/addcustomer">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

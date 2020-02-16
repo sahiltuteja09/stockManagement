@@ -6,6 +6,7 @@ import { ImagesService } from 'src/app/providers/upload/images.service';
 import { ActivatedRoute } from '@angular/router';
 import { CoreConfigConstant } from 'src/configconstants';
 import { ActionSheetController } from '@ionic/angular';
+import { AuthenticationService } from '../auth/authentication.service';
 
 
 interface Purchases {
@@ -40,14 +41,19 @@ export class PurchasesPage implements OnInit {
   selectedAmazountPaid = 'full';
   partialChecked:boolean = false;
   partialAmount:any =0;
+  img_base: string = CoreConfigConstant.uploadedPath;
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
     private curdService: CurdService,
     private uploadImage: ImagesService,
     private route: ActivatedRoute,
-    public actionSheetController: ActionSheetController
-  ) {
+    public actionSheetController: ActionSheetController, 
+    public authenticationService: AuthenticationService) { 
+      
+    const currentUser = this.authenticationService.currentUserValue;
+        const imgUserID = currentUser.id;
+        this.img_base = this.img_base + imgUserID + 'assets/';
 
     this.purchase = {
       'totalcost': 0,
@@ -122,7 +128,7 @@ this.partialAmount = data.data.amount_paid;
               //   this.purchase.amount_paid = data.data.amount_paid;
               // }, 1000);
               if(data.data.image)
-                this.croppedImagepath = CoreConfigConstant.uploadedPath + data.data.image;
+                this.croppedImagepath = this.img_base + data.data.image;
 
             } else {
               this.appProvider.showToast(data.msg);

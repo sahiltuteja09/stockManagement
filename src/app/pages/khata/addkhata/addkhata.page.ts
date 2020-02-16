@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ImagesService } from 'src/app/providers/upload/images.service';
 import { CoreConfigConstant } from '../../../../configconstants';
 import { ActionSheetController } from '@ionic/angular';
+import { AuthenticationService } from '../../auth/authentication.service';
 
 @Component({
   selector: 'app-addkhata',
@@ -28,15 +29,18 @@ export class AddkhataPage implements OnInit {
   countImage: number = 0;
   constructor(
     private uploadImage: ImagesService,
-    private appProvider: CoreAppProvider, 
-    private curdService: CurdService, 
+    private appProvider: CoreAppProvider,
+    private curdService: CurdService,
     public formBuilder: FormBuilder,
+    private authenticationService: AuthenticationService,
     public actionSheetController: ActionSheetController) {
     // this.queryParmSub = this.route.queryParams.subscribe(params => {
     //   // this.khata_type = params['type'];
     //   // this.mobile = params['mobile'];
     // });
-
+    const currentUser = this.authenticationService.currentUserValue;
+    const imgUserID = currentUser.id;
+    this.img_url = this.img_url + imgUserID + 'assets/';
     this.khata = {
       'amount': 0,
       'description': '',
@@ -51,7 +55,7 @@ export class AddkhataPage implements OnInit {
 
   ngOnInit() {
     this.isMobile = this.appProvider.isMobile();
-  //this.croppedImagepath = ['1567572520240-cropped.jpg', '1567572520240-cropped.jpg'];
+    //this.croppedImagepath = ['1567572520240-cropped.jpg', '1567572520240-cropped.jpg'];
   }
   saveKhata() {
     this.appProvider.showLoading().then(loading => {
@@ -94,7 +98,7 @@ export class AddkhataPage implements OnInit {
   }
   saveKhataImage(id) {
     let param = { 'id': id };
-    let images = { 'image': this.croppedImagepath };
+    let images = { 'images': this.croppedImagepath };
 
     let merged = { ...param, ...images };
     this.appProvider.showLoading().then(loading => {
@@ -141,13 +145,13 @@ export class AddkhataPage implements OnInit {
 
     }
   }
-  pickImage(type?:string) {
+  pickImage(type?: string) {
     if (!this.isMobile)
       return false;
-      if(type== 'camera')
+    if (type == 'camera')
       this.uploadImage.captureImage();
-      else
-    this.uploadImage.pickImage();
+    else
+      this.uploadImage.pickImage();
     if (typeof this.isLoadingSubscriber != 'object') {
       this.isLoadingSubscriber = this.uploadImage.isLoading.subscribe((data) => {
         console.log('isLoadingSubscriber ' + data);

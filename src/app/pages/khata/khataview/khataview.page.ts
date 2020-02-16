@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
-import { Platform } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import {CoreConfigConstant} from '../../../../configconstants';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from '../../auth/authentication.service';
+import { ImageModalPage } from '../../image-modal/image-modal.page';
 @Component({
   selector: 'app-khataview',
   templateUrl: './khataview.page.html',
@@ -18,13 +20,19 @@ export class KhataviewPage implements OnInit {
 
   queryParmSub: any;
   khata_id:number = 0;
+  khataImges:any = [];
+  img_base: string = CoreConfigConstant.uploadedPath;
   constructor(
     public appProvider: CoreAppProvider, 
     public platform:Platform, 
     private socialSharing: SocialSharing,
     private curdService: CurdService,
-    private route: ActivatedRoute
-    ) {
+    private route: ActivatedRoute, private modalController: ModalController,
+    public authenticationService: AuthenticationService
+    ) { 
+      const currentUser = this.authenticationService.currentUserValue;
+      const imgUserID = currentUser.id;
+      this.img_base = this.img_base + imgUserID + 'assets/';
       this.queryParmSub = this.route.queryParams.subscribe(params => {
         this.khata_id = params['khata_id'];
       });
@@ -38,7 +46,7 @@ export class KhataviewPage implements OnInit {
   this.backButtonSub =  this.platform.backButton.subscribe(async () => {
       this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number} });
     });
-
+this.getKhataImages();
     if(typeof this.khataDetail == 'undefined')
       this.khataDetails();
   }
@@ -79,6 +87,16 @@ editKhatas(){
   // this.appProvider.tempData({'name':this.khataDetail.name,'id':this.khataDetail.id, 'type':type, 'mobile': this.khataDetail.mobile_number, 'amount': amount,'description': this.khataDetail.description,purchase_date:new Date().toISOString()});
   //   this.appProvider.searchParam('addkhata');
 }
+openPreview(img) {
+  this.modalController.create({
+    component: ImageModalPage,
+    componentProps: {
+      img: img
+    }
+  }).then(modal => {
+    modal.present();
+  });
+}
 shareViaWhatsAppToReceiver(){
   let txt = '';
   if(this.khataDetail.you_got > 0){
@@ -88,6 +106,30 @@ shareViaWhatsAppToReceiver(){
     txt = 'You received rs. '+this.khataDetail.you_got +' on '+this.khataDetail.on_date;
   }
   this.socialSharing.shareViaWhatsAppToReceiver(this.khataDetail.mobile_number, txt);
+}
+getKhataImages(){
+  this.appProvider.showLoading().then(loading => {
+    loading.present().then(() => {
+      let param = { 'khata_id':this.khata_id };
+      this.curdService.getData('getKhataImages', param)
+        .subscribe((data: any) => {
+          if (data.status == false) {
+            // no product found
+            this.khataImges = data;
+            this.noDataFound = '';
+          } else {
+            this.khataImges = [];
+            this.khataImges = data;
+          }
+          this.appProvider.dismissLoading();
+        },
+          error => {
+            this.appProvider.showToast(error);
+            this.appProvider.dismissLoading();
+          }
+        );
+    });
+  });
 }
 shareSocial(){
   let txt = '';

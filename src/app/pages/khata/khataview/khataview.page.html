@@ -18,20 +18,20 @@
   <ion-card>
     <ion-row>
       <ion-col class="ion-text-center" size="12">
-        
+
         <ion-text class="ion-padding-top">
-        {{khataDetail.name}} {{khataDetail.you_got > 0 ? 'Paid' : 'Took'}}
-      </ion-text>
-      <ion-icon name="checkmark-circle-outline"></ion-icon>
+          {{khataDetail.name}} {{khataDetail.you_got > 0 ? 'Paid' : 'Took'}}
+        </ion-text>
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
         <h6 *ngIf="khataDetail.you_got > 0 ">
           <ion-text [color]="'success'">
-            Rs. {{khataDetail.you_got}}/- 
-            </ion-text>
+            Rs. {{khataDetail.you_got}}/-
+          </ion-text>
         </h6>
         <h6 *ngIf="khataDetail.you_paid > 0 ">
           <ion-text [color]="'danger'">
-            Rs. {{khataDetail.you_paid}}/- 
-            </ion-text>
+            Rs. {{khataDetail.you_paid}}/-
+          </ion-text>
         </h6>
         on {{khataDetail.on_date}}
       </ion-col>
@@ -41,30 +41,45 @@
     </ion-row>
 
   </ion-card>
-<ion-card>
-    
-  </ion-card>
+  <div *ngIf="khataImges.status">
+    <ion-row>
+      <ion-col size="2"  size-sm *ngFor="let imges of khataImges.data">
+      <ion-card class="ion-text-center" >
+        <ion-thumbnail>
+          <img [src]="img_base+imges.image" tappable (click)="openPreview(img_base+imges.image)">
+        </ion-thumbnail>
+      </ion-card>
+      </ion-col>
+    </ion-row>
+  </div>
 </ion-content>
 
 <ion-footer no-border>
-  <ion-list *ngIf="this.isMobile" >
+  <ion-list *ngIf="this.isMobile">
     <ion-item (click)="shareViaWhatsAppToReceiver()">
-      <ion-button slot="start" color="success">  <ion-icon name="logo-whatsapp">  </ion-icon> </ion-button>
+      <ion-button slot="start" color="success">
+        <ion-icon name="logo-whatsapp"> </ion-icon>
+      </ion-button>
       <ion-label>Share on WhatsApp</ion-label>
       <ion-icon name="arrow-dropright" class="end"></ion-icon>
     </ion-item>
     <ion-item (click)="shareSocial()">
-      <ion-button slot="start" color="success"> <ion-icon name="share-alt"></ion-icon></ion-button>
+      <ion-button slot="start" color="success">
+        <ion-icon name="share-alt"></ion-icon>
+      </ion-button>
       <ion-label>Share</ion-label>
       <ion-icon name="arrow-dropright" class="end"></ion-icon>
     </ion-item>
   </ion-list>
   <ion-list *ngIf="khataDetail.purchase_id > 0">
     <ion-item (click)="viewBill(khataDetail)">
-      <ion-button slot="start" color="success"> <ion-icon name="cash"></ion-icon></ion-button>
+      <ion-button slot="start" color="success">
+        <ion-icon name="cash"></ion-icon>
+      </ion-button>
       <ion-label>Bill related to this transaction</ion-label>
       <ion-icon name="arrow-dropright" class="end"></ion-icon>
     </ion-item>
   </ion-list>
-    <ion-button (click)="deleteTransaction()" expand="full" color="danger" class="ion-text-uppercase">Delete Transaction</ion-button>
+  <ion-button (click)="deleteTransaction()" expand="full" color="danger" class="ion-text-uppercase">Delete Transaction
+  </ion-button>
 </ion-footer>

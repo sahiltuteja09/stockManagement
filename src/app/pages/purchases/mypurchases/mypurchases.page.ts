@@ -9,6 +9,7 @@ import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocalnotificationService } from 'src/app/services/notification/localnotification.service';
+import { AuthenticationService } from '../../auth/authentication.service';
 @Component({
   selector: 'app-mypurchases',
   templateUrl: './mypurchases.page.html',
@@ -44,8 +45,13 @@ export class MypurchasesPage implements OnInit {
     private transfer: FileTransfer, 
      private file: File,
      private androidPermissions: AndroidPermissions,
-     private localNotification: LocalnotificationService
-    ) { }
+     private localNotification: LocalnotificationService, 
+     public authenticationService: AuthenticationService) { 
+       
+     const currentUser = this.authenticationService.currentUserValue;
+         const imgUserID = currentUser.id;
+         this.img_base = this.img_base + imgUserID + 'assets/';
+     }
 
     openPreview(img) {
       this.modalController.create({

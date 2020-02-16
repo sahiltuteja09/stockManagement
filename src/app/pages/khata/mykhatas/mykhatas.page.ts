@@ -2,6 +2,7 @@
   import { CoreAppProvider } from 'src/app/providers/app';
   import { CurdService } from 'src/app/services/rest/curd.service';
   import { CoreConfigConstant } from 'src/configconstants';
+import { AuthenticationService } from '../../auth/authentication.service';
   @Component({
     selector: 'app-mykhatas',
     templateUrl: './mykhatas.page.html',
@@ -10,6 +11,7 @@
   export class MykhatasPage implements OnInit {
     page: number = 1;
     mykhatas: any = [];
+    customerImages: any = [];
     lifetimePaid:any;
     lifetimeGot:any;
     noDataFound: string = 'Fetching records...';
@@ -19,8 +21,12 @@
     keyword:string = '';
     constructor(
       private appProvider: CoreAppProvider, 
-      private curdService: CurdService
-      ) { }
+      private curdService: CurdService, public authenticationService: AuthenticationService
+      ) { 
+        const currentUser = this.authenticationService.currentUserValue;
+        const imgUserID = currentUser.id;
+        this.img_base = this.img_base + imgUserID + 'assets/';
+      }
   
     ngOnInit() {
       
@@ -45,12 +51,14 @@
                 // no product found
                 this.noDataFound = data.msg;
                 this.mykhatas = [];
+                this.customerImages = [];
                 this.lifetimePaid = data.you_paid;
                 this.lifetimeGot = data.you_got;
               } else {
                 this.mykhatas = data;
                 this.lifetimePaid = data.you_paid;
                 this.lifetimeGot = data.you_got;
+                this.customerImages = data.customer_images;
                 this.page = this.page + 1;
               }
               this.appProvider.dismissLoading();
@@ -83,6 +91,7 @@
                 this.mykhatas = data;
                 this.lifetimePaid = data.you_paid;
                 this.lifetimeGot = data.you_got;
+                this.customerImages = data.customer_images;
                 this.page = this.page + 1;
               }
               setTimeout(() => {
@@ -101,8 +110,11 @@
       // });
     }
     goto(page,khata) {
-  
-      this.appProvider.searchParam(page, { queryParams: { mobile:  khata.mobile_number} });
+  let customerImg = this.customerImages[khata.mobile_number];
+  if(!customerImg){
+    customerImg = '';
+  }
+      this.appProvider.searchParam(page, { queryParams: { mobile:  khata.mobile_number, img:customerImg} });
     }
   
     doRefresh(event) {
@@ -136,6 +148,7 @@
                 for (let i = 0; i < result.data.length; i++) {
                   this.mykhatas.data.push(result.data[i]);
                 }
+                this.customerImages.push(result.customer_images);
                 this.page = this.page + 1;
               }
             },
