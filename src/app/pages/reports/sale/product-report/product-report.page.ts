@@ -44,6 +44,8 @@ export class ProductReportPage implements OnInit {
   // for name maping dynamically
 stockmap: any = [];
 merchantmap:any = [];
+invested = 0;
+return_refund=0;
   constructor(private route: ActivatedRoute,
     private appProvider: CoreAppProvider,
     private curdService: CurdService, 
@@ -95,10 +97,15 @@ merchantmap:any = [];
             if (data.status == false) {
               // no product found
               this.product_reports = [];
+              this.invested = data.stockOutSum;
+              this.return_refund=data.stockInSum;
+              this.noDataFound = data.msg;
             } else {
               this.product_reports = data;
               this.product_name_header = data;
               this.page = this.page+1;
+              this.invested = data.stockOutSum;
+              this.return_refund= data.stockInSum;
             }
             this.appProvider.dismissLoading();
           },
@@ -145,9 +152,14 @@ merchantmap:any = [];
             if (data.status == false) {
               // no product found
               this.product_reports = [];
+              this.invested = data.stockOutSum;
+              this.return_refund=data.stockInSum;
+              this.noDataFound = data.msg;
             } else {
               this.product_reports = data;
               this.page = this.page+1;
+              this.invested = data.stockOutSum;
+              this.return_refund= data.stockInSum;
             }
             this.appProvider.dismissLoading();
           },

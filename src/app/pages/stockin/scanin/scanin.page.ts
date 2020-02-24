@@ -50,6 +50,11 @@ img_base: string = CoreConfigConstant.uploadedPath;
 
   public updatestockdetail: FormGroup;
 
+  defaultSelecteType= '3';
+  compareWithType : any ;
+  defaultSelecteMerchant = '1';
+  compareWithMerchant : any ;
+  purchaseCost:number = 0;
   constructor(
     private scanService: ScannerService,
     private curdService: CurdService,
@@ -65,7 +70,8 @@ img_base: string = CoreConfigConstant.uploadedPath;
       quantity: new FormControl(),
       product_status_id: new FormControl(),
       marketplace_id: new FormControl(),
-      product_id: new FormControl()
+      product_id: new FormControl(),
+      sale_price: new FormControl(),
     });
 
     this.queryParmSub = this.route.queryParams.subscribe(params => {
@@ -73,6 +79,15 @@ img_base: string = CoreConfigConstant.uploadedPath;
     });
     this.getStockType();
     this.getMerchants();
+
+    this.compareWithType = this.compareWithFn;
+    this.compareWithMerchant = this.compareWithMerchantFn;
+  }
+  compareWithFn(o1, o2) {
+    return o1 === o2;
+  }
+  compareWithMerchantFn(o1, o2) {
+    return o1 === o2;
   }
   ionViewWillEnter() {
     this.isMobileDevice = this.appProvider.isMobile();
@@ -151,15 +166,19 @@ img_base: string = CoreConfigConstant.uploadedPath;
     }, 2000);
   }
 
-  updateStock(quantity, productId, product_status_id, marketplace_id, reason, noUIDFOUND?:number) {
+  updateStock(quantity, productId, product_status_id, marketplace_id, reason, noUIDFOUND?:number, sale_price?:any) {
 
     if (quantity > 0) {
       if (product_status_id == '') {
         this.appProvider.showToast('Stock type is required.');
         return;
       }
-      let stock = { 'save_to_product_uids': 0, 'quantity': quantity, 'id': productId, 'product_status_id': product_status_id, 'marketplace_id': marketplace_id, 'stockType': 1, 'reason': reason }
-     
+      if(productId == '' || productId == undefined){
+        this.appProvider.showToast('Invalid product!! Please select a product.');
+        return;
+      }
+      let stock = { 'save_to_product_uids': 0, 'quantity': quantity, 'id': productId, 'product_status_id': product_status_id, 'marketplace_id': marketplace_id, 'stockType': 1, 'reason': reason, 'sale_price':sale_price }
+      
       if(noUIDFOUND == 1){
         if (marketplace_id == '') {
           this.appProvider.showToast('Please select the merchant.');
@@ -286,6 +305,12 @@ img_base: string = CoreConfigConstant.uploadedPath;
     console.log(product);
     this.availableQuantity = product.detail.value.quantity;
     this.product_image = product.detail.value.image;
+    this.purchaseCost = product.detail.value.purchase_cost;
+  }
+  resetProductView(){
+    this.availableQuantity =0;
+    this.product_image = '';
+    this.purchaseCost = 0;
   }
 
   // scanCode() {

@@ -25,14 +25,27 @@
                 <ion-text color="primary"> {{product_report.remaining_quantity}}</ion-text>
               </small>
             </ion-col>
+            <ion-row>
             <ion-col size="3" size-sm align-items-end>
               <small class="deal_price"><b>Product added on:- </b>
                 <ion-text color="primary"> {{product_report.addedDate | timeAgo}}</ion-text>
               </small>
             </ion-col>
-            <ion-col size="3" size-sm>
-
+          </ion-row>
+          <ion-row>
+            <ion-col size="3" size-sm align-items-end>
+              <small class="deal_price"><b>Invested:- </b>
+                <ion-text class="required"> Rs. {{invested}}/-</ion-text>
+              </small>
             </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="3" size-sm align-items-end>
+              <small class="deal_price"><b>Return/Refund:- </b>
+                <ion-text class="success">Rs. {{return_refund}}/-</ion-text>
+              </small>
+            </ion-col>
+          </ion-row>
           </ion-label>
 
         </ion-item>
@@ -97,22 +110,27 @@
       <ion-row>
         <ion-col size="3">
           <div class="ion-text-center">
-            Merchant
+            <small> <strong>Merchant</strong></small>
           </div>
         </ion-col>
-        <ion-col size="3">
+        <ion-col size="2">
           <div class="ion-text-center">
-            Status Type
+            <small> <strong>Status Type</strong></small>
           </div>
         </ion-col>
-        <ion-col size="3">
+        <ion-col size="2">
           <div class="ion-text-center">
-            Quantity
+            <small><strong>Quantity</strong></small>
           </div>
         </ion-col>
-        <ion-col size="3">
+        <ion-col size="2">
             <div class="ion-text-center">
-              Date
+              <small> <strong>Sale Amount</strong></small>
+            </div>
+          </ion-col>
+          <ion-col size="3">
+            <div class="ion-text-center">
+              <small><strong>Date</strong></small>
             </div>
           </ion-col>
       </ion-row>
@@ -126,22 +144,27 @@
             <ion-row (click)="showHide(product_report.id)">
               <ion-col size="3">
                 <div class="ion-text-center">  
-                  {{merchantName(product_report.marketplace_id)}}
+                 <small>{{merchantName(product_report.marketplace_id)}}</small> 
                 </div>
               </ion-col>
-              <ion-col size="3">
+              <ion-col size="2">
                 <div class="ion-text-center">
-                    {{stockName(product_report.product_status_id)}}
+                  <small> {{stockName(product_report.product_status_id)}}</small> 
                 </div>
               </ion-col>
-              <ion-col size="3">
+              <ion-col size="2">
                 <div class="ion-text-center">
-                    {{product_report.quantity}}
+                  <small> {{product_report.quantity}}</small> 
+                </div>
+              </ion-col>
+              <ion-col size="2">
+                <div class="ion-text-center">
+                  <small> {{product_report.sale_price}}</small> 
                 </div>
               </ion-col>
               <ion-col size="3">
                   <div class="ion-text-center">
-                      {{product_report.date_added | timeAgo}}
+                    <small> {{product_report.date_added | timeAgo}}</small> 
                   </div>
                 </ion-col>
             </ion-row>

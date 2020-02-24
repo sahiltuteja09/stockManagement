@@ -66,15 +66,38 @@
             <ion-row>
               <ion-col size="6" size-sm>
                 <ion-item>
-                  <ion-label position="floating">Add Quantity</ion-label>
-                  <ion-input type="number" formControlName="quantity" name="quantity" maxlength="5" #qtyInput></ion-input>
+                  <ion-label position="floating">Add Quantity<span class="required">*</span></ion-label>
+                  <ion-input type="number" formControlName="quantity" value="1" name="quantity" maxlength="5" #qtyInput></ion-input>
                 </ion-item>
                 <div class="ion-text-end">Available: {{result.quantity}}</div>
               </ion-col>
               <ion-col size="6" size-sm> 
                 <ion-item>
-                  <ion-label position="floating">Stock Type</ion-label>
-                  <ion-select placeholder="Select One" name="product_status_id" formControlName="product_status_id" #product_status_id>
+                  <ion-item>
+                    <ion-label position="floating">Sale Price<span class="required">*</span></ion-label>
+                    <ion-input type="number" formControlName="sale_price" required maxlength="6" #sale_price [value]="result.purchase_cost"
+                    name="sale_price"></ion-input>
+                  </ion-item>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col size="6" size-sm>
+                  <ion-item>
+                    <ion-label  position="floating">Merchants</ion-label>
+                    <ion-select [compareWith]="compareWithMerchant" value="{{defaultSelecteMerchant}}" placeholder="Select One" name="marketplace_id" formControlName="marketplace_id" #marketplace_id>
+                      <ion-select-option 
+                        *ngFor="let merchant of merchants.data"
+                         [value]="merchant.id"
+                         >{{merchant.name}}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+              </ion-col>
+              <ion-col size="6" size-sm> 
+                <ion-item>
+                  <ion-label position="floating">Stock Type<span class="required">*</span></ion-label>
+                  <ion-select [compareWith]="compareWithType" value="{{defaultSelecteType}}"  placeholder="Select One" name="product_status_id" formControlName="product_status_id" #product_status_id>
                     <ion-select-option 
                     *ngFor="let stockTypes of stockStatus.data | stocktypepipe: 1"
                      [value]="stockTypes.id"
@@ -83,24 +106,15 @@
                 </ion-item>
               </ion-col>
             </ion-row>
-            <ion-list>
-              <ion-item>
-                <ion-label  position="floating">Merchants</ion-label>
-                <ion-select placeholder="Select One" name="marketplace_id" formControlName="marketplace_id" #marketplace_id>
-                  <ion-select-option 
-                    *ngFor="let merchant of merchants.data"
-                     [value]="merchant.id"
-                     >{{merchant.name}}</ion-select-option>
-                </ion-select>
-              </ion-item>
-            </ion-list>
+
+            
             <ion-list>
               <ion-item>
                   <ion-label  position="floating">Enter more information here...</ion-label>
                 <ion-textarea name="reason" #reason></ion-textarea>
               </ion-item>
             </ion-list>
-            <ion-button color="success" (click)="updateStock(qtyInput.value, result.id,product_status_id.value, marketplace_id.value, reason.value)" type="submit" block>Update</ion-button>
+            <ion-button color="success" (click)="updateStock(qtyInput.value, result.id,product_status_id.value, marketplace_id.value, reason.value, 0, sale_price.value)" type="submit" block>Update</ion-button>
             <ion-button color="danger" type="button" block routerLink="/addnewstock/{{result.id}}">Edit</ion-button>
           </form>
         </ion-col>
@@ -132,7 +146,7 @@
                       <img src="{{product_image == '' ? defaultImage : img_base+product_image}}">
                     </ion-thumbnail>
                     <ion-item>
-                      <ion-label position="floating">Stock Type</ion-label>
+                      <ion-label position="floating">Stock Type<span class="required">*</span></ion-label>
                       <ion-select placeholder="Select One" name="product_id" (ionChange)="setProductView($event)" #product_id formControlName="product_id">
                         <ion-select-option 
                         *ngFor="let item of products.data"
@@ -146,15 +160,38 @@
                 <ion-row>
                   <ion-col size="6" size-sm>
                     <ion-item>
-                      <ion-label position="floating">Add Quantity</ion-label>
-                      <ion-input type="number" formControlName="quantity" name="quantity" maxlength="5" #qtyInput></ion-input>
+                      <ion-label position="floating">Add Quantity<span class="required">*</span></ion-label>
+                      <ion-input type="number" formControlName="quantity" name="quantity" value="1" maxlength="5" #qtyInput></ion-input>
                     </ion-item>
                     <div class="ion-text-end">Available: {{availableQuantity}}</div>
                   </ion-col>
                   <ion-col size="6" size-sm> 
                     <ion-item>
-                      <ion-label position="floating">Stock Type</ion-label>
-                      <ion-select placeholder="Select One" name="product_status_id" formControlName="product_status_id" #product_status_id>
+                      <ion-item>
+                        <ion-label position="floating">Sale Price<span class="required">*</span></ion-label>
+                        <ion-input type="number" formControlName="sale_price" required maxlength="6" #sale_price [value]="purchaseCost"
+                        name="sale_price"></ion-input>
+                      </ion-item>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row>
+                  <ion-col size="6" size-sm>
+                    <ion-item>
+                      <ion-label  position="floating">Merchants<span class="required">*</span></ion-label>
+                      <ion-select [compareWith]="compareWithMerchant" value="{{defaultSelecteMerchant}}" placeholder="Select One" name="marketplace_id" formControlName="marketplace_id" #marketplace_id>
+                        <ion-select-option 
+                          *ngFor="let merchant of merchants.data"
+                           [value]="merchant.id"
+                           >{{merchant.name}}</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size="6" size-sm> 
+                    <ion-item>
+                      <ion-label position="floating">Stock Type<span class="required">*</span></ion-label>
+                      <ion-select [compareWith]="compareWithType" value="{{defaultSelecteType}}"  placeholder="Select One" name="product_status_id" formControlName="product_status_id" #product_status_id>
                         <ion-select-option 
                         *ngFor="let stockTypes of stockStatus.data | stocktypepipe: 1"
                          [value]="stockTypes.id"
@@ -165,22 +202,11 @@
                 </ion-row>
                 <ion-list>
                   <ion-item>
-                    <ion-label  position="floating">Merchants</ion-label>
-                    <ion-select placeholder="Select One" name="marketplace_id" formControlName="marketplace_id" #marketplace_id>
-                      <ion-select-option 
-                        *ngFor="let merchant of merchants.data"
-                         [value]="merchant.id"
-                         >{{merchant.name}}</ion-select-option>
-                    </ion-select>
-                  </ion-item>
-                </ion-list>
-                <ion-list>
-                  <ion-item>
                       <ion-label  position="floating">Enter more information here...</ion-label>
                     <ion-textarea name="reason" #reason></ion-textarea>
                   </ion-item>
                 </ion-list>
-                <ion-button color="success" (click)="updateStock(qtyInput.value, product_id.value.id,product_status_id.value, marketplace_id.value, reason.value, 1)" type="submit" block>Update</ion-button>
+                <ion-button color="success" (click)="updateStock(qtyInput.value, product_id.value.id,product_status_id.value, marketplace_id.value, reason.value, 1, sale_price.value)" type="submit" block>Update</ion-button>
                 <ion-button color="danger" type="button" block routerLink="/addnewstock/1">Edit</ion-button>
               </form>
             </ion-col>

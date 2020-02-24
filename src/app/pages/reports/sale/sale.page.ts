@@ -29,6 +29,8 @@ export class SalePage implements OnInit {
   defaultImage:string = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
   img_base: string = CoreConfigConstant.uploadedPath;
   page: number = 1;
+  stockInSum:any = {};
+  stockOutSum:any = {};
   constructor(
     private appProvider: CoreAppProvider,
      private curdService: CurdService, 
@@ -70,7 +72,7 @@ export class SalePage implements OnInit {
     this.reportData = [];
     let parameter= this.formatDate();
   if(!parameter){
-return;
+      return;
   }  
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
@@ -81,7 +83,10 @@ return;
               this.appProvider.showToast(data.msg);
               this.noDataFound = data.msg;
             } else {
+              console.log(data);
               this.reportData = data;
+              this.stockInSum = data.stockin;
+              this.stockOutSum = data.stock_out;
               this.page = this.page+1;
             }
             setTimeout(() => {
@@ -126,6 +131,8 @@ return;
                 this.reportData.data.push(result.data[i]);
               }
               this.page = this.page + 1;
+              this.stockInSum = result.stockin;
+              this.stockOutSum = result.stock_out;
             }
           },
           error => {
@@ -172,7 +179,22 @@ return;
         }
       );
   }
-
+  getStockIn(pid:any){
+   // console.log(this.stockInSum[pid]);
+    if(this.stockInSum[pid] == undefined){
+      return 0;
+    }else{
+      return this.stockInSum[pid][1];
+    }
+  }
+  getStockOut(pid:any){
+    // console.log(this.stockInSum[pid]);
+     if(this.stockOutSum[pid] == undefined){
+       return 0;
+     }else{
+       return this.stockOutSum[pid][2];
+     }
+   }
   goforProductReport(product_history) {
     this.appProvider.navTo('product-report', product_history.product_id, { queryParams: { marketplace_id: this.merchant, product_status_id: this.stockType, start_date:this.startDate_date_format, end_date:this.endDate_date_format } });
   }

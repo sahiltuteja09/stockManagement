@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
 import { SharedPipesModule } from 'src/app/services/shared.module';
+import { HideHeaderDirective } from 'src/app/providers/hide-heaer-footer/hide-header.directive';
 
 @NgModule({
   imports: [
@@ -19,6 +20,12 @@ import { SharedPipesModule } from 'src/app/services/shared.module';
       }
     ])
   ],
-  declarations: [HomePage]
+  declarations: [HomePage, HideHeaderDirective],
+  schemas: [
+     NO_ERRORS_SCHEMA
+  ],
+  providers: [
+    HideHeaderDirective
+  ]
 })
 export class HomePageModule {}

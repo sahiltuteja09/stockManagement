@@ -66,23 +66,29 @@
     </ion-row>
 <div *ngIf="(reportData.status); else noData">
     <ion-list *ngFor="let product_report of reportData.data">
-        <ion-card>
+        <ion-card (click)="goforProductReport(product_report)">
             <ion-item>
               <ion-thumbnail slot="start">
                 <img [src]="product_report.image ? img_base+product_report.image  : defaultImage" (click)="openPreview(product_report.image ? img_base+product_report.image  : defaultImage)">
               </ion-thumbnail>
               <ion-label>
                 <p>{{product_report.title}}</p>
-                <ion-col size="3" size-sm align-items-end>
-                  <small class="deal_price" >Remaining:- {{product_report.quantity}}</small>
+                <ion-col size="6" size-sm align-items-end>
+                  <small class="deal_price" >Remaining Quantity:- {{product_report.quantity}}</small>
                 </ion-col>
-                <ion-col size="6" size-sm>
-                  <ion-button (click)="goforProductReport(product_report)" float-right color="danger" shape="round" size="small">
-                    <ion-icon name="eye"></ion-icon> Details
-                  </ion-button>
-                </ion-col>
+
+                <ion-row>
+                  <ion-col size="6" size-sm>
+                    <small class="deal_price" >Invested :- <span class="success">Rs. {{getStockOut(product_report.product_id)}}/-</span></small>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="6" size-sm>
+                    <small class="deal_price" >Return/refunded :- <span class="required">Rs. {{getStockIn(product_report.product_id)}}/-</span></small>
+                  </ion-col>
+                </ion-row>
               </ion-label>
-    
+              
             </ion-item>
         </ion-card>
     

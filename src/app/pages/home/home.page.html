@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header [scrollHide]="headerScrollConfig" [scrollContent]="pageContent">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -15,28 +15,14 @@
     
   </ion-toolbar>
 </ion-header>
-<!-- <ion-card>
-  <ion-card-header>
-    <ion-row>
-      <ion-col size="3" size-sm align-items-start>
-        <ion-avatar>
-          <img src="http://placehold.it/75">
-        </ion-avatar>
-      </ion-col>
-      <ion-col size="9" size-sm align-items-start>
-        <ion-button routerLink="/stockin" color="success" shape="round" size="small">Stock In</ion-button>
-        <ion-button routerLink="/stockout" color="danger" shape="round" size="small">Stock Out</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-card-header>
-</ion-card> -->
-<ion-content>
+<ion-content #pageContent fullscreen >
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
       refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
   <div *ngIf="(latestStock.status); else noData">
+    
   <ion-card *ngFor="let result of latestStock.data">
     <ion-card-header>
       <ion-row>
@@ -103,7 +89,7 @@
 </ion-infinite-scroll>
 
  <!-- fab placed in the center of the content with a list on each side -->
- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+ <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
   <ion-fab-button color="danger">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
@@ -118,5 +104,18 @@
       <ion-icon name="shirt"></ion-icon>
     </ion-fab-button>
   </ion-fab-list>
-</ion-fab>
+</ion-fab> -->
 </ion-content>
+<ion-footer no-border [scrollHide]="footerScrollConfig" [scrollContent]="pageContent">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+          <ion-button routerLink="/stockin" expand="full" color="danger" class="ion-text-uppercase">Stock In</ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button routerLink="/stockout" expand="full" color="success" class="ion-text-uppercase">Stock out</ion-button>
+    </ion-col>
+    </ion-row>
+  </ion-grid>
+ 
+</ion-footer>

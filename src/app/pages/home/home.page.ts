@@ -8,6 +8,7 @@ import { interval } from 'rxjs';
 import { CoreConfigConstant } from 'src/configconstants';
 import { LocalnotificationService } from 'src/app/services/notification/localnotification.service';
 import { OnesignalnotificationService } from 'src/app/services/notification/onesignalnotification.service';
+import { ScrollHideConfig } from 'src/app/providers/hide-heaer-footer/hide-header.directive';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -24,6 +25,9 @@ export class HomePage {
   secondsCounter = interval(120000);
   counter: any = '';
   unreadMsgSub: any;
+
+  footerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-bottom', maxValue: undefined };
+  headerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-top', maxValue: 44 };
  // notifications: any[] = [];
   constructor(
     private curdService: CurdService,
