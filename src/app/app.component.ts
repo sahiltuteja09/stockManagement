@@ -38,16 +38,16 @@ export class AppComponent {
       url: '/mykhatas',
       icon: 'list'
     },
-    {
-      title: 'Stock In',
-      url: '/stockin',
-      icon: 'list'
-    },
-    {
-      title: 'Stock Out',
-      url: '/stockout',
-      icon: 'list'
-    },
+    // {
+    //   title: 'Stock In',
+    //   url: '/stockin',
+    //   icon: 'list'
+    // },
+    // {
+    //   title: 'Stock Out',
+    //   url: '/stockout',
+    //   icon: 'list'
+    // },
     
     {
       title: 'Reports',

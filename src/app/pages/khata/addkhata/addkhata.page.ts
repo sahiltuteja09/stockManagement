@@ -97,6 +97,9 @@ export class AddkhataPage implements OnInit {
     });
   }
   saveKhataImage(id) {
+    if(Object.keys(this.croppedImagepath).length == 0){
+      return false;
+    }
     let param = { 'id': id };
     let images = { 'images': this.croppedImagepath };
 
@@ -116,8 +119,8 @@ export class AddkhataPage implements OnInit {
             setTimeout(() => {
 
               this.appProvider.dismissLoading();
-              if (data.status)
-                this.appProvider.goto('mypurchases', 1);
+              // if (data.status)
+              //   this.appProvider.goto('mypurchases', 1);
             }, 2000);
 
           },

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CoreConfigConstant } from '../../../../configconstants';
 import { AuthenticationService } from '../authentication.service';
@@ -20,6 +20,16 @@ export class LoginPage implements OnInit {
       appid: [CoreConfigConstant.appID]
     });
   }
+//   form: HTMLFormElement;
+
+// @HostListener('keydown.enter')
+// handleEnterKey(e: KeyboardEvent) {
+//   if ((e.target as HTMLIonInputElement).name === 'password') {
+//     (this.form
+//       .querySelector('ion-button[type="submit"]')
+//       .shadowRoot.querySelector('button[type="submit"]') as HTMLButtonElement).click();
+//   }
+// }
 
   ngOnInit() {
     
@@ -32,6 +42,12 @@ this.authenticationService.isLoggedin('home');
   }
   // convenience getter for easy access to form fields
   get f() { return this.loginDetails.controls; }
+
+  submitForm(e:Event){
+    e.preventDefault();
+    e.stopPropagation();
+    this.login();
+  }
 
   login() {
     // stop here if form is invalid

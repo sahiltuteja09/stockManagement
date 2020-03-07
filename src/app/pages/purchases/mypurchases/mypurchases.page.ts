@@ -25,8 +25,8 @@ export class MypurchasesPage implements OnInit {
   img_base: string = CoreConfigConstant.uploadedPath;
   isFiltered = false;
 
-  startDate:string;
-  endDate: any;
+  startDate:string = new Date().toISOString();
+  endDate: any = new Date().toISOString();
   startDate_date_format:string = '';
   endDate_date_format:string = '';
   keyword:string = '';
@@ -229,7 +229,8 @@ export class MypurchasesPage implements OnInit {
   selectedValues(){
     let items = this.mypurchases.data;
     const checkedOptions = items.filter(x => x.checked);
-    this.selectedValue = checkedOptions.map(x => x.image);
+    this.selectedValue = checkedOptions.map(x => x.id);
+    //this.selectedValue = checkedOptions.map(x => x.image);
   }
   
   bulkDownload(){
@@ -321,8 +322,8 @@ export class MypurchasesPage implements OnInit {
       '/'+this.downloadFolder+'/' + "bill-"+Math.round(Math.random() * 10000) +"."+ext, true).then((entry) => {
       console.log('download complete: ' + entry.toURL());
       this.appProvider.dismissLoading();
-      this.appProvider.showToast('Your bill has been downloaded successfully.');
-      this.localNotification.sendNotification('Your bill has been downloaded successfully.');
+      this.appProvider.showToast('Your bill has been downloaded successfully in your '+this.downloadFolder + ' folder.');
+      this.localNotification.sendNotification('Your bill has been downloaded successfully in your '+this.downloadFolder + ' folder.');
     }, (error) => {
       // handle error
       console.log(error);

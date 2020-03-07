@@ -1,0 +1,13 @@
+
+
+    .image-container {
+        min-height: 80px;
+        background-size: cover;
+    }
+    .selected-image{
+        position: absolute;
+        height: 20%;
+        width: 20%;
+        transition: .3s ease;
+        background-color: #ff000000;
+    }

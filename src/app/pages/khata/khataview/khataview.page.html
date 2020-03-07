@@ -35,20 +35,25 @@
         </h6>
         on {{khataDetail.on_date}}
       </ion-col>
-      <ion-col size="12">
-        {{khataDetail.description}}
-      </ion-col>
+      
     </ion-row>
 
   </ion-card>
+  <ion-row>
+    <ion-col size="12">
+      <p [innerHTML]="khataDetail.description | safehtml"></p>
+    </ion-col>
+  </ion-row>
   <div *ngIf="khataImges.status">
     <ion-row>
-      <ion-col size="2"  size-sm *ngFor="let imges of khataImges.data">
-      <ion-card class="ion-text-center" >
-        <ion-thumbnail>
-          <img [src]="img_base+imges.image" tappable (click)="openPreview(img_base+imges.image)">
-        </ion-thumbnail>
-      </ion-card>
+      <ion-col ssize="6" size="4" size="3"  size-sm *ngFor="let imges of khataImges.data">
+      <!-- <ion-card class="ion-text-center" >
+        <ion-thumbnail> -->
+          <!-- <img [src]="img_base+imges.image" tappable (click)="openPreview(img_base+imges.image)"> -->
+          <div tappable (click)="openPreview(img_base+imges.image)" class="image-container" [ngStyle]="{'background-image':'url(' + img_base+imges.image + ')', 'background-size':'cover', 'background-repeat':'no-repeat'}"></div>
+               
+        <!-- </ion-thumbnail>
+      </ion-card> -->
       </ion-col>
     </ion-row>
   </div>
@@ -56,14 +61,14 @@
 
 <ion-footer no-border>
   <ion-list *ngIf="this.isMobile">
-    <ion-item (click)="shareViaWhatsAppToReceiver()">
+    <ion-item (click)="shareViaWhatsAppToReceiver()" *ngIf="khataDetail.is_deleted == 0">
       <ion-button slot="start" color="success">
         <ion-icon name="logo-whatsapp"> </ion-icon>
       </ion-button>
       <ion-label>Share on WhatsApp</ion-label>
       <ion-icon name="arrow-dropright" class="end"></ion-icon>
     </ion-item>
-    <ion-item (click)="shareSocial()">
+    <ion-item (click)="shareSocial()" *ngIf="khataDetail.is_deleted == 0">
       <ion-button slot="start" color="success">
         <ion-icon name="share-alt"></ion-icon>
       </ion-button>
@@ -80,6 +85,6 @@
       <ion-icon name="arrow-dropright" class="end"></ion-icon>
     </ion-item>
   </ion-list>
-  <ion-button (click)="deleteTransaction()" expand="full" color="danger" class="ion-text-uppercase">Delete Transaction
+  <ion-button *ngIf="khataDetail.is_deleted == 0" (click)="deleteTransaction()" expand="full" color="danger" class="ion-text-uppercase">Delete Transaction
   </ion-button>
 </ion-footer>

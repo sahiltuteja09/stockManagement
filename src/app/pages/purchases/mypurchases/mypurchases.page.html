@@ -16,13 +16,13 @@
         <ion-col size="6" size-sm align-items-start>
             <ion-item>
                 <ion-label position="floating">Start</ion-label>
-                <ion-datetime displayFormat="DD-MM-YYYY" [(ngModel)]="startDate"></ion-datetime>
+                <ion-datetime displayFormat="DD-MMM-YYYY" [(ngModel)]="startDate"></ion-datetime>
               </ion-item>
         </ion-col>
         <ion-col size="6" size-sm align-items-start>
             <ion-item>
                 <ion-label position="floating">End</ion-label>
-                <ion-datetime displayFormat="DD-MM-YYYY" [(ngModel)]="endDate"></ion-datetime>
+                <ion-datetime displayFormat="DD-MMM-YYYY" [(ngModel)]="endDate"></ion-datetime>
               </ion-item>
         </ion-col>
         <ion-col size="5" size-sm align-items-start>
@@ -126,7 +126,8 @@
   </div>
   <ng-template #noData>
     <div class="ion-text-center">
-      {{noDataFound}}
+      <p>{{noDataFound}}</p>
+        <ion-button color="primary" small color="tertiary" shape="round" routerLink="/purchases">Add New</ion-button>
     </div>
   </ng-template>
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">

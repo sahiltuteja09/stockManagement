@@ -79,6 +79,11 @@
     </ion-card>
   </ion-list >
 </ion-virtual-scroll>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" [hidden]="true">
+  <ion-fab-button color="danger" (click)="downloadLadger()">
+    <ion-icon name="cloud-download"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 </div>
 <ng-template #noData>
   <div class="ion-text-center padding-top-30" padding  >

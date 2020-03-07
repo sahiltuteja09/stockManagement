@@ -27,7 +27,8 @@ interface Purchases {
 export class PurchasesPage implements OnInit {
   purchase: Purchases = <Purchases>{};
   isLoading: boolean = false;
-  croppedImagepath: string = '';
+  //croppedImagepath: string = '';
+  croppedImagepath: any[] = [];
   imageName: string = '';
   isLoadingSubscriber;
   croppedImagepathSubscriber;
@@ -42,6 +43,7 @@ export class PurchasesPage implements OnInit {
   partialChecked:boolean = false;
   partialAmount:any =0;
   img_base: string = CoreConfigConstant.uploadedPath;
+  countImage: number = 0;
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -59,7 +61,7 @@ export class PurchasesPage implements OnInit {
       'totalcost': 0,
       'image': '',
       'description': '',
-      'purchase_date':'',
+      'purchase_date':new Date().toISOString(),
       'name':'',
       'mobile_number': '',
       'amount_paid': 0
@@ -101,6 +103,7 @@ export class PurchasesPage implements OnInit {
   ngOnInit() {
     if (this.purchase_id > 0) {
       this.getDetail();
+      this.getKhataImages();
     }
   }
   getDetail() {
@@ -127,8 +130,8 @@ this.partialAmount = data.data.amount_paid;
              // setTimeout(() => {
               //   this.purchase.amount_paid = data.data.amount_paid;
               // }, 1000);
-              if(data.data.image)
-                this.croppedImagepath = this.img_base + data.data.image;
+             // if(data.data.image)
+               // this.croppedImagepath = this.img_base + data.data.image;
 
             } else {
               this.appProvider.showToast(data.msg);
@@ -148,6 +151,40 @@ this.partialAmount = data.data.amount_paid;
       });
     });
   }
+  getKhataImages(){
+    // this.appProvider.showLoading().then(loading => {
+    //   loading.present().then(() => {
+        let param = { 'purchase_id':this.purchase_id};
+        this.curdService.getData('getPurchaseImages', param)
+          .subscribe((data: any) => {
+            if (data.status == false) {
+              // no product found
+              this.croppedImagepath = [];
+            } else {
+              this.croppedImagepath = [];
+              for(let i=0;i < data.data.length; i++){
+                this.countImage  = i;
+                this.croppedImagepath[this.countImage ] = data.data[i].image;
+              }
+            }
+            //this.appProvider.dismissLoading();
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            }
+          );
+    //   });
+    // });
+  }
+  removeImg(item, e) {
+    e.preventDefault();
+    console.log(item);
+    console.log(this.croppedImagepath);
+    var index = this.croppedImagepath.indexOf(item);
+    if (index !== -1) this.croppedImagepath.splice(index, 1);
+    console.log(this.croppedImagepath);
+  }
   // get the form contorls in a f object
   get f() { return this.newstockdetail.controls; }
 
@@ -162,6 +199,11 @@ this.partialAmount = data.data.amount_paid;
       this.appProvider.showLoading().then(loading => {
         loading.present().then(() => {
           let apiMethod = 'save_purchase';
+
+          if(Object.keys(this.croppedImagepath).length > 0){
+            this.purchase.image =  this.croppedImagepath[0];
+          }
+
           let merged;
           let updatePurchase;
           if (this.purchase_id > 0) {
@@ -176,6 +218,8 @@ this.partialAmount = data.data.amount_paid;
 
               if (data.status) {
                 this.appProvider.showToast(data.data);
+
+                this.saveKhataImage(data.khata_id);
                 this.newstockdetail.reset();
                 
                 
@@ -201,6 +245,45 @@ this.partialAmount = data.data.amount_paid;
       });
     }
   }
+  saveKhataImage(id) {
+    if(Object.keys(this.croppedImagepath).length == 0){
+      return false;
+    }
+    let param = { 'id': id };
+    let images = { 'images': this.croppedImagepath };
+
+    let merged = { ...param, ...images };
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        let apiMethod = 'saveKhataImage';
+        this.curdService.postData(apiMethod, merged)
+          .subscribe((data: any) => {
+
+            if (data.status) {
+              this.appProvider.showToast(data.data);
+
+            } else {
+              this.appProvider.showToast(data.msg);
+            }
+            setTimeout(() => {
+
+              this.appProvider.dismissLoading();
+              // if (data.status)
+              //   this.appProvider.goto('mypurchases', 1);
+            }, 2000);
+
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            },
+            () => {
+            }
+          );
+      });
+    });
+  }
+  
 
   async pickImage() {
     const actionSheet = await this.actionSheetController.create({
@@ -242,18 +325,32 @@ this.partialAmount = data.data.amount_paid;
     }
     if (typeof this.croppedImagepathSubscriber != 'object') {
       this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
-        console.log('croppedImagepathSubscriber '+data);
-        this.croppedImagepath = data;
-        this.imageName = this.uploadImage.imageFileName();
-        if (this.imageName) {
-          this.purchase.image = this.imageName;
-          console.log('this.imageName if ' + this.imageName);
-          if (typeof this.croppedImagepathSubscriber == 'object'){
+      //  console.log('croppedImagepathSubscriber '+data);
+        //this.croppedImagepath = data;
+        let imageName = this.uploadImage.imageFileName();
+
+        if (imageName) {
+          if (typeof this.croppedImagepathSubscriber == 'object') {
             this.isLoading = false;
             this.croppedImagepathSubscriber.unsubscribe();
             this.isLoadingSubscriber.unsubscribe();
+            this.croppedImagepathSubscriber = '';
+            setTimeout(() => {
+              this.croppedImagepath[this.countImage] = imageName;
+              this.countImage = this.countImage + 1;
+            }, 2000);
           }
         }
+
+        // if (this.imageName) {
+        //   this.purchase.image = this.imageName;
+        //   console.log('this.imageName if ' + this.imageName);
+        //   if (typeof this.croppedImagepathSubscriber == 'object'){
+        //     this.isLoading = false;
+        //     this.croppedImagepathSubscriber.unsubscribe();
+        //     this.isLoadingSubscriber.unsubscribe();
+        //   }
+        // }
 
         console.log('this.imageName ' + this.imageName);
       });

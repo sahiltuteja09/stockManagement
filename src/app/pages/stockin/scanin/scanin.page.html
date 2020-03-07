@@ -137,7 +137,15 @@
           </div>
         </ion-card>
         <ion-card >
-          <ion-row>
+          <ion-grid *ngIf="hideProductCard" [@panelInOut]>
+            <ion-row>
+              <ion-col (click)="selectedProduct(image)" size="6" size="4" size="3" *ngFor="let image of products.data">
+                <span *ngIf="image.id == selectedProductId" ><ion-icon color="danger" name="checkmark" class="selected-image" ></ion-icon></span>
+                <div class="image-container" [ngStyle]="{'background-image':'url(' + img_base+image.image + ')', 'background-size':'contain', 'background-repeat':'no-repeat'}"></div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-row *ngIf="!hideProductCard" [@panelInOut]>
             <ion-col>
               <form [formGroup]="updatestockdetail">
                 <ion-item lines="none">
@@ -145,15 +153,17 @@
                     <ion-thumbnail>
                       <img src="{{product_image == '' ? defaultImage : img_base+product_image}}">
                     </ion-thumbnail>
-                    <ion-item>
-                      <ion-label position="floating">Stock Type<span class="required">*</span></ion-label>
+                    <ion-item lines="none">
+                      <ion-label>{{selectedProductTitle}}</ion-label>
+                      </ion-item>
+                    <ion-input type="hidden" formControlName="product_id" name="product_id" value="{{selectedProductId}}" #product_id></ion-input>
+                      <!-- <ion-label position="floating">Stock Type<span class="required">*</span></ion-label>
                       <ion-select placeholder="Select One" name="product_id" (ionChange)="setProductView($event)" #product_id formControlName="product_id">
                         <ion-select-option 
                         *ngFor="let item of products.data"
                          [value]="item"
                          >{{item.title}}</ion-select-option>
-                      </ion-select>
-                    </ion-item>
+                      </ion-select> -->
                     
                   </ion-item>
                 </ion-item>
@@ -206,8 +216,9 @@
                     <ion-textarea name="reason" #reason></ion-textarea>
                   </ion-item>
                 </ion-list>
-                <ion-button color="success" (click)="updateStock(qtyInput.value, product_id.value.id,product_status_id.value, marketplace_id.value, reason.value, 1, sale_price.value)" type="submit" block>Update</ion-button>
-                <ion-button color="danger" type="button" block routerLink="/addnewstock/1">Edit</ion-button>
+                <ion-button color="success" (click)="updateStock(qtyInput.value, product_id.value,product_status_id.value, marketplace_id.value, reason.value, 1, sale_price.value)" type="submit" block>Update</ion-button>
+                <ion-button color="danger" type="button" block routerLink="/addnewstock">Add New</ion-button>
+                <ion-button color="primary" type="button" block (click)="undoSelectedProduct()" float-right>Back</ion-button>
               </form>
             </ion-col>
           </ion-row>

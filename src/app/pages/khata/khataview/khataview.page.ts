@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
-import { Platform, ModalController } from '@ionic/angular';
+import { Platform, ModalController, AlertController } from '@ionic/angular';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import {CoreConfigConstant} from '../../../../configconstants';
 import { CurdService } from 'src/app/services/rest/curd.service';
@@ -28,7 +28,7 @@ export class KhataviewPage implements OnInit {
     private socialSharing: SocialSharing,
     private curdService: CurdService,
     private route: ActivatedRoute, private modalController: ModalController,
-    public authenticationService: AuthenticationService
+    public authenticationService: AuthenticationService,public alertController: AlertController
     ) { 
       const currentUser = this.authenticationService.currentUserValue;
       const imgUserID = currentUser.id;
@@ -100,12 +100,29 @@ openPreview(img) {
 shareViaWhatsAppToReceiver(){
   let txt = '';
   if(this.khataDetail.you_got > 0){
-    txt = 'You paid rs. '+this.khataDetail.you_got +' on '+this.khataDetail.on_date;
+    txt = 'Hi '+this.khataDetail.name+' I have paid rs. '+this.khataDetail.you_got +'/- on '+this.khataDetail.on_date;
   }
   if(this.khataDetail.you_paid > 0){
-    txt = 'You received rs. '+this.khataDetail.you_got +' on '+this.khataDetail.on_date;
+    txt = 'Hi '+this.khataDetail.name+ ' I received rs. '+this.khataDetail.you_got +'/- on '+this.khataDetail.on_date + '. Thank you.';
   }
-  this.socialSharing.shareViaWhatsAppToReceiver(this.khataDetail.mobile_number, txt);
+  if(this.khataDetail.you_got > 0 && this.khataDetail.you_paid > 0){
+     txt = 'Hi '+this.khataDetail.name+' I have bought the item\'s of Rs. '+this.khataDetail.you_got +'/- on '+this.khataDetail.on_date+' and Amount paid is Rs. '+this.khataDetail.you_paid + '/-. Balance amount is Rs. ' + (this.khataDetail.you_got*1 - this.khataDetail.you_paid*1)+'/-';
+  }
+  console.log(txt);
+  this.socialSharing.shareViaWhatsAppToReceiver("91"+this.khataDetail.mobile_number, txt);
+}
+shareSocial(){
+  let txt = '';
+  if(this.khataDetail.you_got > 0){
+    txt = 'Hi '+this.khataDetail.name+' I have paid rs. '+this.khataDetail.you_got +'/- on '+this.khataDetail.on_date;
+  }
+  if(this.khataDetail.you_paid > 0){
+    txt = 'Hi '+this.khataDetail.name+ ' I received rs. '+this.khataDetail.you_got +'/- on '+this.khataDetail.on_date + '. Thank you.';
+  }
+  if(this.khataDetail.you_got > 0 && this.khataDetail.you_paid > 0){
+     txt = 'Hi '+this.khataDetail.name+' I have bought the item\'s of Rs. '+this.khataDetail.you_got +'/- on '+this.khataDetail.on_date+' and Amount paid is Rs. '+this.khataDetail.you_paid + '/-. Balance amount is Rs. ' + (this.khataDetail.you_got*1 - this.khataDetail.you_paid*1)+'/-';
+  }
+  this.socialSharing.share(txt, 'Your Transaction with '+CoreConfigConstant.appName);
 }
 getKhataImages(){
   this.appProvider.showLoading().then(loading => {
@@ -131,25 +148,35 @@ getKhataImages(){
     });
   });
 }
-shareSocial(){
-  let txt = '';
-  if(this.khataDetail.you_got > 0){
-    txt = 'You paid rs. '+this.khataDetail.you_got +' on '+this.khataDetail.on_date;
-  }
-  if(this.khataDetail.you_paid > 0){
-    txt = 'You received rs. '+this.khataDetail.you_got +' on '+this.khataDetail.on_date;
-  }
-  this.socialSharing.share(txt, 'Your Transaction with '+CoreConfigConstant.appName);
-}
-deleteTransaction(){
+
+async deleteTransaction(){
   console.log('deleteTransaction');
-  let param:any = { 'khata_id': this.khataDetail.id};
-  this.curdService.getData('deleteKhataRow', param)
+
+  const alert = await this.alertController.create({
+    header: 'Confirm!',
+    message: 'Are you sure?',
+    buttons: [
+      {
+        text: 'No',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: (blah) => {
+          console.log('Confirm Cancel: blah');
+        }
+      }, {
+        text: 'Yes',
+        handler: () => {
+          this.appProvider.showLoading().then(loading => {
+            loading.present().then(() => {
+
+          let param:any = { 'khata_id': this.khataDetail.id};
+      this.curdService.getData('deleteKhataRow', param)
         .subscribe(
           (result: any) => {
+            this.appProvider.dismissLoading();
             if (result.status == false) {
               // no product found
-              this.noDataFound = result.msg;
+              this.appProvider.showToast(result.msg);
             } else {
               this.appProvider.showToast(result.msg);
               setTimeout(() => {
@@ -161,6 +188,15 @@ deleteTransaction(){
             this.appProvider.showToast(error);
           }
         );
+        })
+      });
+
+        }
+      }
+    ]
+  });
+
+  await alert.present();
 }
 viewBill(data:any){
   this.appProvider.tempData(data);

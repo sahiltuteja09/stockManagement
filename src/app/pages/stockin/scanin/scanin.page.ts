@@ -7,11 +7,23 @@ import { ScannerService } from 'src/app/providers/scanner.service';
 import { ActivatedRoute } from '@angular/router';
 import { CoreConfigConstant } from 'src/configconstants';
 import { AuthenticationService } from '../../auth/authentication.service';
+import { trigger, transition, animate, style } from '@angular/animations';
 
 @Component({
   selector: 'app-scanin',
   templateUrl: './scanin.page.html',
   styleUrls: ['./scanin.page.scss'],
+  animations: [
+    trigger('panelInOut', [
+        transition('void => *', [
+            style({transform: 'translateY(-100%)'}),
+            animate(800)
+        ]),
+        // transition('* => void', [
+        //     animate(100, style({transform: 'translateY(100%)'}))
+        // ])
+    ]),
+]
 })
 export class ScaninPage implements OnInit {
 
@@ -55,6 +67,9 @@ img_base: string = CoreConfigConstant.uploadedPath;
   defaultSelecteMerchant = '1';
   compareWithMerchant : any ;
   purchaseCost:number = 0;
+  selectedProductId:number = 0;
+  hideProductCard:boolean =true;
+  selectedProductTitle:string ='';
   constructor(
     private scanService: ScannerService,
     private curdService: CurdService,
@@ -301,17 +316,32 @@ img_base: string = CoreConfigConstant.uploadedPath;
         }
       );
   }
-  setProductView(product:any){
-    console.log(product);
-    this.availableQuantity = product.detail.value.quantity;
-    this.product_image = product.detail.value.image;
-    this.purchaseCost = product.detail.value.purchase_cost;
-  }
+  // setProductView(product:any){
+  //   console.log(product);
+  //   this.availableQuantity = product.detail.value.quantity;
+  //   this.product_image = product.detail.value.image;
+  //   this.purchaseCost = product.detail.value.purchase_cost;
+  // }
   resetProductView(){
     this.availableQuantity =0;
     this.product_image = '';
     this.purchaseCost = 0;
   }
+  selectedProduct(product:any){
+    this.selectedProductId = product.id;
+    
+    this.availableQuantity = product.quantity;
+        this.product_image = product.image;
+        this.purchaseCost = product.purchase_cost;
+    this.selectedProductTitle = product.title;this.hideProductCard = false;
+    setTimeout(() => {
+      
+    }, 200);
+      }
+      undoSelectedProduct(){
+        this.hideProductCard = true;
+        this.selectedProductId = 0;
+      }
 
   // scanCode() {
   //   if (!this.appProvider.isMobile()) { return false; }

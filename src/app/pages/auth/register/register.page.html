@@ -10,47 +10,43 @@
 </ion-header>
 
 <ion-content>
-  <form #form="ngForm" [formGroup]="registerDetails">
+  <form #form="ngForm" [formGroup]="registerDetails" (keyup.enter)="submitForm($event)">
     <ion-grid>
+      <ion-card>
       <ion-row color="primary" justify-content-center>
         <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
           <div text-center>
             <h3>Create your account!</h3>
           </div>
-          <div padding>
             <ion-item>
-              <ion-label position="floating">Name</ion-label>
+              <ion-label position="floating">Name<span class="required">*</span></ion-label>
               <ion-input name="name" type="text" formControlName="name" required></ion-input>
             </ion-item>
-            <ion-item *ngIf="!registerDetails.controls.name.valid  && (registerDetails.controls.name.dirty)">
-              <p>Please enter a valid name.</p>
-            </ion-item>
+            <div *ngIf="!registerDetails.controls.name.valid  && (registerDetails.controls.name.dirty)">
+             <span class="required">Please enter a valid name.</span>
+            </div>
             <ion-item>
-              <ion-label position="floating">Mobile</ion-label>
-              <ion-input name="mobile" maxLength="10" formControlName="mobile" type="text" required></ion-input>
+              <ion-label position="floating">Mobile<span class="required">*</span></ion-label>
+              <ion-input name="mobile" maxLength="10" formControlName="mobile" type="number" type="text" required></ion-input>
             </ion-item>
-            <ion-item *ngIf="!registerDetails.controls.mobile.valid  && (registerDetails.controls.mobile.dirty)">
-              <p>Please enter the 10 digit valid mobile number.</p>
-            </ion-item>
+            <div *ngIf="!registerDetails.controls.mobile.valid  && (registerDetails.controls.mobile.dirty)">
+             <small> <span class="required">Please enter the 10 digit valid mobile number.</span></small>
+            </div>
             <ion-item>
-              <ion-label position="floating">Email</ion-label>
+              <ion-label position="floating">Email<span class="required">*</span></ion-label>
               <ion-input name="email" type="email" formControlName="email" required></ion-input>
             </ion-item>
-            <ion-item *ngIf="!registerDetails.controls.email.valid && !registerDetails.controls.email.pending && (registerDetails.controls.email.dirty)">
-              <p>Please enter a valid email.</p>
-            </ion-item>
-            <div *ngIf=" f.email.errors" class="invalid-feedback">
-              <div *ngIf="f.email.errors.required">Email is required</div>
-              <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
-          </div>
+            <div *ngIf="!registerDetails.controls.email.valid && !registerDetails.controls.email.pending && (registerDetails.controls.email.dirty) ">
+              <span class="required">Please enter the valid email.</span>
+            </div>
             <ion-item>
-              <ion-label position="floating">Password</ion-label>
+              <ion-label position="floating">Password<span class="required">*</span></ion-label>
               <ion-input name="password" type="password" formControlName="password" required></ion-input>
             </ion-item>
-          </div>
           <ion-input name="appid" type="hidden" [value]="appId" formControlName="appid"></ion-input>
           <div padding>
             <ion-button size="large" type="submit" [disabled]="form.invalid" expand="block" (click)="register()">
+              <ion-ripple-effect></ion-ripple-effect>
               Register</ion-button>
           </div>
           <p class="ion-text-center">
@@ -58,6 +54,7 @@
             </p>
         </ion-col>
       </ion-row>
+    </ion-card>
     </ion-grid>
   </form>
 </ion-content>

@@ -30,6 +30,7 @@ export class PurchasesviewPage implements OnInit {
   img_base: string = CoreConfigConstant.uploadedPath;
   queryParmSub:any;
   searchTerm:string;
+  khataImges:any = [];
   constructor(
     private appProvider: CoreAppProvider,
     private modalController: ModalController,
@@ -53,9 +54,11 @@ export class PurchasesviewPage implements OnInit {
     }else{
       this.purchaseDetail = this.appProvider.tempStorage;
     }
+
   }
 
   ngOnInit() {
+    this.getKhataImages();
   }
   ionViewWillLeave() {
     this.queryParmSub.unsubscribe();
@@ -71,12 +74,12 @@ export class PurchasesviewPage implements OnInit {
     });
   }
   shareViaWhatsAppToReceiver(){// https://www.freakyjolly.com/ionic-3-share-and-save-images-from-applications-assets-folder-to-device/
-    let txt = 'Hi '+this.purchaseDetail.name+' I have bought item\'s Rs. '+this.purchaseDetail.totalcost +' on '+this.purchaseDetail.purchase_date+' and Amount paid Rs. '+this.purchaseDetail.amount_paid + '. Balance amount Rs. ' + (this.purchaseDetail.totalcost*1 - this.purchaseDetail.amount_paid*1);
+    let txt = 'Hi '+this.purchaseDetail.name+' I have bought the item\'s of Rs. '+this.purchaseDetail.totalcost +'/- on '+this.purchaseDetail.purchase_date+' and Amount paid is Rs. '+this.purchaseDetail.amount_paid + '/-. Balance amount is Rs. ' + (this.purchaseDetail.totalcost*1 - this.purchaseDetail.amount_paid*1)+'/-';
     
-    this.socialSharing.shareViaWhatsAppToReceiver(this.purchaseDetail.mobile_number, txt);
+    this.socialSharing.shareViaWhatsAppToReceiver("91"+this.purchaseDetail.mobile_number, txt);
   }
   shareSocial(){
-    let txt = 'Hi '+this.purchaseDetail.name+' I have bought item\'s Rs. '+this.purchaseDetail.totalcost +' on '+this.purchaseDetail.purchase_date+' and Amount paid Rs. '+this.purchaseDetail.amount_paid + '. Balance amount Rs. ' + (this.purchaseDetail.totalcost*1 - this.purchaseDetail.amount_paid*1);
+    let txt = 'Hi '+this.purchaseDetail.name+' I have the bought item\'s of Rs. '+this.purchaseDetail.totalcost +'/- on '+this.purchaseDetail.purchase_date+' and Amount paid is Rs. '+this.purchaseDetail.amount_paid + '/-. Balance amount is Rs. ' + (this.purchaseDetail.totalcost*1 - this.purchaseDetail.amount_paid*1)+'/-';
     
     this.socialSharing.share(txt, 'Your Transaction with '+CoreConfigConstant.appName);
   }
@@ -117,5 +120,29 @@ export class PurchasesviewPage implements OnInit {
       });
     });
   }
+  getKhataImages(){
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        let param = { 'purchase_id':this.purchaseDetail.id};
+        this.curdService.getData('getPurchaseImages', param)
+          .subscribe((data: any) => {
+            if (data.status == false) {
+              // no product found
+              this.khataImges = data;
+            } else {
+              this.khataImges = [];
+              this.khataImges = data;
+            }
+            this.appProvider.dismissLoading();
+          },
+            error => {
+              this.appProvider.showToast(error);
+              this.appProvider.dismissLoading();
+            }
+          );
+      });
+    });
+  }
+  
 
 }

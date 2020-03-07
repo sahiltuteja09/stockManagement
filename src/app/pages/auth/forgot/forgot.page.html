@@ -10,7 +10,7 @@
   </ion-header>
 
 <ion-content>
-    <form #form="ngForm" [formGroup]="forgotDetails">
+    <form #form="ngForm" [formGroup]="forgotDetails" (keyup.enter)="submitForm($event)">
         <ion-grid>
           <ion-row color="primary" justify-content-center>
             <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
@@ -22,6 +22,14 @@
                 <ion-item>
                   <ion-label position="floating">Email</ion-label>
                   <ion-input name="email" type="email" formControlName="email" required></ion-input>
+                </ion-item>
+                <ion-item *ngIf="otpSent">
+                  <ion-label position="floating">Verify Otp</ion-label>
+                  <ion-input name="otp" type="text" formControlName="otp" ></ion-input>
+                </ion-item>
+                <ion-item *ngIf="otpSent">
+                  <ion-label position="floating">New password</ion-label>
+                  <ion-input name="password" type="password" formControlName="password" ></ion-input>
                 </ion-item>
               </div>
               <div padding>

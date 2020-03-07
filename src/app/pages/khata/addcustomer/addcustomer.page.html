@@ -25,7 +25,7 @@
               <ion-label position="floating">Mobile number <ion-text color="danger">*</ion-text>
               </ion-label>
               <ion-input type="text" formControlName="mobile_number" required [(ngModel)]="customer.mobile_number"
-                name="mobile_number"></ion-input>
+                name="mobile_number" placeholder="Enter mobile number"></ion-input>
             </ion-item>
             <div *ngIf=" f.mobile_number.errors && f.mobile_number.touched" class="invalid-feedback">
               <div *ngIf="f.mobile_number.errors.required">Cost field is required</div>

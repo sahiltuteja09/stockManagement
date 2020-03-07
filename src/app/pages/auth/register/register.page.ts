@@ -34,6 +34,11 @@ export class RegisterPage implements OnInit {
     // check login
     this.authenticationService.isLoggedin('home');
       }
+      submitForm(e:Event){
+        e.preventDefault();
+        e.stopPropagation();
+        this.register();
+      }
   register() {
     this.submitAttempt = true;
     if (!this.registerDetails.valid) {

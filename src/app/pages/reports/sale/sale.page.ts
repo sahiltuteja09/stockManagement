@@ -12,8 +12,8 @@ import { AuthenticationService } from '../../auth/authentication.service';
   styleUrls: ['./sale.page.scss'],
 })
 export class SalePage implements OnInit {
-  startDate:string;
-  endDate: any;
+  startDate:string= new Date().toISOString();
+  endDate: any = new Date().toISOString();
   startDate_date_format:string;
   endDate_date_format:string;
 
@@ -46,6 +46,7 @@ export class SalePage implements OnInit {
   ngOnInit() {
     this.getStockType();
     this.getMerchants();
+    this.filterReport();
   }
   formatDate(){
     if (this.startDate) {
@@ -131,8 +132,6 @@ export class SalePage implements OnInit {
                 this.reportData.data.push(result.data[i]);
               }
               this.page = this.page + 1;
-              this.stockInSum = result.stockin;
-              this.stockOutSum = result.stock_out;
             }
           },
           error => {
