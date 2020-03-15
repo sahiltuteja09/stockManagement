@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header >
     <ion-toolbar color="primary">
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
@@ -10,7 +10,7 @@
   </ion-header>
   
 
-  <ion-content>
+  <ion-content >
     <ion-searchbar showCancelButton="always" animated debounce="500" [(ngModel)]="keyword" (ionChange)="filterProduct()" (ionClear)="products()"></ion-searchbar>
       <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
           <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
@@ -66,3 +66,16 @@
         </ion-fab-button>
       </ion-fab>
   </ion-content>
+  <ion-footer no-border >
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+            <ion-button routerLink="/scanin" expand="full" color="danger" class="ion-text-uppercase">Stock In</ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button routerLink="/stockout" expand="full" color="success" class="ion-text-uppercase">Stock out</ion-button>
+      </ion-col>
+      </ion-row>
+    </ion-grid>
+   
+  </ion-footer>

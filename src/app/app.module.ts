@@ -32,7 +32,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
-
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
+import { Contacts } from '@ionic-native/contacts/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -62,7 +64,10 @@ import { Camera } from '@ionic-native/camera/ngx';
     Device,CoreAppProvider,
     Crop,
     ImagePicker,
-    File,FileTransfer,OneSignal,AndroidPermissions, NativeAudio, CallNumber
+    File,FileTransfer,OneSignal,
+    AndroidPermissions, NativeAudio, 
+    CallNumber, SpeechRecognition, 
+    TextToSpeech,Contacts
   ],
   bootstrap: [AppComponent]
 })

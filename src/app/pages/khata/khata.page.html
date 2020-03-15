@@ -2,14 +2,14 @@
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="mykhatas"></ion-back-button>
-      <ion-avatar *ngIf="customerImg == ''">
+      <ion-avatar *ngIf="customerImg == ''" (click)="editCustomer()">
         <text-avatar [text]="name"  textColor="#fff" marginTop='10px'></text-avatar>
       </ion-avatar>
-      <ion-avatar *ngIf="customerImg != ''">
+      <ion-avatar *ngIf="customerImg != ''" >
         <img [src]="img_base + customerImg" (click)="openPreview(img_base + customerImg)">
       </ion-avatar>
     </ion-buttons>
-    <ion-title>
+    <ion-title (click)="editCustomer()">
       <ion-label>
         <h3>{{name}}</h3>
         <small>{{mobileNumber}}</small>

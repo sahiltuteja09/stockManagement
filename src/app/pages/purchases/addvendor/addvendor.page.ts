@@ -7,16 +7,17 @@ import { AuthenticationService } from '../../auth/authentication.service';
 import { ImagesService } from 'src/app/providers/upload/images.service';
 import { ActionSheetController } from '@ionic/angular';
 import { NativeContactService } from 'src/app/providers/contact/native-contact.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-addcustomer',
-  templateUrl: './addcustomer.page.html',
-  styleUrls: ['./addcustomer.page.scss'],
+  selector: 'app-addvendor',
+  templateUrl: './addvendor.page.html',
+  styleUrls: ['./addvendor.page.scss'],
 })
-export class AddcustomerPage implements OnInit {
-  public addcustomer: FormGroup;
-  customer: any;
+export class AddvendorPage implements OnInit {
+
+  
+  public addvendor: FormGroup;
+  vendor: any;
 
   isLoading: boolean = false;
   defaultdImg: string = 'http://placehold.it/300x200';
@@ -26,7 +27,6 @@ export class AddcustomerPage implements OnInit {
   croppedImagepathSubscriber;
   img_base: string = CoreConfigConstant.uploadedPath;
   isMobile:boolean = false;
-  queryParmSub:any;
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -34,7 +34,6 @@ export class AddcustomerPage implements OnInit {
     public authenticationService: AuthenticationService,
     private uploadImage: ImagesService,
     public actionSheetController: ActionSheetController, 
-    private route: ActivatedRoute,
     private contact:NativeContactService
   ) {
 
@@ -42,23 +41,15 @@ export class AddcustomerPage implements OnInit {
     let imgUserID = currentUser.id;
     this.img_base = this.img_base + imgUserID + 'assets/';
 
-    this.customer = {
+    this.vendor = {
       name: '',
       mobile_number: '',
-      image: '',
-      is_update:0
+      image: ''
     }
-    this.addcustomer = formBuilder.group({
+    this.addvendor = formBuilder.group({
       name: ['', Validators.compose([Validators.required])],
-      mobile_number: ['', Validators.compose([Validators.maxLength(10), Validators.required])],
+      mobile_number: ['', Validators.compose([Validators.maxLength(10),Validators.minLength(10), Validators.required])],
       image: [''],
-    });
-
-    this.queryParmSub = this.route.queryParams.subscribe(params => {
-      this.customer.mobile_number = params['mobile'];
-      this.customer.name = params['name'];
-      if(params['mobile'])
-      this.customer.is_update = 1
     });
   }
 
@@ -69,9 +60,9 @@ export class AddcustomerPage implements OnInit {
     this.contact.pickContact().then(()=>{
       if(this.contact.contactDetail.mobile){
       let mobileNumber = this.contact.contactDetail.mobile.replace(/ +/g, "");
-      this.customer.mobile_number = mobileNumber.substr(mobileNumber.length - 10);
+      this.vendor.mobile_number = mobileNumber.substr(mobileNumber.length - 10);
       }
-      this.customer.name = this.contact.contactDetail.name;
+      this.vendor.name = this.contact.contactDetail.name;
       console.log(this.contact.contactDetail);
     }).catch((err)=>{
 
@@ -79,11 +70,11 @@ export class AddcustomerPage implements OnInit {
    
   }
   // get the form contorls in a f object
-  get f() { return this.addcustomer.controls; }
+  get f() { return this.addvendor.controls; }
 
-  addCustomer() {
+  addVendor() {
 
-    if (!this.addcustomer.valid) {
+    if (!this.addvendor.valid) {
       console.log('form');
       return;
     }
@@ -98,15 +89,15 @@ export class AddcustomerPage implements OnInit {
             'description': '',
             'purchase_id': 0,
             'purchase_date': '',
-            'is_vendor':0
+            'is_vendor':1
           };
-          let merged = { ...this.customer, ...emptyfields };
+          let merged = { ...this.vendor, ...emptyfields };
           this.curdService.postData(apiMethod, merged)
             .subscribe((data: any) => {
 
               if (data.status) {
                 this.appProvider.showToast(data.data);
-                this.addcustomer.reset();
+                this.addvendor.reset();
               } else {
                 this.appProvider.showToast(data.msg);
               }
@@ -114,7 +105,7 @@ export class AddcustomerPage implements OnInit {
 
                 this.appProvider.dismissLoading();
                 if (data.status)
-                  this.appProvider.goto('mykhatas', 1);
+                  this.appProvider.searchParam('purchases', { queryParams: { mobile:  merged.mobile_number, name:merged.name } });
               }, 2000);
 
             },
@@ -175,7 +166,7 @@ export class AddcustomerPage implements OnInit {
         this.croppedImagepath = data;
         this.imageName = this.uploadImage.imageFileName();
         if (this.imageName) {
-          this.customer.image = this.imageName;
+          this.vendor.image = this.imageName;
           console.log('this.imageName if ' + this.imageName);
 
 
@@ -202,4 +193,5 @@ export class AddcustomerPage implements OnInit {
         this.appProvider.dismissLoading();
       
   }
+
 }

@@ -62,6 +62,9 @@ const routes: Routes = [
   { path: 'productview', loadChildren: './pages/myproducts/productview/productview.module#ProductviewPageModule',  data: { num: 256 }  },
   { path: 'mybills', loadChildren: './pages/purchases/mybills/mybills.module#MybillsPageModule',  data: { num: 257 } },
   { path: 'change-password', loadChildren: './pages/setting/change-password/change-password.module#ChangePasswordPageModule' },
+  { path: 'addvendor', loadChildren: './pages/purchases/addvendor/addvendor.module#AddvendorPageModule' },
+  { path: 'myvendors', loadChildren: './pages/purchases/my-vendors/my-vendors.module#MyVendorsPageModule' },
+
 
 
 

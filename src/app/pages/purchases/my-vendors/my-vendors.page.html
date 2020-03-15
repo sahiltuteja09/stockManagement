@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="mypurchases"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Vendors
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar showCancelButton="always" animated debounce="500" [(ngModel)]="keyword" (ionChange)="filterReport()"></ion-searchbar>
+  <div *ngIf="(myVendors.status); else noData">
+      <ion-virtual-scroll [items]="myVendors.data" >
+          <ion-item *virtualItem="let item;" (click)="goto('purchases', item)">
+            <ion-avatar slot="start">
+              <span *ngIf="item.customer_image">
+                <img [src]="img_base + item.customer_image">
+              </span>
+              <span *ngIf="!item.customer_image">
+              <text-avatar [text]="item.name"  textColor="#fff"></text-avatar>
+            </span>
+            </ion-avatar>
+            <ion-label>
+              <h3>{{item.name | titlecase}}</h3>
+            </ion-label>
+          </ion-item>
+      </ion-virtual-scroll>
+    </div>
+    <ng-template #noData>
+      <div class="ion-text-center danger" >
+        <ion-button color="primary" small color="tertiary" shape="round" routerLink="/addvendor">Add New</ion-button>
+      </div>
+    </ng-template>
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
+      <ion-fab-button color="danger" routerDirection="forward" data-desc="add New" routerLink="/addvendor">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+</ion-content>

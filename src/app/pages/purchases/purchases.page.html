@@ -14,24 +14,30 @@
     <ion-row>
       <ion-col size="12" size-sm>
         <ion-row>
-          <ion-col size="6" size-sm>
-            <ion-item>
-              <ion-label position="floating">Purchase from</ion-label>
-              <ion-input type="text" placeholder="Enter name" formControlName="name" required
-                [(ngModel)]="purchase.name" name="name"></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col size="6" size-sm>
+         
+          <ion-col size="7" size-sm>
             <ion-item>
               <ion-label position="floating">Mobile number <ion-text color="danger">*</ion-text>
               </ion-label>
               <ion-input type="text" formControlName="mobile_number" required [(ngModel)]="purchase.mobile_number"
                 name="mobile_number"></ion-input>
+                <div slot="end" *ngIf="isMobileDevice" class="padding-top-15">
+                  <ion-button color="default" (click)="getContact()">
+                    <ion-icon color="success" name="contact" ></ion-icon>
+                  </ion-button>
+                  </div>
             </ion-item>
             <div *ngIf=" f.mobile_number.errors && f.mobile_number.touched" class="invalid-feedback">
-              <div *ngIf="f.mobile_number.errors.required">Cost field is required</div>
-              <div *ngIf="f.mobile_number.errors.maxlength">Cost cannot be greater than 13 digits.</div>
+              <div *ngIf="f.mobile_number.errors.required">Mobile number field is required</div>
+              <div *ngIf="f.mobile_number.errors.maxlength">Mobile number cannot be greater than 10 digits.</div>
             </div>
+          </ion-col>
+          <ion-col size="5" size-sm>
+            <ion-item>
+              <ion-label position="floating">Purchase from</ion-label>
+              <ion-input type="text" placeholder="Enter name" formControlName="name" required
+                [(ngModel)]="purchase.name" name="name"></ion-input>
+            </ion-item>
           </ion-col>
         </ion-row>
         <ion-row>

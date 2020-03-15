@@ -20,7 +20,7 @@ import { HideHeaderDirective } from 'src/app/providers/hide-heaer-footer/hide-he
       }
     ])
   ],
-  declarations: [HomePage, HideHeaderDirective],
+  declarations: [HomePage,HideHeaderDirective],
   schemas: [
      NO_ERRORS_SCHEMA
   ],

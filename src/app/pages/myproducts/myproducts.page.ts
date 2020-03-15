@@ -5,7 +5,7 @@ import { CoreConfigConstant } from 'src/configconstants';
 import { ModalController } from '@ionic/angular';
 import { ImageModalPage } from '../image-modal/image-modal.page';
 import { AuthenticationService } from '../auth/authentication.service';
-
+//import { ScrollHideConfig } from 'src/app/providers/hide-heaer-footer/hide-header.directive';
 @Component({
   selector: 'app-myproducts',
   templateUrl: './myproducts.page.html',
@@ -24,6 +24,8 @@ export class MyproductsPage implements OnInit {
   img_base: string = CoreConfigConstant.uploadedPath;
   isFiltered:boolean = false;
   keyword:string = '';
+  // footerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-bottom', maxValue: undefined };
+  // headerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-top', maxValue: 44 };
   constructor(
     private appProvider: CoreAppProvider, 
     private curdService: CurdService,

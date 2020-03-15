@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CoreConfigConstant } from 'src/configconstants';
 import { ActionSheetController } from '@ionic/angular';
 import { AuthenticationService } from '../auth/authentication.service';
+import { NativeContactService } from 'src/app/providers/contact/native-contact.service';
 
 
 interface Purchases {
@@ -37,6 +38,7 @@ export class PurchasesPage implements OnInit {
   isMobileDevice: boolean = true;
 
   routSub: any;
+  queryParmSub:any;
   purchase_id: number = 0;
   scanType:string = '';
   selectedAmazountPaid = 'full';
@@ -51,7 +53,7 @@ export class PurchasesPage implements OnInit {
     private uploadImage: ImagesService,
     private route: ActivatedRoute,
     public actionSheetController: ActionSheetController, 
-    public authenticationService: AuthenticationService) { 
+    public authenticationService: AuthenticationService, private contact:NativeContactService) { 
       
     const currentUser = this.authenticationService.currentUserValue;
         const imgUserID = currentUser.id;
@@ -78,12 +80,28 @@ export class PurchasesPage implements OnInit {
 
     this.routSub = this.route.params.subscribe((params) => {
       this.purchase_id = +params['purchase_id'];
-
+    });
+    this.queryParmSub = this.route.queryParams.subscribe(params => {
+      this.purchase.mobile_number = params['mobile'];
+      this.purchase.name = params['name'];
     });
     
    }
    ionViewWillEnter() {
     this.isMobileDevice = this.appProvider.isMobile();
+  }
+  getContact(){
+    this.contact.pickContact().then(()=>{
+      if(this.contact.contactDetail.mobile){
+      let mobileNumber = this.contact.contactDetail.mobile.replace(/ +/g, "");
+      this.purchase.mobile_number = mobileNumber.substr(mobileNumber.length - 10);
+      }
+      this.purchase.name = this.contact.contactDetail.name;
+      console.log(this.contact.contactDetail);
+    }).catch((err)=>{
+
+    });
+   
   }
   onChangeHandler(event: any){
     this.selectedAmazountPaid = event.detail.value;
@@ -366,7 +384,10 @@ this.partialAmount = data.data.amount_paid;
 
     if (typeof this.routSub == 'object')
       this.routSub.unsubscribe();
-     
+
+      if(typeof this.queryParmSub == 'object')
+      this.queryParmSub.unsubscribe();
+
         this.appProvider.dismissLoading();
       
   }

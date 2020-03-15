@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CoreConfigConstant } from 'src/configconstants';
 import { ActionSheetController } from '@ionic/angular';
 import { AuthenticationService } from '../../auth/authentication.service';
+import { SpeakToSearchService } from 'src/app/providers/speech/speak-to-search.service';
 
 interface Stock {
   product_unique: string;
@@ -55,7 +56,7 @@ export class AddnewstockPage implements OnInit {
     private uploadImage: ImagesService,
     private route: ActivatedRoute,
     public actionSheetController: ActionSheetController, 
-    public authenticationService: AuthenticationService) { 
+    public authenticationService: AuthenticationService, public voiceService:SpeakToSearchService) { 
       
     const currentUser = this.authenticationService.currentUserValue;
         const imgUserID = currentUser.id;
@@ -302,6 +303,93 @@ this.scanType =  codeType;
     this.scanService.scanBarCode();
 
 }
+
+startListing(){
+  console.log('startListing');
+  this.voiceService.txtToSpeech('Hey. I will assist you to adding the product. Just answer my some question.').then(()=>{
+
+    this.voiceService.txtToSpeech('Can i ask? Speak yes or no after the beep').then(()=>{
+      this.voiceService.startListing().then(() => {
+        
+        if(this.voiceService.speechTxt == 'yes'){
+
+          this.voiceService.txtToSpeech('What is the product name? Speak after the beep').then(()=>{
+            this.voiceService.startListing().then(() => {
+              this.stock.product_name = this.voiceService.speechTxt;
+      
+              this.voiceService.txtToSpeech('What is the product unique id or sku? Speak after the beep').then(()=>{
+                this.voiceService.startListing().then(() => {
+                  this.stock.product_unique = this.voiceService.speechTxt;
+      
+                  this.voiceService.txtToSpeech('What is the product sale price? Speak after the beep').then(()=>{
+                    this.voiceService.startListing().then(() => {
+                      this.stock.purchase_cost = this.voiceService.speechTxt;
+      
+                      this.voiceService.txtToSpeech('What is available quantity? Speak after the beep').then(()=>{
+                        this.voiceService.startListing().then(() => {
+                          this.stock.product_qty = this.voiceService.speechTxt;
+      
+                          this.voiceService.txtToSpeech('Thank you. can i add the product in your inventory? Speak yes or no after the beep').then(()=>{
+                            this.voiceService.startListing().then(() => {
+                              
+                              if(this.voiceService.speechTxt == 'yes'){
+                                if(this.stock.image == '')
+                                this.voiceService.txtToSpeech('I suggest, please add the product image. For now i am adding the product to your inventory.');
+                                else
+                                this.voiceService.txtToSpeech('I am adding the product to your inventory.');
+                                 this.newStock();
+                              }else{
+                                this.voiceService.txtToSpeech('Thank you. Please add product manually.');
+                              }
+      
+                            }).catch((err) => {
+                              console.log('green');
+                              console.log(err);
+                              this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
+                            });
+                          });
+      
+                        }).catch((err) => {
+                          console.log('green');
+                          console.log(err);
+                          this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
+                        });
+                      });
+      
+                    }).catch((err) => {
+                      console.log('green');
+                      console.log(err);
+                      this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
+                    });
+                  });
+      
+                }).catch((err) => {
+                  console.log('green');
+                  console.log(err);
+                  this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
+                });
+              });
+      
+            }).catch((err) => {
+              console.log('green');
+              console.log(err);
+              this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
+            });
+          });
+
+        }else{
+          this.voiceService.txtToSpeech('Thank you. Please add product manually.');
+        }
+
+      }).catch((err) => {
+        console.log('green');
+        console.log(err);
+        this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
+      });
+    });
+});
+}
+
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')
       this.isLoadingSubscriber.unsubscribe();

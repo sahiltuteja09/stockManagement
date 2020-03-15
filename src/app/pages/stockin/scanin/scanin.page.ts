@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CoreConfigConstant } from 'src/configconstants';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { trigger, transition, animate, style } from '@angular/animations';
+import { SpeakToSearchService } from 'src/app/providers/speech/speak-to-search.service';
 
 @Component({
   selector: 'app-scanin',
@@ -70,12 +71,14 @@ img_base: string = CoreConfigConstant.uploadedPath;
   selectedProductId:number = 0;
   hideProductCard:boolean =true;
   selectedProductTitle:string ='';
+  public sform: FormGroup;
+  speechProduct:any = {};
   constructor(
     private scanService: ScannerService,
     private curdService: CurdService,
     private appProvider: CoreAppProvider,
     private route: ActivatedRoute, 
-    public authenticationService: AuthenticationService) { 
+    public authenticationService: AuthenticationService,public voiceService:SpeakToSearchService) { 
       
     const currentUser = this.authenticationService.currentUserValue;
         const imgUserID = currentUser.id;
@@ -88,12 +91,17 @@ img_base: string = CoreConfigConstant.uploadedPath;
       product_id: new FormControl(),
       sale_price: new FormControl(),
     });
+    this.sform = new FormGroup({
+      searchControl: new FormControl()
+    });
 
     this.queryParmSub = this.route.queryParams.subscribe(params => {
       this.searchTerm = params['term'];
     });
     this.getStockType();
     this.getMerchants();
+    if(typeof this.searchTerm == 'undefined')
+    this.getProductsList();
 
     this.compareWithType = this.compareWithFn;
     this.compareWithMerchant = this.compareWithMerchantFn;
@@ -113,10 +121,13 @@ img_base: string = CoreConfigConstant.uploadedPath;
 
   }
   setFilteredItems() {
+    
     this.searching = true;
+    this.resetProductView();
   }
   searchProduct() {
     if (this.searchTerm) {
+      this.voiceService.txtToSpeech('searching... Please wait...');
       this.inFiniteLoop = false;
       this.page = 1;
       this.appProvider.showLoading().then(loading => {
@@ -137,9 +148,38 @@ img_base: string = CoreConfigConstant.uploadedPath;
                 if(Object.keys(this.products).length === 0){
                   this.getProductsList();
                 }
+                this.voiceService.txtToSpeech(this.noDataFound);
               } else {
                 this.searchData = data;
                 this.page = this.page + 1;
+                let totalProducts = Object.keys(data.data).length;
+              
+                
+                if(totalProducts == 1 && this.isMobileDevice){
+                 let productRow = data.data;
+                 this.speechProduct = {
+                   quantity: 1,
+                   productId:productRow[0].id,
+                   product_status_id:this.defaultSelecteType,
+                   marketplace_id:this.defaultSelecteMerchant,
+                   reason: '',
+                   noUIDFOUND:0,
+                   sale_price:productRow[0].purchase_cost
+                 }
+
+                 this.voiceService.txtToSpeech('One product found.Can i subtract the quantity?Please Speak Yes or No after the beep.').then(()=>{
+                   if(this.voiceService.speechTxt == 'yes'){
+                    this.updateProductAuto();
+                   }else{
+                      this.voiceService.txtToSpeech('Do you want to update price?Please Speak Yes or No after the beep.').then(()=>{
+                        this.updateSpeechPrice(productRow[0].id,0);
+                      });
+                   }
+                });
+                   
+                }else{
+                 this.voiceService.txtToSpeech(totalProducts +' products found. Please select product manually.');
+                }
               }
 
               this.appProvider.dismissLoading();
@@ -209,9 +249,11 @@ img_base: string = CoreConfigConstant.uploadedPath;
             .subscribe((data: any) => {
 
               if (data.status) {
+                this.voiceService.txtToSpeech('Product Updated successfully');
                 this.appProvider.showToast(data.data);
                 this.updatestockdetail.reset();
               } else {
+                this.voiceService.txtToSpeech('Unable to update. Please click on the update button.');
                 this.appProvider.showToast(data.msg);
               }
               setTimeout(() => {
@@ -403,7 +445,173 @@ img_base: string = CoreConfigConstant.uploadedPath;
       }
 
         this.appProvider.dismissLoading();
-      
-
   }
+
+  startListing(){
+    console.log('startListing');
+    this.voiceService.txtToSpeech('Hey. I will try to search whatever you speak.Please Speak after the beep.').then(()=>{
+    this.voiceService.startListing().then(() => {
+      this.sform.controls["searchControl"].setValue(this.voiceService.speechTxt);
+    }).catch((err) => {
+      console.log('green');
+      console.log(err);
+    });
+  });
+  }
+
+  updatePriceField(quantity, productId, product_status_id, marketplace_id, reason, noUIDFOUND?:number,sale_price?:any){
+    this.speechProduct = {
+      'quantity':quantity,
+      productId:productId,
+      product_status_id:product_status_id,
+      marketplace_id:marketplace_id,
+      reason:reason,
+      noUIDFOUND:noUIDFOUND,
+      sale_price:sale_price
+    }
+    this.voiceService.txtToSpeech('What is the new price ?Speak after the beep').then(()=>{
+      this.voiceService.startListing().then(() => {
+        // validation required
+
+        eval('document.getElementById("'+ productId +'").value = '+this.voiceService.speechTxt);
+        this.speechProduct.sale_price = this.voiceService.speechTxt;
+        this.updateProductAuto();
+
+            }).catch((err) => {
+              console.log('green');
+              console.log(err);
+              this.voiceService.txtToSpeech('unable to understand. still want to update price. Speak yes or no after the beep ').then(()=>{
+                this.updateSpeechPrice(productId, 1);
+              });
+            });
+    });
+  }
+  updateQuantityField(quantity, productId, product_status_id, marketplace_id, reason, noUIDFOUND?:number,sale_price?:any){
+    this.speechProduct = {
+      'quantity':quantity,
+      productId:productId,
+      product_status_id:product_status_id,
+      marketplace_id:marketplace_id,
+      reason:reason,
+      noUIDFOUND:noUIDFOUND,
+      sale_price:sale_price
+    }
+    this.voiceService.txtToSpeech('What is the new quantity. Speak after the beep').then(()=>{
+      this.voiceService.startListing().then(() => {
+        // validation required
+
+          eval('document.getElementById("quantity'+ productId +'").value = '+this.voiceService.speechTxt);
+          this.speechProduct.quantity = this.voiceService.speechTxt;
+          this.voiceService.txtToSpeech('New quantity is '+this.voiceService.speechTxt +'.');
+          this.updateProductAuto();
+        }).catch((err) => {
+          console.log('green');
+          console.log(err);
+          this.voiceService.txtToSpeech('unable to understand. still want to update quantity. Speak yes or no after the beep ').then(()=>{
+            this.updateSpeechQuantity(productId);
+          });
+        });
+    });
+  }
+  updateFields(quantity, productId, product_status_id, marketplace_id, reason, noUIDFOUND?:number,sale_price?:any){
+    this.speechProduct = {
+      'quantity':quantity,
+      productId:productId,
+      product_status_id:product_status_id,
+      marketplace_id:marketplace_id,
+      reason:reason,
+      noUIDFOUND:noUIDFOUND,
+      sale_price:sale_price
+    }
+      this.voiceService.txtToSpeech('Product price is rupees '+sale_price+' Do you want to update?Please Speak Yes or No after the beep.').then(()=>{
+        this.updateSpeechPrice(productId,0);
+    });
+  }
+  updateSpeechPrice(productId, isField?:number){
+
+    this.voiceService.startListing().then(() => {
+
+      if(this.voiceService.speechTxt == 'yes'){
+        
+        this.voiceService.txtToSpeech('What is the new price ?Speak after the beep').then(()=>{
+          this.voiceService.startListing().then(() => {
+            // validation required
+    
+            eval('document.getElementById("'+ productId +'").value = '+this.voiceService.speechTxt);
+            this.speechProduct.sale_price = this.voiceService.speechTxt;
+            this.voiceService.txtToSpeech('New Price is rupees '+this.voiceService.speechTxt +'.Do you want to update quantity.Speak Yes or No after the beep').then(()=>{
+              this.updateSpeechQuantity(productId);
+            });
+    
+                }).catch((err) => {
+                  console.log('green');
+                  console.log(err);
+                  this.voiceService.txtToSpeech('unable to understand. still want to update price. Speak yes or no after the beep ').then(()=>{
+                    this.updateSpeechPrice(productId,0);
+                  });
+                });
+        });
+      }else{
+        if(isField){
+          this.updateProductAuto();
+        }else{
+        this.voiceService.txtToSpeech('Do you want to update quantity.Speak Yes or No after the beep').then(()=>{
+          this.updateSpeechQuantity(productId);
+        }).catch(()=>{
+          console.log('Do you want to update quantity.Speak Yes or No after the beep');
+        })
+      }
+      }
+
+    }).catch((err) => {
+      console.log('green');
+      console.log(err);
+    });
+  }
+  updateSpeechQuantity(productId){
+    this.voiceService.startListing().then(() => {
+
+      if(this.voiceService.speechTxt == 'yes'){
+
+        this.voiceService.txtToSpeech('What is the new quantity. Speak after the beep').then(()=>{
+          this.voiceService.startListing().then(() => {
+            // validation required
+    
+              eval('document.getElementById("quantity'+ productId +'").value = '+this.voiceService.speechTxt);
+              this.speechProduct.quantity = this.voiceService.speechTxt;
+              this.voiceService.txtToSpeech('New quantity is '+this.voiceService.speechTxt +'.');
+              this.updateProductAuto();
+            }).catch((err) => {
+              console.log('green');
+              console.log(err);
+              this.voiceService.txtToSpeech('unable to understand. still want to update quantity. Speak yes or no after the beep ').then(()=>{
+                this.updateSpeechQuantity(productId);
+              });
+            });
+        });
+      }else{
+       
+        this.updateProductAuto();
+      }
+    }).catch((err) => {
+      console.log('updateSpeechQuantity');
+      console.log(err);
+    }); 
+  }
+
+  updateProductAuto(){
+    this.voiceService.txtToSpeech('Can i update the product?Speak yes or no after the beep').then(()=>{
+
+      this.voiceService.startListing().then(() => {
+        if(this.voiceService.speechTxt == 'yes'){
+          this.voiceService.txtToSpeech('Updating your product.');
+          this.updateStock(this.speechProduct.quantity,this.speechProduct.productId,this.speechProduct.product_status_id,this.speechProduct.marketplace_id,this.speechProduct.reason,this.speechProduct.noUIDFOUND,this.speechProduct.sale_price);
+        }else{
+          this.voiceService.txtToSpeech('Thank you.');
+        }
+      })
+
+    });
+  }
+
 }

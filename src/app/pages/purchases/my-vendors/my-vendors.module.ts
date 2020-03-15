@@ -5,12 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MyproductsPage } from './myproducts.page';
+import { MyVendorsPage } from './my-vendors.page';
 import { SharedPipesModule } from 'src/app/services/shared.module';
+import { TextAvatarModule } from 'src/app/services/text-avatar/text-avatar.module';
 const routes: Routes = [
   {
     path: '',
-    component: MyproductsPage
+    component: MyVendorsPage
   }
 ];
 
@@ -18,9 +19,9 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,SharedPipesModule,
+    IonicModule,SharedPipesModule,TextAvatarModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [MyproductsPage]
+  declarations: [MyVendorsPage]
 })
-export class MyproductsPageModule {}
+export class MyVendorsPageModule {}
