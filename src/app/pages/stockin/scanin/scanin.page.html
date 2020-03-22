@@ -98,7 +98,6 @@
               </ion-col>
               <ion-col size="6" size-sm> 
                 <ion-item>
-                  <ion-item>
                     <ion-label position="floating">Sale Price<span class="required">*</span></ion-label>
                     <ion-input type="number" [id]="result.id" formControlName="sale_price" required maxlength="6" #sale_price [value]="result.purchase_cost"
                     name="sale_price"></ion-input>
@@ -107,7 +106,6 @@
                       <ion-icon color="danger" name="mic" ></ion-icon>
                     </ion-button>
                   </div>
-                  </ion-item>
                 </ion-item>
               </ion-col>
             </ion-row>
@@ -172,7 +170,8 @@
             <ion-row>
               <ion-col (click)="selectedProduct(image)" size="6" size="4" size="3" *ngFor="let image of products.data">
                 <span *ngIf="image.id == selectedProductId" ><ion-icon color="danger" name="checkmark" class="selected-image" ></ion-icon></span>
-                <div class="image-container" [ngStyle]="{'background-image':'url(' + img_base+image.image + ')', 'background-size':'contain', 'background-repeat':'no-repeat'}"></div>
+                <div *ngIf="image.image" class="image-container" [ngStyle]="{'background-image':'url(' +  img_base+image.image + ')', 'background-size':'contain', 'background-repeat':'no-repeat'}"></div>
+                <div *ngIf="!image.image" class="image-container" [ngStyle]="{'background-image':'url(' +  defaultImage + ')', 'background-size':'contain', 'background-repeat':'no-repeat'}"></div>
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -267,4 +266,13 @@
   </ion-fab>
 </ion-content>
 
-  
+<ion-footer no-border >
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+          <ion-button expand="full" color="danger" class="ion-text-uppercase" (click)="quickUpdateProduct()">Quick Update</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+ 
+</ion-footer>

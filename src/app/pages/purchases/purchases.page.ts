@@ -389,6 +389,8 @@ this.partialAmount = data.data.amount_paid;
       this.queryParmSub.unsubscribe();
 
         this.appProvider.dismissLoading();
+        this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
       
   }
 

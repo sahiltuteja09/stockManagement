@@ -114,7 +114,7 @@ captureImage(){
     });
   }
 
-  uploadPic(croppedImagepath, fileName: any) {
+  uploadPic(croppedImagepathBase, fileName: any) {
     this.imageFileNames = fileName;
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
@@ -129,11 +129,11 @@ captureImage(){
         }
         const currentUser = this.authenticationService.currentUserValue;
         let userID = currentUser.id;
-        fileTransfer.upload(croppedImagepath, this.END_POINT+'uploadProductImg/'+userID, options).then(data => {
+        fileTransfer.upload(croppedImagepathBase, this.END_POINT+'uploadProductImg/'+userID, options).then(data => {
           this.appProvider.dismissLoading();
           let d = data.response;
           let detail = JSON.parse(d);
-          this.croppedImagepath.next(croppedImagepath);
+          this.croppedImagepath.next(croppedImagepathBase);
           this.appProvider.showToast(detail.msg);
 
         }, error => {

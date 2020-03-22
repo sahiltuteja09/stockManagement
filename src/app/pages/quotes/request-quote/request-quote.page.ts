@@ -23,12 +23,11 @@ export class RequestQuotePage implements OnInit {
     public authenticationService: AuthenticationService) { 
       
     const currentUser = this.authenticationService.currentUserValue;
-        const imgUserID = currentUser.id;
-        this.img_base = this.img_base + imgUserID + 'assets/';
     this.route.params.subscribe((params) => {
       this.product_id = params['id'];
       this.user_id = params['user_id'];
     });
+    this.img_base = this.img_base + this.user_id + 'assets/';
   }
 
   ngOnInit() {

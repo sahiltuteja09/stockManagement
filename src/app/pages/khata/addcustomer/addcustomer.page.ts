@@ -8,6 +8,7 @@ import { ImagesService } from 'src/app/providers/upload/images.service';
 import { ActionSheetController } from '@ionic/angular';
 import { NativeContactService } from 'src/app/providers/contact/native-contact.service';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-addcustomer',
@@ -57,6 +58,9 @@ export class AddcustomerPage implements OnInit {
     this.queryParmSub = this.route.queryParams.subscribe(params => {
       this.customer.mobile_number = params['mobile'];
       this.customer.name = params['name'];
+      this.customer.image = params['img'];
+      this.croppedImagepath = this.img_base+this.customer.image ;
+      console.log(this.croppedImagepath );
       if(params['mobile'])
       this.customer.is_update = 1
     });
@@ -170,21 +174,24 @@ export class AddcustomerPage implements OnInit {
         this.isLoading = data;
       });
     }
+    console.log(this.croppedImagepathSubscriber);
     if (typeof this.croppedImagepathSubscriber != 'object') {
       this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
-        this.croppedImagepath = data;
+        
         this.imageName = this.uploadImage.imageFileName();
         if (this.imageName) {
+          this.croppedImagepath = data;
           this.customer.image = this.imageName;
           console.log('this.imageName if ' + this.imageName);
+        }
 
-
-          if (typeof this.croppedImagepathSubscriber == 'object') {
-            this.isLoading = false;
-            this.croppedImagepathSubscriber.unsubscribe();
-            this.isLoadingSubscriber.unsubscribe();
-          }
-
+        if (typeof this.croppedImagepathSubscriber == 'object') {
+          this.isLoading = false;
+          
+          this.croppedImagepathSubscriber.unsubscribe();
+          this.isLoadingSubscriber.unsubscribe();
+          this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
         }
 
         console.log('this.imageName ' + this.imageName);
@@ -200,6 +207,8 @@ export class AddcustomerPage implements OnInit {
       this.croppedImagepathSubscriber.unsubscribe();
 
         this.appProvider.dismissLoading();
+        this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
       
   }
 }

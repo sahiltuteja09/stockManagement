@@ -73,6 +73,8 @@ img_base: string = CoreConfigConstant.uploadedPath;
   selectedProductTitle:string ='';
   public sform: FormGroup;
   speechProduct:any = {};
+  quickUpdate:boolean = false;
+  speakToSearch:boolean =false;
   constructor(
     private scanService: ScannerService,
     private curdService: CurdService,
@@ -125,6 +127,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
     this.searching = true;
     this.resetProductView();
   }
+  
   searchProduct() {
     if (this.searchTerm) {
       this.voiceService.txtToSpeech('searching... Please wait...');
@@ -154,7 +157,8 @@ img_base: string = CoreConfigConstant.uploadedPath;
                 this.page = this.page + 1;
                 let totalProducts = Object.keys(data.data).length;
               
-                
+                if(this.speakToSearch){
+                  this.speakToSearch = false;
                 if(totalProducts == 1 && this.isMobileDevice){
                  let productRow = data.data;
                  this.speechProduct = {
@@ -166,20 +170,33 @@ img_base: string = CoreConfigConstant.uploadedPath;
                    noUIDFOUND:0,
                    sale_price:productRow[0].purchase_cost
                  }
+                 if(!this.quickUpdate){
+                  this.voiceService.txtToSpeech('One product found.Can i update the product?Please Speak Yes or No after the beep.').then(()=>{
 
-                 this.voiceService.txtToSpeech('One product found.Can i subtract the quantity?Please Speak Yes or No after the beep.').then(()=>{
-                   if(this.voiceService.speechTxt == 'yes'){
-                    this.updateProductAuto();
-                   }else{
-                      this.voiceService.txtToSpeech('Do you want to update price?Please Speak Yes or No after the beep.').then(()=>{
-                        this.updateSpeechPrice(productRow[0].id,0);
-                      });
-                   }
-                });
-                   
+                    this.voiceService.startListing().then(() => {
+                    if(this.voiceService.speechTxt == 'yes'){
+                     this.updateProductAuto(1);
+                    }else if(this.voiceService.speechTxt == 'stop'){}else{
+                       this.voiceService.txtToSpeech('Do you want to update price?Please Speak Yes or No after the beep.').then(()=>{
+                         this.updateSpeechPrice(productRow[0].id,0);
+                       });
+                    }
+                  }).catch((err) => {
+                    console.log('updateSpeechQuantity');
+                    console.log(err);
+                  }); 
+  
+                 });
+              }else{
+                this.quickUpdate = false;
+                this.updateProductAuto(1);
+              }
                 }else{
                  this.voiceService.txtToSpeech(totalProducts +' products found. Please select product manually.');
                 }
+              }else{
+                this.speakToSearch = false;
+              }
               }
 
               this.appProvider.dismissLoading();
@@ -446,10 +463,17 @@ img_base: string = CoreConfigConstant.uploadedPath;
 
         this.appProvider.dismissLoading();
   }
-
-  startListing(){
+  quickUpdateProduct(){
+    
+    this.quickUpdate = true;
+    this.startListing('Please Speak after the beep.');
+  }
+  startListing(msg?:string){
+    if(!msg)
+    msg = 'Hey. I will try to search whatever you speak.Please Speak after the beep.';
     console.log('startListing');
-    this.voiceService.txtToSpeech('Hey. I will try to search whatever you speak.Please Speak after the beep.').then(()=>{
+    this.speakToSearch = true;
+    this.voiceService.txtToSpeech(msg).then(()=>{
     this.voiceService.startListing().then(() => {
       this.sform.controls["searchControl"].setValue(this.voiceService.speechTxt);
     }).catch((err) => {
@@ -480,7 +504,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
             }).catch((err) => {
               console.log('green');
               console.log(err);
-              this.voiceService.txtToSpeech('unable to understand. still want to update price. Speak yes or no after the beep ').then(()=>{
+              this.voiceService.txtToSpeech('Price field should be numeric. still want to update price. Speak yes or no after the beep ').then(()=>{
                 this.updateSpeechPrice(productId, 1);
               });
             });
@@ -507,7 +531,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
         }).catch((err) => {
           console.log('green');
           console.log(err);
-          this.voiceService.txtToSpeech('unable to understand. still want to update quantity. Speak yes or no after the beep ').then(()=>{
+          this.voiceService.txtToSpeech('Quantity field should be numeric. still want to update quantity. Speak yes or no after the beep ').then(()=>{
             this.updateSpeechQuantity(productId);
           });
         });
@@ -546,12 +570,12 @@ img_base: string = CoreConfigConstant.uploadedPath;
                 }).catch((err) => {
                   console.log('green');
                   console.log(err);
-                  this.voiceService.txtToSpeech('unable to understand. still want to update price. Speak yes or no after the beep ').then(()=>{
+                  this.voiceService.txtToSpeech('Price field should be numeric. still want to update price. Speak yes or no after the beep ').then(()=>{
                     this.updateSpeechPrice(productId,0);
                   });
                 });
         });
-      }else{
+      }else if(this.voiceService.speechTxt == 'stop'){}else{
         if(isField){
           this.updateProductAuto();
         }else{
@@ -584,12 +608,12 @@ img_base: string = CoreConfigConstant.uploadedPath;
             }).catch((err) => {
               console.log('green');
               console.log(err);
-              this.voiceService.txtToSpeech('unable to understand. still want to update quantity. Speak yes or no after the beep ').then(()=>{
+              this.voiceService.txtToSpeech('Quantity field should be numeric. still want to update quantity. Speak yes or no after the beep ').then(()=>{
                 this.updateSpeechQuantity(productId);
               });
             });
         });
-      }else{
+      }else if(this.voiceService.speechTxt == 'stop'){}else{
        
         this.updateProductAuto();
       }
@@ -599,19 +623,24 @@ img_base: string = CoreConfigConstant.uploadedPath;
     }); 
   }
 
-  updateProductAuto(){
+  updateProductAuto(updatewithouspeak?:any){
+    if(updatewithouspeak == 1){
+      this.voiceService.txtToSpeech('Product found. Updating...');
+      this.updateStock(this.speechProduct.quantity,this.speechProduct.productId,this.speechProduct.product_status_id,this.speechProduct.marketplace_id,this.speechProduct.reason,this.speechProduct.noUIDFOUND,this.speechProduct.sale_price);
+    }else{
     this.voiceService.txtToSpeech('Can i update the product?Speak yes or no after the beep').then(()=>{
 
       this.voiceService.startListing().then(() => {
         if(this.voiceService.speechTxt == 'yes'){
           this.voiceService.txtToSpeech('Updating your product.');
           this.updateStock(this.speechProduct.quantity,this.speechProduct.productId,this.speechProduct.product_status_id,this.speechProduct.marketplace_id,this.speechProduct.reason,this.speechProduct.noUIDFOUND,this.speechProduct.sale_price);
-        }else{
+        }else if(this.voiceService.speechTxt == 'stop'){}else{
           this.voiceService.txtToSpeech('Thank you.');
         }
       })
 
     });
+  }
   }
 
 }

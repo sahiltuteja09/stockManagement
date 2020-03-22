@@ -225,6 +225,8 @@ export class AddkhataPage implements OnInit {
       this.croppedImagepathSubscriber.unsubscribe();
 
     this.appProvider.dismissLoading();
+    this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
 
   }
 }

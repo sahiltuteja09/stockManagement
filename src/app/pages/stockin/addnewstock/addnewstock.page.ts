@@ -243,16 +243,20 @@ export class AddnewstockPage implements OnInit {
     if (typeof this.croppedImagepathSubscriber != 'object') {
       this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
         console.log('croppedImagepathSubscriber '+data);
-        this.croppedImagepath = data;
+        
         this.imageName = this.uploadImage.imageFileName();
         if (this.imageName) {
+          this.croppedImagepath = data;
           this.stock.image = this.imageName;
           console.log('this.imageName if ' + this.imageName);
-          if (typeof this.croppedImagepathSubscriber == 'object'){
-            this.isLoading = false;
-            this.croppedImagepathSubscriber.unsubscribe();
-            this.isLoadingSubscriber.unsubscribe();
-          }
+          
+        }
+        if (typeof this.croppedImagepathSubscriber == 'object'){
+          this.isLoading = false;
+          this.croppedImagepathSubscriber.unsubscribe();
+          this.isLoadingSubscriber.unsubscribe();
+          this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
         }
 
         console.log('this.imageName ' + this.imageName);
@@ -407,8 +411,9 @@ startListing(){
       }
 
         this.appProvider.dismissLoading();
-      
 
+        this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
   }
 
 }

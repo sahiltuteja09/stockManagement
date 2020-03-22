@@ -111,7 +111,7 @@ export class KhataPage implements OnInit {
   }
   editCustomer(){
     console.log(this.searchTerm);
-    this.appProvider.searchParam('addcustomer', { queryParams: { 'mobile':  this.searchTerm, 'name':this.name} });
+    this.appProvider.searchParam('addcustomer', { queryParams: { 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg} });
   }
   addkhata(type:number){
     this.appProvider.tempData({'name':this.name,'khata_id':0, 'type':type, 'mobile': this.searchTerm, 'amount': 0,'description': '',purchase_date:new Date().toISOString()});

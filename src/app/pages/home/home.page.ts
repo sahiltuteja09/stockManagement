@@ -21,6 +21,7 @@ export class HomePage {
   noDataFound: string = 'Fetching records...';
   defaultImage: string = 'http://placehold.it/300x200';
   img_base: string = CoreConfigConstant.uploadedPath;
+  imgBase:string = '';
   userID: number = 0;
 
   secondsCounter = interval(120000);
@@ -43,6 +44,7 @@ export class HomePage {
 
     const currentUser = this.authenticationService.currentUserValue;
     this.userID = currentUser.id;
+    this.imgBase = this.img_base;
     this.img_base = this.img_base + this.userID + 'assets/';
     this.checkNetworkStatus();
     this.checkUpdates();

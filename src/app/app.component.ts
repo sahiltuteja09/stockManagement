@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, Events, MenuController } from '@ionic/angular';
+import { Platform, Events, MenuController, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ConfigServiceService } from 'src/config';
@@ -86,7 +86,7 @@ export class AppComponent {
     private router: Router,
     private location: Location,
     public menuCtrl: MenuController,
-    private localNotification: LocalnotificationService
+    private localNotification: LocalnotificationService,private alertCtrl: AlertController
   ) {
     this.initializeApp();
     router.events.subscribe((event: Event) => {
@@ -177,8 +177,27 @@ export class AppComponent {
   menuControl() {
     this.loggedin = this.authenticationService.isLoggedin();
   }
-  logout() {
-    this.localNotification.cancelAllLocalNotifications();
-    this.authenticationService.logout();
+  async logout() {
+    const alert = await this.alertCtrl.create({
+      header: 'Are you sure ?',
+      message: '',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Continue',
+          handler: () => {
+            this.localNotification.cancelAllLocalNotifications();
+            this.authenticationService.logout();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

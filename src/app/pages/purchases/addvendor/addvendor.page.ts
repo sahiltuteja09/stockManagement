@@ -89,7 +89,8 @@ export class AddvendorPage implements OnInit {
             'description': '',
             'purchase_id': 0,
             'purchase_date': '',
-            'is_vendor':1
+            'is_vendor':1,
+            'is_update':0
           };
           let merged = { ...this.vendor, ...emptyfields };
           this.curdService.postData(apiMethod, merged)
@@ -163,19 +164,22 @@ export class AddvendorPage implements OnInit {
     }
     if (typeof this.croppedImagepathSubscriber != 'object') {
       this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
-        this.croppedImagepath = data;
+        
         this.imageName = this.uploadImage.imageFileName();
         if (this.imageName) {
+          this.croppedImagepath = data;
           this.vendor.image = this.imageName;
           console.log('this.imageName if ' + this.imageName);
+        }
 
+        if (typeof this.croppedImagepathSubscriber == 'object') {
+          
+          this.isLoading = false;
+          this.croppedImagepathSubscriber.unsubscribe();
+          this.isLoadingSubscriber.unsubscribe();
 
-          if (typeof this.croppedImagepathSubscriber == 'object') {
-            this.isLoading = false;
-            this.croppedImagepathSubscriber.unsubscribe();
-            this.isLoadingSubscriber.unsubscribe();
-          }
-
+          this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber= '';
         }
 
         console.log('this.imageName ' + this.imageName);
@@ -191,6 +195,9 @@ export class AddvendorPage implements OnInit {
       this.croppedImagepathSubscriber.unsubscribe();
 
         this.appProvider.dismissLoading();
+
+        this.croppedImagepathSubscriber = '';
+            this.isLoadingSubscriber= '';
       
   }
 
