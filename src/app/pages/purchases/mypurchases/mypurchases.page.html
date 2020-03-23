@@ -127,7 +127,7 @@
   <ng-template #noData>
     <div class="ion-text-center">
       <p>{{noDataFound}}</p>
-        <ion-button color="primary" small color="tertiary" shape="round" routerLink="/myvendors">Add New</ion-button>
+        <ion-button color="primary" small color="tertiary" shape="round" (click)="gotoPage('myvendors')">Add New</ion-button>
     </div>
   </ng-template>
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
@@ -136,7 +136,7 @@
   </ion-infinite-scroll>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
-    <ion-fab-button color="danger" routerDirection="forward" data-desc="add New" routerLink="/myvendors">
+    <ion-fab-button color="danger"  data-desc="add New" (click)="gotoPage('myvendors')">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

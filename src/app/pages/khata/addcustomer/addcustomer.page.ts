@@ -59,8 +59,8 @@ export class AddcustomerPage implements OnInit {
       this.customer.mobile_number = params['mobile'];
       this.customer.name = params['name'];
       this.customer.image = params['img'];
-      this.croppedImagepath = this.img_base+this.customer.image ;
-      console.log(this.croppedImagepath );
+      
+     
       if(params['mobile'])
       this.customer.is_update = 1
     });
@@ -68,6 +68,11 @@ export class AddcustomerPage implements OnInit {
 
   ngOnInit() {
     this.isMobile = this.appProvider.isMobile();
+    setTimeout(() => {
+      this.croppedImagepath = this.img_base+this.customer.image ;
+      console.log(this.croppedImagepath );
+    }, 1000);
+   
   }
   getContact(){
     this.contact.pickContact().then(()=>{
@@ -118,6 +123,9 @@ export class AddcustomerPage implements OnInit {
 
                 this.appProvider.dismissLoading();
                 if (data.status)
+                  this.appProvider.goto('mykhatas', 1);
+
+                  if (!data.status && this.customer.is_update)
                   this.appProvider.goto('mykhatas', 1);
               }, 2000);
 

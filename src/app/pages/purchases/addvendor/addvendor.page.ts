@@ -106,7 +106,7 @@ export class AddvendorPage implements OnInit {
 
                 this.appProvider.dismissLoading();
                 if (data.status)
-                  this.appProvider.searchParam('purchases', { queryParams: { mobile:  merged.mobile_number, name:merged.name } });
+                  this.appProvider.searchParam('purchases', { queryParams: { mobile:  merged.mobile_number, name:merged.name }, replaceUrl: true });
               }, 2000);
 
             },

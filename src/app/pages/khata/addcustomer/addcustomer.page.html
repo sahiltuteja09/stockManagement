@@ -26,7 +26,7 @@
               </ion-label>
               <ion-input type="text" formControlName="mobile_number" [disabled]="customer.is_update" required [(ngModel)]="customer.mobile_number"
                 name="mobile_number" placeholder="Enter mobile number"></ion-input>
-                <div slot="end" *ngIf="isMobile" class="padding-top-15">
+                <div slot="end" *ngIf="isMobile && customer.is_update == 0" class="padding-top-15">
                   <ion-button color="default" (click)="getContact()">
                     <ion-icon color="success" name="contact" ></ion-icon>
                   </ion-button>

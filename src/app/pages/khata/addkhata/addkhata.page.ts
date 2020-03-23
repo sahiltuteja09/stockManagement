@@ -82,7 +82,7 @@ export class AddkhataPage implements OnInit {
 
               this.appProvider.dismissLoading();
               if (data.status)
-                this.appProvider.searchParam('khata', { queryParams: { 'mobile': this.mobile } });
+                this.appProvider.searchParam('khata', { queryParams: { 'mobile': this.mobile }, skipLocationChange: true  });
             }, 2000);
 
           },
@@ -97,9 +97,9 @@ export class AddkhataPage implements OnInit {
     });
   }
   saveKhataImage(id) {
-    if(Object.keys(this.croppedImagepath).length == 0){
-      return false;
-    }
+    // if(Object.keys(this.croppedImagepath).length == 0){
+    //   return false;
+    // }
     let param = { 'id': id };
     let images = { 'images': this.croppedImagepath };
 
@@ -174,6 +174,9 @@ export class AddkhataPage implements OnInit {
             this.isLoadingSubscriber.unsubscribe();
             this.croppedImagepathSubscriber = '';
             setTimeout(() => {
+              if(this.croppedImagepath[this.countImage])
+              this.countImage = this.countImage + 1;
+              
               this.croppedImagepath[this.countImage] = imageName;
               this.countImage = this.countImage + 1;
             }, 2000);

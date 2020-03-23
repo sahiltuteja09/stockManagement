@@ -170,7 +170,11 @@ export class MypurchasesPage implements OnInit {
   }
   goto(page,product) {
 
-    this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id} });
+    this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id},skipLocationChange: true });
+  }
+  gotoPage(page) {
+
+    this.appProvider.searchParam(page);
   }
 
   doRefresh(event) {

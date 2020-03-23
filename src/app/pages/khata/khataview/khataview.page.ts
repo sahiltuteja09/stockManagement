@@ -44,7 +44,7 @@ export class KhataviewPage implements OnInit {
     this.khataDetail = this.appProvider.tempStorage;
 
   this.backButtonSub =  this.platform.backButton.subscribe(async () => {
-      this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number} });
+      this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number}, skipLocationChange: true });
     });
 this.getKhataImages();
     if(typeof this.khataDetail == 'undefined')
@@ -180,7 +180,7 @@ async deleteTransaction(){
             } else {
               this.appProvider.showToast(result.msg);
               setTimeout(() => {
-                this.appProvider.searchParam('khata', { queryParams: { mobile:  this.khataDetail.mobile_number} });
+                this.appProvider.searchParam('khata', { queryParams: { mobile:  this.khataDetail.mobile_number}, skipLocationChange: true });
               }, 2000);
             }
           },
@@ -204,7 +204,7 @@ viewBill(data:any){
 }
 
 BackButtonAction(){
-  this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number} });
+  this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number}, skipLocationChange: true});
 }
 ionViewWillLeave() {
   this.backButtonSub.unsubscribe();

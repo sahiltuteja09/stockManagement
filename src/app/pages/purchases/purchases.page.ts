@@ -180,10 +180,13 @@ this.partialAmount = data.data.amount_paid;
               this.croppedImagepath = [];
             } else {
               this.croppedImagepath = [];
-              for(let i=0;i < data.data.length; i++){
-                this.countImage  = i;
-                this.croppedImagepath[this.countImage ] = data.data[i].image;
+              if(data.data.length > 0){
+                for(let i=0;i < data.data.length; i++){
+                  this.countImage  = i;
+                  this.croppedImagepath[this.countImage ] = data.data[i].image;
+                }
               }
+              
             }
             //this.appProvider.dismissLoading();
           },
@@ -220,6 +223,8 @@ this.partialAmount = data.data.amount_paid;
 
           if(Object.keys(this.croppedImagepath).length > 0){
             this.purchase.image =  this.croppedImagepath[0];
+          }else if(Object.keys(this.croppedImagepath).length == 0){
+            this.purchase.image = '';
           }
 
           let merged;
@@ -264,9 +269,9 @@ this.partialAmount = data.data.amount_paid;
     }
   }
   saveKhataImage(id) {
-    if(Object.keys(this.croppedImagepath).length == 0){
-      return false;
-    }
+    // if(Object.keys(this.croppedImagepath).length == 0){
+    //   return false;
+    // }
     let param = { 'id': id };
     let images = { 'images': this.croppedImagepath };
 
@@ -354,6 +359,9 @@ this.partialAmount = data.data.amount_paid;
             this.isLoadingSubscriber.unsubscribe();
             this.croppedImagepathSubscriber = '';
             setTimeout(() => {
+              if(this.croppedImagepath[this.countImage])
+              this.countImage = this.countImage + 1;
+
               this.croppedImagepath[this.countImage] = imageName;
               this.countImage = this.countImage + 1;
             }, 2000);

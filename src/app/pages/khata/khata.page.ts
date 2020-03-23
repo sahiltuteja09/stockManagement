@@ -12,7 +12,7 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./khata.page.scss'],
 })
 export class KhataPage implements OnInit {
-  name:string='test';
+  name:string='';
   mobileNumber:string;
   queryParmSub: any;
   searchTerm:any;

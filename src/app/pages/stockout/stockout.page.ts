@@ -432,7 +432,10 @@ export class StockoutPage implements OnInit {
           this.appProvider.showToast('Please select the merchant.');
           return;
         }
-        let product_uids_type = {'save_to_product_uids': 1, 'marketplace_unique_id' : this.searchTerm}; 
+        let product_uids_type = {'save_to_product_uids': 0, 'marketplace_unique_id' : ''}; 
+        if(this.searchTerm){
+         product_uids_type = {'save_to_product_uids': 1, 'marketplace_unique_id' : this.searchTerm}; 
+        }
         stock = {...stock , ...product_uids_type};
       }
      
