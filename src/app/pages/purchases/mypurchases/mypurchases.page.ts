@@ -67,11 +67,14 @@ export class MypurchasesPage implements OnInit {
   ngOnInit() {
     this.isMobile = this.appProvider.isMobile();
     this.isAndroid = this.appProvider.isAndroid();
+    console.log(this.isAndroid);
+    if(this.isMobile){
     if(this.isAndroid){
       this.downloadPath = this.file.externalRootDirectory;
     }else{
       this.downloadPath = this.file.documentsDirectory;
     }
+  }
   }
   ionViewWillEnter() {
     this.purchases();

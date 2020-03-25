@@ -27,6 +27,7 @@ export class AddkhataPage implements OnInit {
   croppedImagepathSubscriber;
   isMobile: boolean = false;
   countImage: number = 0;
+  selectedFile: File[];
   constructor(
     private uploadImage: ImagesService,
     private appProvider: CoreAppProvider,
@@ -212,12 +213,41 @@ export class AddkhataPage implements OnInit {
     });
     await actionSheet.present();
   }
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
+
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+
+      if(this.croppedImagepath[this.countImage])
+      this.countImage = this.countImage + 1;
+
+      this.croppedImagepath[this.countImage] =  data.status.data.file_name;
+              this.countImage = this.countImage + 1;
+
+              console.log(this.croppedImagepath);
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
   removeImg(item, e) {
     e.preventDefault();
     console.log(item);
     console.log(this.croppedImagepath);
     var index = this.croppedImagepath.indexOf(item);
     if (index !== -1) this.croppedImagepath.splice(index, 1);
+    this.countImage = this.countImage - 1;
     console.log(this.croppedImagepath);
   }
   ionViewWillLeave() {

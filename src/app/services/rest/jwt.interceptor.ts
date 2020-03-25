@@ -11,8 +11,16 @@ export class JwtInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add authorization header with jwt token if available
         let currentUser = this.authenticationService.currentUserValue;
-        
+        var uploadRequest = request.url.indexOf("uploadProductDesktopImg");
         if (currentUser && currentUser.token) {
+        if(uploadRequest > 0){
+            request = request.clone({
+                setHeaders: {
+                    Authorization: `${currentUser.token}`,
+                    'appid': `${CoreConfigConstant.appID}`
+                }
+            });
+        }else{
             request = request.clone({
                 setHeaders: {
                     'Accept': 'application/json',
@@ -21,6 +29,7 @@ export class JwtInterceptor implements HttpInterceptor {
                     'appid': `${CoreConfigConstant.appID}`
                 }
             });
+        }
         }else{
             request = request.clone({
                 setHeaders: {

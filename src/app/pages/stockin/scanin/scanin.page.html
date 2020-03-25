@@ -44,7 +44,7 @@
             <ion-icon color="success" name="expand" ></ion-icon>
           </ion-button>
           </div>
-        <div slot="end" *ngIf="isMobileDevice" class="padding-top-15">
+        <div slot="end" class="padding-top-15">
           <ion-button color="default" (click)="startListing()">
             <ion-icon color="danger" name="mic" ></ion-icon>
           </ion-button>
@@ -56,18 +56,6 @@
   <div *ngIf="searching" class="ion-text-center" text-center>
     <ion-spinner></ion-spinner>
   </div>
-
-  <!-- <div *ngIf="isMobileDevice" text-center class="ion-padding-top">Or</div>
-
-  <ion-row *ngIf="isMobileDevice">
-    <ion-col text-center class="ion-padding-top">
-      <ion-button (click)="scanCode()" color="success" shape="round" >
-        <ion-icon slot="start" name="qr-scanner"></ion-icon>
-        Scan
-      </ion-button>
-    </ion-col>
-  </ion-row> -->
-  
 
   <div *ngIf="(searchData.status); else noData">
     <ion-card *ngFor="let result of searchData.data">
@@ -88,7 +76,7 @@
                 <ion-item>
                   <ion-label position="floating">Add Quantity<span class="required">*</span></ion-label>
                   <ion-input type="number" [id]="'quantity'+result.id" formControlName="quantity" value="1" name="quantity" maxlength="5" #qtyInput></ion-input>
-                  <div slot="end" *ngIf="isMobileDevice" class="padding-top-35">
+                  <div slot="end" class="padding-top-35">
                     <ion-button color="default" (click)="updateQuantityField(qtyInput.value, result.id,product_status_id.value, marketplace_id.value, reason.value, 0,sale_price.value)">
                       <ion-icon color="danger" name="mic" ></ion-icon>
                     </ion-button>
@@ -101,7 +89,7 @@
                     <ion-label position="floating">Sale Price<span class="required">*</span></ion-label>
                     <ion-input type="number" [id]="result.id" formControlName="sale_price" required maxlength="6" #sale_price [value]="result.purchase_cost"
                     name="sale_price"></ion-input>
-                    <div slot="end" *ngIf="isMobileDevice" class="padding-top-35">
+                    <div slot="end" class="padding-top-35">
                       <ion-button color="default" (click)="updatePriceField(qtyInput.value, result.id,product_status_id.value, marketplace_id.value, reason.value, 0,sale_price.value)">
                       <ion-icon color="danger" name="mic" ></ion-icon>
                     </ion-button>
@@ -270,8 +258,8 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12">
-          <ion-button expand="full" color="danger" class="ion-text-uppercase" (click)="quickUpdateProduct()">Quick Update</ion-button>
-      </ion-col>
+        <ion-button expand="full" [disabled]="quickUpdateObject.disabled" [color]="quickUpdateObject.color" class="ion-text-uppercase" (click)="quickUpdateProduct()">{{quickUpdateObject.txt}}</ion-button>
+    </ion-col>
     </ion-row>
   </ion-grid>
  

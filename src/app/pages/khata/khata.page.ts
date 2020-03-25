@@ -33,6 +33,9 @@ export class KhataPage implements OnInit {
     this.queryParmSub = this.route.queryParams.subscribe(params => {
       this.searchTerm = params['mobile'];
       this.customerImg = params['img'];
+
+      this.name= params['name'];
+       this.mobileNumber =params['mobile'];
     });
   }
 
@@ -61,7 +64,6 @@ export class KhataPage implements OnInit {
               this.page = this.page + 1;
               this.balance_text = data.balance_text;
               this.balance = data.balance;
-              console.log(data[0]);
               this.name= data.data[0].name;
               this.mobileNumber =data.data[0].mobile_number;
             }

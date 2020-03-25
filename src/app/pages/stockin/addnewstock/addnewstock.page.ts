@@ -48,6 +48,9 @@ export class AddnewstockPage implements OnInit {
   product_id: number = 0;
   scanType:string = '';
   img_base: string = CoreConfigConstant.uploadedPath;
+  selectedFile: File[];
+
+  quickUpdateObject:any = { 'color': 'danger', 'disabled':false };
   constructor(
     private scanService: ScannerService,
     public formBuilder: FormBuilder,
@@ -262,9 +265,30 @@ export class AddnewstockPage implements OnInit {
         console.log('this.imageName ' + this.imageName);
       });
     }
-
-    
   }
+
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
+
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+      this.stock.image =  data.status.data.file_name;
+      this.croppedImagepath = this.img_base+this.stock.image;
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
 
 
 scanCode(codeType){
@@ -307,33 +331,60 @@ this.scanType =  codeType;
     this.scanService.scanBarCode();
 
 }
-
+voiceToAdd:boolean = false;
 startListing(){
+if(this.voiceToAdd){
+return;
+}
+  this.voiceToAdd = true;
   console.log('startListing');
+  
   this.voiceService.txtToSpeech('Hey. I will assist you to adding the product. Just answer my some question.').then(()=>{
 
     this.voiceService.txtToSpeech('Can i ask? Speak yes or no after the beep').then(()=>{
+        this.quickUpdateObject = { 'color': 'success', 'disabled':true };
       this.voiceService.startListing().then(() => {
+       
+          this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
         
         if(this.voiceService.speechTxt == 'yes'){
 
           this.voiceService.txtToSpeech('What is the product name? Speak after the beep').then(()=>{
+           
+              this.quickUpdateObject = { 'color': 'success', 'disabled':true };
+            
             this.voiceService.startListing().then(() => {
+              this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
               this.stock.product_name = this.voiceService.speechTxt;
       
               this.voiceService.txtToSpeech('What is the product unique id or sku? Speak after the beep').then(()=>{
+                
+                  this.quickUpdateObject = { 'color': 'success', 'disabled':true };
+                
                 this.voiceService.startListing().then(() => {
+                  this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
                   this.stock.product_unique = this.voiceService.speechTxt;
       
                   this.voiceService.txtToSpeech('What is the product sale price? Speak after the beep').then(()=>{
+                    
+                      this.quickUpdateObject = { 'color': 'success', 'disabled':true };
+                    
                     this.voiceService.startListing().then(() => {
+                       this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
                       this.stock.purchase_cost = this.voiceService.speechTxt;
       
                       this.voiceService.txtToSpeech('What is available quantity? Speak after the beep').then(()=>{
+                      
+                          this.quickUpdateObject = { 'color': 'success', 'disabled':true };
+                        
                         this.voiceService.startListing().then(() => {
+                          this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
                           this.stock.product_qty = this.voiceService.speechTxt;
       
                           this.voiceService.txtToSpeech('Thank you. can i add the product in your inventory? Speak yes or no after the beep').then(()=>{
+                           
+                              this.quickUpdateObject = { 'color': 'success', 'disabled':true };
+                            
                             this.voiceService.startListing().then(() => {
                               
                               if(this.voiceService.speechTxt == 'yes'){
@@ -342,52 +393,54 @@ startListing(){
                                 else
                                 this.voiceService.txtToSpeech('I am adding the product to your inventory.');
                                  this.newStock();
+                                 this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
                               }else{
                                 this.voiceService.txtToSpeech('Thank you. Please add product manually.');
                               }
       
                             }).catch((err) => {
-                              console.log('green');
-                              console.log(err);
+                              this.voiceToAdd = false;
+                              this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
                               this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
                             });
                           });
       
                         }).catch((err) => {
-                          console.log('green');
-                          console.log(err);
+                          this.voiceToAdd = false;
+                          this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
                           this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
                         });
                       });
       
                     }).catch((err) => {
-                      console.log('green');
-                      console.log(err);
+                      this.voiceToAdd = false;
+                      this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
                       this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
                     });
                   });
       
                 }).catch((err) => {
-                  console.log('green');
-                  console.log(err);
+                  this.voiceToAdd = false;
+                  this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
                   this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
                 });
               });
       
             }).catch((err) => {
-              console.log('green');
-              console.log(err);
+              this.voiceToAdd = false;
+              this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
               this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
             });
           });
 
         }else{
+          this.voiceToAdd = false;
           this.voiceService.txtToSpeech('Thank you. Please add product manually.');
         }
 
       }).catch((err) => {
-        console.log('green');
-        console.log(err);
+        this.voiceToAdd = false;
+        this.quickUpdateObject = { 'color': 'danger', 'disabled':false };
         this.voiceService.txtToSpeech('Sorry, Unable to understand. Please try again')
       });
     });

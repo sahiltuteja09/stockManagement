@@ -58,6 +58,7 @@ export class ChatsPage implements OnInit {
   }
 
   ngOnInit() {
+    if(this.appProvider.isMobile()){
     if (this.device.platform = 'iOS') {
       switch (this.platform.height()) {
         case 812:
@@ -71,6 +72,7 @@ export class ChatsPage implements OnInit {
           break;
       }
     }
+  }
 
     this.routSub = this.route.params.subscribe((params) => {
       this.conversationId = params['conversationId'];

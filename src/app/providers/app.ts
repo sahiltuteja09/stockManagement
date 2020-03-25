@@ -13,7 +13,7 @@ export enum ConnectionStatusEnum {
 export class CoreAppProvider {
     isLoading = false;
     previousStatus: any;
-    tempStorage:any;
+    tempStorage:any = JSON.parse(localStorage.getItem('tempStorage'));
     constructor(
         public loadingController: LoadingController,
         public toastController: ToastController,
@@ -38,12 +38,32 @@ export class CoreAppProvider {
 
     }
     navigateWithState(page: string, objectItem){
-        this.tempStorage = objectItem;
+        if(!this.isMobile()){
+            this.setStorage(objectItem);
+            this.tempStorage = this.getStorage();
+        }else{
+            this.tempStorage = objectItem;
+        }
         this.goto(page);
     }
      tempData(data){
-        this.tempStorage = data;
+        if(!this.isMobile()){
+            this.setStorage(data);
+            this.tempStorage = this.getStorage();
+        }else{
+            this.tempStorage = data;
+        }
+        //this.tempStorage = data;
     }
+    setStorage(tempData:any){
+        localStorage.setItem('tempStorage', JSON.stringify(tempData));
+    }
+    getStorage(){
+       return JSON.parse(localStorage.getItem('tempStorage'));
+    }
+    deleteStorage(){
+        return localStorage.removeItem('tempStorage');
+     }
     // for chat and quotes request routes structure
     navTo(page: string, para?: any, para2?: any) {
 
@@ -151,8 +171,10 @@ export class CoreAppProvider {
     isOnline(): boolean {
         let noCon: any = Connection.NONE;
         let unkownCon: any = Connection.UNKNOWN;
-        console.log('this.network.type ' + this.network.type);
-        let online = this.network.type !== null && this.network.type != noCon && this.network.type != unkownCon && this.network.type != 'none';
+        let online = true;
+        if(this.isMobile()){
+         online = this.network.type !== null && this.network.type != noCon && this.network.type != unkownCon && this.network.type != 'none';
+        }
         // Double check we are not online because we cannot rely 100% in Cordova APIs. Also, check it in browser.
         if (!online && navigator.onLine) {
             online = true;

@@ -15,7 +15,7 @@ export class ProductviewPage implements OnInit {
   product:any = [];
   defaultImage: string = 'http://placehold.it/300x200';
   img_base: string = CoreConfigConstant.uploadedPath;
-
+  isMobile:boolean = false;
   constructor(
     private appProvider: CoreAppProvider, 
     private modalController: ModalController, 
@@ -24,6 +24,7 @@ export class ProductviewPage implements OnInit {
     const currentUser = this.authenticationService.currentUserValue;
         const imgUserID = currentUser.id;
         this.img_base = this.img_base + imgUserID + 'assets/';
+        this.isMobile = this.appProvider.isMobile();
   }
 
   ngOnInit() {
@@ -62,6 +63,10 @@ export class ProductviewPage implements OnInit {
   goto(page) {
 
     this.appProvider.searchParam(page, { queryParams: { term:  this.product.product.marketplace_unique_id} });
+  }
+  ngOnDestroy(){
+    if(!this.isMobile)
+    this.appProvider.deleteStorage();
   }
 
 }

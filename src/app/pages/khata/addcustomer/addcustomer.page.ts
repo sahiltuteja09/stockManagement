@@ -8,7 +8,6 @@ import { ImagesService } from 'src/app/providers/upload/images.service';
 import { ActionSheetController } from '@ionic/angular';
 import { NativeContactService } from 'src/app/providers/contact/native-contact.service';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-addcustomer',
@@ -28,6 +27,7 @@ export class AddcustomerPage implements OnInit {
   img_base: string = CoreConfigConstant.uploadedPath;
   isMobile:boolean = false;
   queryParmSub:any;
+  selectedFile: File[];
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -68,11 +68,12 @@ export class AddcustomerPage implements OnInit {
 
   ngOnInit() {
     this.isMobile = this.appProvider.isMobile();
+    if(this.customer.image){
     setTimeout(() => {
       this.croppedImagepath = this.img_base+this.customer.image ;
       console.log(this.croppedImagepath );
     }, 1000);
-   
+  }
   }
   getContact(){
     this.contact.pickContact().then(()=>{
@@ -207,6 +208,28 @@ export class AddcustomerPage implements OnInit {
       });
     }
   }
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
+
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+      this.customer.image =  data.status.data.file_name;
+      this.croppedImagepath = this.img_base+this.customer.image;
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')
       this.isLoadingSubscriber.unsubscribe();

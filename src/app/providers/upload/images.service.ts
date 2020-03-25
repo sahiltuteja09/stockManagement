@@ -4,10 +4,11 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { CoreAppProvider } from '../app';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { CoreConfigConstant } from '../../../configconstants';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AuthenticationService } from 'src/app/pages/auth/authentication.service';
+import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,7 @@ export class ImagesService {
     private transfer: FileTransfer,
     private camera: Camera,
     private authenticationService: AuthenticationService,
+    private http: HttpClient
   ) { }
 
   pickImage() {
@@ -148,5 +150,40 @@ captureImage(){
   imageFileName(){
     let n = this.imageFileNames;
     return n;
+  }
+
+  uploadDesktopImage(uploadData:any):Promise<any>{
+    //https://academind.com/learn/angular/snippets/angular-image-upload-made-easy/
+
+    return new Promise( (resolve, reject) => {
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+
+              const currentUser = this.authenticationService.currentUserValue;
+              let userID = currentUser.id;
+              this.http.post(this.END_POINT+'uploadProductDesktopImg/'+userID, uploadData,
+              {
+                reportProgress: true,
+                observe: 'events'
+              }
+              ).subscribe({
+                next: (data) => {
+                  if(data.type == HttpEventType.UploadProgress){
+                    console.log('Uploading Progress: '+ Math.round(data.loaded / data.total * 100) + '%');
+                  }else if(data.type == HttpEventType.Response){
+                    console.log(data);
+                    resolve({'status':data.body, 'msg': 'success'});
+                  }
+                  this.appProvider.dismissLoading();},
+                error: error => {
+                console.error('There was an error!', error);
+                this.appProvider.showToast("Something went wrong! Please try after again.");
+                this.appProvider.dismissLoading();
+                reject({'status':false, 'msg': 'Something went wrong! Please try after again.'});
+              }
+            });
+       })
+    });
+  });
   }
 }

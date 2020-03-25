@@ -28,6 +28,7 @@ export class ProfilePage implements OnInit {
     'image': ''
   };
   updateLocal = {
+    'id': 0,
     'username': '',
     'email': '',
     'mobile': '',
@@ -46,6 +47,9 @@ export class ProfilePage implements OnInit {
   isLoadingSubscriber;
   croppedImagepathSubscriber;
   img_base: string = CoreConfigConstant.uploadedPath;
+
+  isMobile:boolean = false;
+  selectedFile: File[];
   constructor(
     public formBuilder: FormBuilder,
     public authenticationService: AuthenticationService,
@@ -53,10 +57,13 @@ export class ProfilePage implements OnInit {
     private curdService: CurdService,
     private uploadImage: ImagesService,
     public actionSheetController: ActionSheetController) { 
-      
+      this.isMobile = this.appProvider.isMobile();
+
     const currentUser = this.authenticationService.currentUserValue;
     if(currentUser == undefined) return;
     this.userID = currentUser.id;
+
+this.updateLocal.id = this.userID;
     this.img_base = this.img_base + this.userID + 'assets/';
     this.username = currentUser.username;
     this.email = currentUser.email;
@@ -67,6 +74,7 @@ export class ProfilePage implements OnInit {
     this.profile.state = currentUser.state;
     this.profile.address = currentUser.address;
     this.profile.image = currentUser.image;
+
     if (this.profile.image) {
       this.croppedImagepath = this.img_base+currentUser.image;
       
@@ -84,9 +92,6 @@ export class ProfilePage implements OnInit {
   ngOnInit() {
   }
   update() {
-    console.log(this.profile);
-
-
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
         this.curdService.postData('updateProfile', this.profile)
@@ -182,6 +187,29 @@ export class ProfilePage implements OnInit {
       });
     }
   }
+
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
+
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+      this.profile.image =  data.status.data.file_name;
+      this.croppedImagepath = this.img_base+this.profile.image;
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
 
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')

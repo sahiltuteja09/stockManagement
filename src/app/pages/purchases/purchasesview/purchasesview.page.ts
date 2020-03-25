@@ -143,6 +143,9 @@ export class PurchasesviewPage implements OnInit {
       });
     });
   }
-  
+  ngOnDestroy(){
+    if(!this.isMobile)
+    this.appProvider.deleteStorage();
+  }
 
 }

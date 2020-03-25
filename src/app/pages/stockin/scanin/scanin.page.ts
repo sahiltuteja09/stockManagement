@@ -75,6 +75,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
   speechProduct:any = {};
   quickUpdate:boolean = false;
   speakToSearch:boolean =false;
+  quickUpdateObject:any = {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
   constructor(
     private scanService: ScannerService,
     private curdService: CurdService,
@@ -152,6 +153,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
                   this.getProductsList();
                 }
                 this.voiceService.txtToSpeech(this.noDataFound);
+                this.speakToSearch = false;
               } else {
                 this.searchData = data;
                 this.page = this.page + 1;
@@ -159,7 +161,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
               
                 if(this.speakToSearch){
                   this.speakToSearch = false;
-                if(totalProducts == 1 && this.isMobileDevice){
+                if(totalProducts == 1){
                  let productRow = data.data;
                  this.speechProduct = {
                    quantity: 1,
@@ -172,18 +174,27 @@ img_base: string = CoreConfigConstant.uploadedPath;
                  }
                  if(!this.quickUpdate){
                   this.voiceService.txtToSpeech('One product found.Can i update the product?Please Speak Yes or No after the beep.').then(()=>{
-
+                   
+                      this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
+                    
                     this.voiceService.startListing().then(() => {
+                    
+                        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+                        
                     if(this.voiceService.speechTxt == 'yes'){
                      this.updateProductAuto(1);
-                    }else if(this.voiceService.speechTxt == 'stop'){}else{
+                    }else if(this.voiceService.speechTxt == 'stop'){
+                      this.speakToSearch =false;
+                        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+                    }else{
                        this.voiceService.txtToSpeech('Do you want to update price?Please Speak Yes or No after the beep.').then(()=>{
                          this.updateSpeechPrice(productRow[0].id,0);
                        });
                     }
                   }).catch((err) => {
-                    console.log('updateSpeechQuantity');
-                    console.log(err);
+                    this.speakToSearch =false;
+                      this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+                      
                   }); 
   
                  });
@@ -473,21 +484,34 @@ img_base: string = CoreConfigConstant.uploadedPath;
     this.startListing('Please Speak after the beep.');
   }
   startListing(msg?:string){
+
+    if(this.speakToSearch){return false;}
     if(!msg)
     msg = 'Hey. I will try to search whatever you speak.Please Speak after the beep.';
     console.log('startListing');
     this.speakToSearch = true;
     this.voiceService.txtToSpeech(msg).then(()=>{
+    
+        this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
+      
     this.voiceService.startListing().then(() => {
+     if(this.voiceService.speechTxt == this.searchTerm){
+      this.speakToSearch =false;
+     }
+        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+        
       this.sform.controls["searchControl"].setValue(this.voiceService.speechTxt);
     }).catch((err) => {
-      console.log('green');
-      console.log(err);
+      this.speakToSearch =false;
+        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+        
     });
   });
   }
 
   updatePriceField(quantity, productId, product_status_id, marketplace_id, reason, noUIDFOUND?:number,sale_price?:any){
+    if(this.speakToSearch){return false;}
+    this.speakToSearch = true;
     this.speechProduct = {
       'quantity':quantity,
       productId:productId,
@@ -498,16 +522,22 @@ img_base: string = CoreConfigConstant.uploadedPath;
       sale_price:sale_price
     }
     this.voiceService.txtToSpeech('What is the new price ?Speak after the beep').then(()=>{
+      
+        this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
+      
       this.voiceService.startListing().then(() => {
         // validation required
-
+      
+          this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+          
         eval('document.getElementById("'+ productId +'").value = '+this.voiceService.speechTxt);
         this.speechProduct.sale_price = this.voiceService.speechTxt;
         this.updateProductAuto();
 
             }).catch((err) => {
-              console.log('green');
-              console.log(err);
+              this.speakToSearch =false;
+                this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+                
               this.voiceService.txtToSpeech('Price field should be numeric. still want to update price. Speak yes or no after the beep ').then(()=>{
                 this.updateSpeechPrice(productId, 1);
               });
@@ -515,6 +545,8 @@ img_base: string = CoreConfigConstant.uploadedPath;
     });
   }
   updateQuantityField(quantity, productId, product_status_id, marketplace_id, reason, noUIDFOUND?:number,sale_price?:any){
+    if(this.speakToSearch){return false;}
+    this.speakToSearch = true;
     this.speechProduct = {
       'quantity':quantity,
       productId:productId,
@@ -525,16 +557,22 @@ img_base: string = CoreConfigConstant.uploadedPath;
       sale_price:sale_price
     }
     this.voiceService.txtToSpeech('What is the new quantity. Speak after the beep').then(()=>{
+      
+        this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
+      
       this.voiceService.startListing().then(() => {
         // validation required
-
+        
+          this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+          
           eval('document.getElementById("quantity'+ productId +'").value = '+this.voiceService.speechTxt);
           this.speechProduct.quantity = this.voiceService.speechTxt;
           this.voiceService.txtToSpeech('New quantity is '+this.voiceService.speechTxt +'.');
           this.updateProductAuto();
         }).catch((err) => {
-          console.log('green');
-          console.log(err);
+          this.speakToSearch =false;
+            this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+            
           this.voiceService.txtToSpeech('Quantity field should be numeric. still want to update quantity. Speak yes or no after the beep ').then(()=>{
             this.updateSpeechQuantity(productId);
           });
@@ -542,6 +580,8 @@ img_base: string = CoreConfigConstant.uploadedPath;
     });
   }
   updateFields(quantity, productId, product_status_id, marketplace_id, reason, noUIDFOUND?:number,sale_price?:any){
+    if(this.speakToSearch){return;}
+    this.speakToSearch = true;
     this.speechProduct = {
       'quantity':quantity,
       productId:productId,
@@ -556,15 +596,24 @@ img_base: string = CoreConfigConstant.uploadedPath;
     });
   }
   updateSpeechPrice(productId, isField?:number){
-
+   
+      this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
+    
     this.voiceService.startListing().then(() => {
-
+     
+        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+        
       if(this.voiceService.speechTxt == 'yes'){
         
         this.voiceService.txtToSpeech('What is the new price ?Speak after the beep').then(()=>{
+         
+            this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
+          
           this.voiceService.startListing().then(() => {
             // validation required
-    
+            
+              this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+            
             eval('document.getElementById("'+ productId +'").value = '+this.voiceService.speechTxt);
             this.speechProduct.sale_price = this.voiceService.speechTxt;
             this.voiceService.txtToSpeech('New Price is rupees '+this.voiceService.speechTxt +'.Do you want to update quantity.Speak Yes or No after the beep').then(()=>{
@@ -572,14 +621,18 @@ img_base: string = CoreConfigConstant.uploadedPath;
             });
     
                 }).catch((err) => {
-                  console.log('green');
-                  console.log(err);
+                  this.speakToSearch =false;
+                    this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+                    
                   this.voiceService.txtToSpeech('Price field should be numeric. still want to update price. Speak yes or no after the beep ').then(()=>{
                     this.updateSpeechPrice(productId,0);
                   });
                 });
         });
-      }else if(this.voiceService.speechTxt == 'stop'){}else{
+      }else if(this.voiceService.speechTxt == 'stop'){
+        this.speakToSearch =false;
+                        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+      }else{
         if(isField){
           this.updateProductAuto();
         }else{
@@ -592,38 +645,56 @@ img_base: string = CoreConfigConstant.uploadedPath;
       }
 
     }).catch((err) => {
-      console.log('green');
-      console.log(err);
+      this.speakToSearch =false;
+        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+        
     });
   }
   updateSpeechQuantity(productId){
+   
+      this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
+    
     this.voiceService.startListing().then(() => {
+     
+        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+        
 
       if(this.voiceService.speechTxt == 'yes'){
 
         this.voiceService.txtToSpeech('What is the new quantity. Speak after the beep').then(()=>{
+         
+            this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
+          
           this.voiceService.startListing().then(() => {
             // validation required
+            
+              this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+              
     
               eval('document.getElementById("quantity'+ productId +'").value = '+this.voiceService.speechTxt);
               this.speechProduct.quantity = this.voiceService.speechTxt;
               this.voiceService.txtToSpeech('New quantity is '+this.voiceService.speechTxt +'.');
               this.updateProductAuto();
             }).catch((err) => {
-              console.log('green');
-              console.log(err);
+              this.speakToSearch =false;
+                this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+                
               this.voiceService.txtToSpeech('Quantity field should be numeric. still want to update quantity. Speak yes or no after the beep ').then(()=>{
                 this.updateSpeechQuantity(productId);
               });
             });
         });
-      }else if(this.voiceService.speechTxt == 'stop'){}else{
+      }else if(this.voiceService.speechTxt == 'stop'){
+        this.speakToSearch =false;
+                        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+      }else{
        
         this.updateProductAuto();
       }
     }).catch((err) => {
-      console.log('updateSpeechQuantity');
-      console.log(err);
+      this.speakToSearch =false;
+        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+        
     }); 
   }
 
@@ -633,15 +704,28 @@ img_base: string = CoreConfigConstant.uploadedPath;
       this.updateStock(this.speechProduct.quantity,this.speechProduct.productId,this.speechProduct.product_status_id,this.speechProduct.marketplace_id,this.speechProduct.reason,this.speechProduct.noUIDFOUND,this.speechProduct.sale_price);
     }else{
     this.voiceService.txtToSpeech('Can i update the product?Speak yes or no after the beep').then(()=>{
-
+     
+        this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
+      
       this.voiceService.startListing().then(() => {
+        
+          this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+          
         if(this.voiceService.speechTxt == 'yes'){
           this.voiceService.txtToSpeech('Updating your product.');
           this.updateStock(this.speechProduct.quantity,this.speechProduct.productId,this.speechProduct.product_status_id,this.speechProduct.marketplace_id,this.speechProduct.reason,this.speechProduct.noUIDFOUND,this.speechProduct.sale_price);
-        }else if(this.voiceService.speechTxt == 'stop'){}else{
+        }else if(this.voiceService.speechTxt == 'stop'){
+          this.speakToSearch =false;
+                        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+        }else{
+          this.speakToSearch = true;
           this.voiceService.txtToSpeech('Thank you.');
         }
-      })
+      }).catch(()=>{
+        this.speakToSearch =false;
+          this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+          
+      });
 
     });
   }

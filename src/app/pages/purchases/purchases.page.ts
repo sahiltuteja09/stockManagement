@@ -46,6 +46,7 @@ export class PurchasesPage implements OnInit {
   partialAmount:any =0;
   img_base: string = CoreConfigConstant.uploadedPath;
   countImage: number = 0;
+  selectedFile: File[];
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -204,6 +205,8 @@ this.partialAmount = data.data.amount_paid;
     console.log(this.croppedImagepath);
     var index = this.croppedImagepath.indexOf(item);
     if (index !== -1) this.croppedImagepath.splice(index, 1);
+    
+    this.countImage = this.countImage - 1;
     console.log(this.croppedImagepath);
   }
   // get the form contorls in a f object
@@ -364,6 +367,8 @@ this.partialAmount = data.data.amount_paid;
 
               this.croppedImagepath[this.countImage] = imageName;
               this.countImage = this.countImage + 1;
+
+              
             }, 2000);
           }
         }
@@ -382,7 +387,34 @@ this.partialAmount = data.data.amount_paid;
       });
     }
   }
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
 
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+
+      if(this.croppedImagepath[this.countImage])
+      this.countImage = this.countImage + 1;
+
+      this.croppedImagepath[this.countImage] =  data.status.data.file_name;
+              this.countImage = this.countImage + 1;
+
+              console.log(this.croppedImagepath);
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')
       this.isLoadingSubscriber.unsubscribe();

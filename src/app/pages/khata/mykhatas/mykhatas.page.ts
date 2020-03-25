@@ -114,7 +114,7 @@ import { AuthenticationService } from '../../auth/authentication.service';
   if(!customerImg){
     customerImg = '';
   }
-      this.appProvider.searchParam(page, { queryParams: { mobile:  khata.mobile_number, img:customerImg} });
+      this.appProvider.searchParam(page, { queryParams: { mobile:  khata.mobile_number, img:customerImg, 'name':khata.name} });
     }
   
     doRefresh(event) {
@@ -148,6 +148,7 @@ import { AuthenticationService } from '../../auth/authentication.service';
                 for (let i = 0; i < result.data.length; i++) {
                   this.mykhatas.data.push(result.data[i]);
                 }
+                if(Object.keys(result.customer_images).length > 0)
                 this.customerImages.push(result.customer_images);
                 this.page = this.page + 1;
               }

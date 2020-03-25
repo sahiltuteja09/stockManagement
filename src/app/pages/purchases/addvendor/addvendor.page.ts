@@ -27,6 +27,7 @@ export class AddvendorPage implements OnInit {
   croppedImagepathSubscriber;
   img_base: string = CoreConfigConstant.uploadedPath;
   isMobile:boolean = false;
+  selectedFile: File[];
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -187,6 +188,28 @@ export class AddvendorPage implements OnInit {
       });
     }
   }
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
+
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+      this.vendor.image =  data.status.data.file_name;
+      this.croppedImagepath = this.img_base+this.vendor.image;
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')
       this.isLoadingSubscriber.unsubscribe();

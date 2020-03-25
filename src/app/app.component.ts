@@ -97,14 +97,12 @@ export class AppComponent {
         // Show loading indicator
         let isOnline = this.appProvider.isOnline();
         this.menuControl();
-      console.log('isOnline app ' + isOnline);
       }
 
       if (event instanceof NavigationEnd) {
         // Hide loading indicator
         let isOnline = this.appProvider.isOnline();
         this.menuControl();
-    console.log('isOnline app hide ' + isOnline);
 
     let routePage = this.router.routerState.snapshot.url;
         console.log('routePage => '+routePage);
@@ -138,12 +136,14 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      if(this.appProvider.isMobile()){
       this.statusBar.overlaysWebView(false);
       this.statusBar.styleDefault();
       // set status bar to color
       this.statusBar.backgroundColorByHexString('#3880ff');
       this.splashScreen.hide();
       this.exitApp() ;
+      }
       setTimeout(() => {
         this.configs = this.configService.configValue;
         if (this.configs != undefined) {
