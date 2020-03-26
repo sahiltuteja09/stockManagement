@@ -1,4 +1,16 @@
 .image-container {
     min-height: 80px;
     background-size: cover;
+    position: absolute;
+  width: 100%;
+  height: 100%;
 }
+.square {
+    width: 100%;
+  }
+  
+  .square:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+  }

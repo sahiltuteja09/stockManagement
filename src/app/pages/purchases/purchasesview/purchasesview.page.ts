@@ -62,6 +62,7 @@ export class PurchasesviewPage implements OnInit {
   }
   ionViewWillLeave() {
     this.queryParmSub.unsubscribe();
+    this.appProvider.deleteStorage();
 }
   openPreview(img) {
     this.modalController.create({
@@ -89,6 +90,10 @@ export class PurchasesviewPage implements OnInit {
     .then(res => console.log('Launched dialer!', res))
     .catch(err => console.log('Error launching dialer', err));
       }
+  }
+  editPurchase(){
+    
+    this.appProvider.goto('purchases/'+this.purchaseDetail.id, 1);
   }
   getPurchaseDetail(){
 
@@ -142,10 +147,6 @@ export class PurchasesviewPage implements OnInit {
           );
       });
     });
-  }
-  ngOnDestroy(){
-    if(!this.isMobile)
-    this.appProvider.deleteStorage();
   }
 
 }

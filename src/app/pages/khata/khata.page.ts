@@ -22,6 +22,7 @@ export class KhataPage implements OnInit {
   balance:number = 0;
   balance_text :string = '';
   customerImg:string = '';
+  defaultImage: string = 'http://placehold.it/300x200';
   img_base: string = CoreConfigConstant.uploadedPath;
   constructor( private route: ActivatedRoute, private appProvider: CoreAppProvider, private curdService: CurdService, 
     public authenticationService: AuthenticationService, 
@@ -37,6 +38,10 @@ export class KhataPage implements OnInit {
       this.name= params['name'];
        this.mobileNumber =params['mobile'];
     });
+
+    if(this.searchTerm == undefined || this.searchTerm == ''){
+      this.appProvider.goto('mykhatas');
+    }
   }
 
   ngOnInit() {
@@ -107,12 +112,14 @@ export class KhataPage implements OnInit {
     }, 2000);
   }
   khataView(item){
+    item.name = this.name;
+    item.img = this.customerImg;
     this.appProvider.tempData(item);console.log(item);
-    this.appProvider.searchParam('khataview', { queryParams: { khata_id:  item.id} });
+    this.appProvider.searchParam('khataview');
      //this.appProvider.navigateWithState('khataview', item);
   }
   editCustomer(){
-    console.log(this.searchTerm);
+    this.appProvider.tempData({ 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg});
     this.appProvider.searchParam('addcustomer', { queryParams: { 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg} });
   }
   addkhata(type:number){

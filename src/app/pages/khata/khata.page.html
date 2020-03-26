@@ -6,7 +6,7 @@
         <text-avatar [text]="name"  textColor="#fff" marginTop='10px'></text-avatar>
       </ion-avatar>
       <ion-avatar *ngIf="customerImg != ''" >
-        <img [src]="img_base + customerImg" (click)="openPreview(img_base + customerImg)">
+        <img [src]="customerImg ? img_base + customerImg : defaultImage" (click)="openPreview(img_base + customerImg)">
       </ion-avatar>
     </ion-buttons>
     <ion-title (click)="editCustomer()">

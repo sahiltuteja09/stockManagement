@@ -109,8 +109,8 @@ export class AppComponent {
         if(routePage != '/no-internet' && !isOnline){
           this.router.navigate(['/no-internet'], { replaceUrl: true });
         }
-
-        if(routePage == '/login' || routePage == '/login?returnUrl=%2Fhome' || routePage == '/register' || routePage == '/forgot' || routePage == '/no-internet'){
+let findIndex = routePage.indexOf('returnUrl');
+        if(routePage == '/login' || findIndex > 0 || routePage == '/register' || routePage == '/forgot' || routePage == '/no-internet'){
           this.menuCtrl.enable(false);
         }else{
           this.menuCtrl.enable(true);
@@ -183,14 +183,14 @@ export class AppComponent {
       message: '',
       buttons: [
         {
-          text: 'Cancel',
+          text: 'No',
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
           }
         },
         {
-          text: 'Continue',
+          text: 'Yes',
           handler: () => {
             this.localNotification.cancelAllLocalNotifications();
             this.authenticationService.logout();

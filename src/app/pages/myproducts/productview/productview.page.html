@@ -56,7 +56,7 @@
     </ion-thumbnail>
     </ion-item>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
-      <ion-fab-button color="danger" routerDirection="forward" data-desc="Edit" routerLink="/addnewstock/{{product.product.id}}">
+      <ion-fab-button color="danger" routerDirection="forward" data-desc="Edit" (click)="editStock()" >
         <ion-icon name="create"></ion-icon>
       </ion-fab-button>
     </ion-fab>

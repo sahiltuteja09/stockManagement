@@ -155,9 +155,9 @@ this.partialAmount = data.data.amount_paid;
             } else {
               this.appProvider.showToast(data.msg);
             }
-            setTimeout(() => {
+          //  setTimeout(() => {
               this.appProvider.dismissLoading();
-            }, 2000);
+            //}, 2000);
 
           },
             error => {

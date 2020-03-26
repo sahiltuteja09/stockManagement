@@ -28,6 +28,7 @@ export class AddcustomerPage implements OnInit {
   isMobile:boolean = false;
   queryParmSub:any;
   selectedFile: File[];
+  cDetail:any = [];
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -64,6 +65,17 @@ export class AddcustomerPage implements OnInit {
       if(params['mobile'])
       this.customer.is_update = 1
     });
+
+    this.cDetail = this.appProvider.tempStorage;
+
+    if( this.cDetail == undefined || this.cDetail == null){
+      
+    }else{
+      this.customer.mobile_number = this.cDetail.mobile;
+      this.customer.name = this.cDetail.name;
+      this.customer.image = this.cDetail.img;
+    }
+
   }
 
   ngOnInit() {
@@ -240,6 +252,9 @@ export class AddcustomerPage implements OnInit {
         this.appProvider.dismissLoading();
         this.croppedImagepathSubscriber = '';
           this.isLoadingSubscriber = '';
+
+          this.cDetail = [];
+          this.appProvider.deleteStorage();
       
   }
 }

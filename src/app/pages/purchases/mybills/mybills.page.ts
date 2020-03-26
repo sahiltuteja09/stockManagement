@@ -23,6 +23,8 @@ export class MybillsPage implements OnInit {
   downloadFolder:string = 'Download';
   zipFileName:string='';
   img_base:string= CoreConfigConstant.uploadedPath;
+  appName:String = CoreConfigConstant.appName
+  billzipName:any = '';
   constructor(public appProvider : CoreAppProvider, public curdService: CurdService,private androidPermissions: AndroidPermissions,
     private localNotification: LocalnotificationService,private transfer: FileTransfer, 
     private file: File, 
@@ -96,8 +98,13 @@ export class MybillsPage implements OnInit {
     }, 2000);
   }
   downlaodBill(zipName:string){
-    if(!this.isMobile)
-    return false;
+    this.billzipName = zipName;
+    this.zipFileName = this.img_base + zipName +'.zip';
+  
+    if(!this.isMobile){
+      (<any>window).open(this.zipFileName);
+    }else{
+    
 this.zipFileName = this.img_base + zipName +'.zip';
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
       .then(status => {
@@ -115,6 +122,7 @@ this.zipFileName = this.img_base + zipName +'.zip';
             });
         }
       });
+    }
   }
   downloadFile() {
   
@@ -130,8 +138,6 @@ this.zipFileName = this.img_base + zipName +'.zip';
         console.log('Directory no create'+JSON.stringify(err));
       }); 
     });
-  
-    
   }
   downloadBill(){
     let imageURL = this.zipFileName;
@@ -147,7 +153,7 @@ this.zipFileName = this.img_base + zipName +'.zip';
   
     const fileTransfer: FileTransferObject = this.transfer.create();
     fileTransfer.download(imageURL, this.downloadPath  + 
-      '/'+this.downloadFolder+'/' + "bill-"+Math.round(Math.random() * 10000) +"."+ext, true).then((entry) => {
+      '/'+this.downloadFolder+'/' + this.appName+"-"+ this.billzipName +Math.round(Math.random() * 99) +"."+ext, true).then((entry) => {
       console.log('download complete: ' + entry.toURL());
       this.appProvider.dismissLoading();
       this.appProvider.showToast('Your bill has been downloaded successfully.');

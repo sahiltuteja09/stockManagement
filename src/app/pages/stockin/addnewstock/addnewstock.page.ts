@@ -137,10 +137,10 @@ export class AddnewstockPage implements OnInit {
             } else {
               this.appProvider.showToast(data.msg);
             }
-            setTimeout(() => {
-              this.appProvider.dismissLoading();
-            }, 2000);
-
+            // setTimeout(() => {
+            //   this.appProvider.dismissLoading();
+            // }, 2000);
+            this.appProvider.dismissLoading();
           },
             error => {
               this.appProvider.showToast(error);
