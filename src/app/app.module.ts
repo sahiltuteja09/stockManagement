@@ -35,6 +35,8 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 import { Contacts } from '@ionic-native/contacts/ngx';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -45,7 +47,8 @@ import { Contacts } from '@ionic-native/contacts/ngx';
     HttpClientModule,
     SharedPipesModule,
     ImageModalPageModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     StatusBar,
