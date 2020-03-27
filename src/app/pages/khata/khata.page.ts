@@ -12,7 +12,7 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./khata.page.scss'],
 })
 export class KhataPage implements OnInit {
-  name:string='test';
+  name:string='';
   mobileNumber:string;
   queryParmSub: any;
   searchTerm:any;
@@ -22,6 +22,7 @@ export class KhataPage implements OnInit {
   balance:number = 0;
   balance_text :string = '';
   customerImg:string = '';
+  defaultImage: string = 'http://placehold.it/300x200';
   img_base: string = CoreConfigConstant.uploadedPath;
   constructor( private route: ActivatedRoute, private appProvider: CoreAppProvider, private curdService: CurdService, 
     public authenticationService: AuthenticationService, 
@@ -33,7 +34,14 @@ export class KhataPage implements OnInit {
     this.queryParmSub = this.route.queryParams.subscribe(params => {
       this.searchTerm = params['mobile'];
       this.customerImg = params['img'];
+
+      this.name= params['name'];
+       this.mobileNumber =params['mobile'];
     });
+
+    if(this.searchTerm == undefined || this.searchTerm == ''){
+      this.appProvider.goto('mykhatas');
+    }
   }
 
   ngOnInit() {
@@ -61,7 +69,6 @@ export class KhataPage implements OnInit {
               this.page = this.page + 1;
               this.balance_text = data.balance_text;
               this.balance = data.balance;
-              console.log(data[0]);
               this.name= data.data[0].name;
               this.mobileNumber =data.data[0].mobile_number;
             }
@@ -105,13 +112,15 @@ export class KhataPage implements OnInit {
     }, 2000);
   }
   khataView(item){
+    item.name = this.name;
+    item.img = this.customerImg;
     this.appProvider.tempData(item);console.log(item);
-    this.appProvider.searchParam('khataview', { queryParams: { khata_id:  item.id} });
+    this.appProvider.searchParam('khataview');
      //this.appProvider.navigateWithState('khataview', item);
   }
   editCustomer(){
-    console.log(this.searchTerm);
-    this.appProvider.searchParam('addcustomer', { queryParams: { 'mobile':  this.searchTerm, 'name':this.name} });
+    this.appProvider.tempData({ 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg});
+    this.appProvider.searchParam('addcustomer', { queryParams: { 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg} });
   }
   addkhata(type:number){
     this.appProvider.tempData({'name':this.name,'khata_id':0, 'type':type, 'mobile': this.searchTerm, 'amount': 0,'description': '',purchase_date:new Date().toISOString()});

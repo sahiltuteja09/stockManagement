@@ -35,7 +35,7 @@ export class TextAvatarDirective {
   }
 
   private extractFirstCharacter(text: string): string {
-    return text.charAt(0) || '';
+    return text.charAt(0).toUpperCase() || '';
   }
 
   private backgroundColorHexString(color: string, text: string): string {

@@ -63,7 +63,7 @@
         </ion-row>
 
         <ion-row>
-          <ion-col size="6" size-sm>
+          <ion-col size="6" size-sm [hidden]="true">
               <ion-list>
                 <ion-radio-group (ionChange)="onChangeHandler($event)">
                   <ion-list-header>
@@ -136,8 +136,18 @@
         </ion-grid>
        
         <br />
+        <span *ngIf="isMobileDevice">
         <ion-button *ngIf="!isLoading" (click)="pickImage()" color="primary" small color="tertiary" shape="round">Upload
           Image</ion-button>
+        </span>
+        <span *ngIf="!isMobileDevice">
+          <input
+          style="display: none"
+          type="file" (change)="onFileChanged($event)" accept="image/*"
+          #fileInput>
+          <ion-button *ngIf="!isLoading" (click)="fileInput.click()" color="primary" small
+          color="tertiary" shape="round" >Upload Image</ion-button>
+        </span>
         <ion-button *ngIf="isLoading" color="primary" small color="tertiary" shape="round">Loading
           ...</ion-button>
           <ion-input type="hidden" formControlName="image" [(ngModel)]="purchase.image" name="image"></ion-input> 

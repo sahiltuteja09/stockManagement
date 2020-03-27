@@ -51,9 +51,16 @@ export class PurchasesviewPage implements OnInit {
     });
     if(this.searchTerm){
       this.getPurchaseDetail();
+      this.purchaseDetail.id = this.searchTerm;
     }else{
-      this.purchaseDetail = this.appProvider.tempStorage;
+      if(this.appProvider.tempStorage == null || this.appProvider.tempStorage == undefined){
+        this.appProvider.goto('mypurchases',1);
+      }else{
+        this.purchaseDetail = this.appProvider.tempStorage;
+      }
+      
     }
+    
 
   }
 
@@ -62,6 +69,7 @@ export class PurchasesviewPage implements OnInit {
   }
   ionViewWillLeave() {
     this.queryParmSub.unsubscribe();
+    this.appProvider.deleteStorage();
 }
   openPreview(img) {
     this.modalController.create({
@@ -90,6 +98,10 @@ export class PurchasesviewPage implements OnInit {
     .catch(err => console.log('Error launching dialer', err));
       }
   }
+  editPurchase(){
+    
+    this.appProvider.goto('purchases/'+this.purchaseDetail.id, 1);
+  }
   getPurchaseDetail(){
 
 
@@ -105,9 +117,7 @@ export class PurchasesviewPage implements OnInit {
             } else {
               this.appProvider.showToast(data.msg);
             }
-            setTimeout(() => {
-              this.appProvider.dismissLoading();
-            }, 2000);
+            this.appProvider.dismissLoading();
 
           },
             error => {
@@ -143,6 +153,5 @@ export class PurchasesviewPage implements OnInit {
       });
     });
   }
-  
 
 }

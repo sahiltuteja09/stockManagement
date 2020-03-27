@@ -46,6 +46,7 @@ export class PurchasesPage implements OnInit {
   partialAmount:any =0;
   img_base: string = CoreConfigConstant.uploadedPath;
   countImage: number = 0;
+  selectedFile: File[];
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -154,9 +155,9 @@ this.partialAmount = data.data.amount_paid;
             } else {
               this.appProvider.showToast(data.msg);
             }
-            setTimeout(() => {
+          //  setTimeout(() => {
               this.appProvider.dismissLoading();
-            }, 2000);
+            //}, 2000);
 
           },
             error => {
@@ -180,10 +181,13 @@ this.partialAmount = data.data.amount_paid;
               this.croppedImagepath = [];
             } else {
               this.croppedImagepath = [];
-              for(let i=0;i < data.data.length; i++){
-                this.countImage  = i;
-                this.croppedImagepath[this.countImage ] = data.data[i].image;
+              if(data.data.length > 0){
+                for(let i=0;i < data.data.length; i++){
+                  this.countImage  = i;
+                  this.croppedImagepath[this.countImage ] = data.data[i].image;
+                }
               }
+              
             }
             //this.appProvider.dismissLoading();
           },
@@ -197,11 +201,20 @@ this.partialAmount = data.data.amount_paid;
   }
   removeImg(item, e) {
     e.preventDefault();
-    console.log(item);
-    console.log(this.croppedImagepath);
-    var index = this.croppedImagepath.indexOf(item);
-    if (index !== -1) this.croppedImagepath.splice(index, 1);
-    console.log(this.croppedImagepath);
+if(this.purchase_id > 0){
+  var index = this.croppedImagepath.indexOf(item);
+  if (index !== -1) this.croppedImagepath.splice(index, 1);
+  this.countImage = this.countImage - 1;
+}else{
+
+    this.uploadImage.removeImage(item).then(()=> {
+      var index = this.croppedImagepath.indexOf(item);
+      if (index !== -1) this.croppedImagepath.splice(index, 1);
+      this.countImage = this.countImage - 1;
+    }).catch((err)=> {
+    
+    });
+  }
   }
   // get the form contorls in a f object
   get f() { return this.newstockdetail.controls; }
@@ -220,6 +233,8 @@ this.partialAmount = data.data.amount_paid;
 
           if(Object.keys(this.croppedImagepath).length > 0){
             this.purchase.image =  this.croppedImagepath[0];
+          }else if(Object.keys(this.croppedImagepath).length == 0){
+            this.purchase.image = '';
           }
 
           let merged;
@@ -264,9 +279,9 @@ this.partialAmount = data.data.amount_paid;
     }
   }
   saveKhataImage(id) {
-    if(Object.keys(this.croppedImagepath).length == 0){
-      return false;
-    }
+    // if(Object.keys(this.croppedImagepath).length == 0){
+    //   return false;
+    // }
     let param = { 'id': id };
     let images = { 'images': this.croppedImagepath };
 
@@ -354,8 +369,13 @@ this.partialAmount = data.data.amount_paid;
             this.isLoadingSubscriber.unsubscribe();
             this.croppedImagepathSubscriber = '';
             setTimeout(() => {
+              if(this.croppedImagepath[this.countImage])
+              this.countImage = this.countImage + 1;
+
               this.croppedImagepath[this.countImage] = imageName;
               this.countImage = this.countImage + 1;
+
+              
             }, 2000);
           }
         }
@@ -374,7 +394,34 @@ this.partialAmount = data.data.amount_paid;
       });
     }
   }
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
 
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+
+      if(this.croppedImagepath[this.countImage])
+      this.countImage = this.countImage + 1;
+
+      this.croppedImagepath[this.countImage] =  data.status.data.file_name;
+              this.countImage = this.countImage + 1;
+
+              console.log(this.croppedImagepath);
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')
       this.isLoadingSubscriber.unsubscribe();
@@ -389,6 +436,8 @@ this.partialAmount = data.data.amount_paid;
       this.queryParmSub.unsubscribe();
 
         this.appProvider.dismissLoading();
+        this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
       
   }
 

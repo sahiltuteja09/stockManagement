@@ -38,12 +38,13 @@ export class ImageModalPage implements OnInit {
   ngOnInit() {
     this.isMobile = this.appProvider.isMobile();
     this.isAndroid = this.appProvider.isAndroid();
+    if(this.isMobile){
     if(this.isAndroid){
       this.downloadPath = this.file.externalRootDirectory;
     }else{
       this.downloadPath = this.file.documentsDirectory;
     }
-   
+  }
     this.img = this.navParams.get('img');
   }
   zoom(zoomIn: boolean) {

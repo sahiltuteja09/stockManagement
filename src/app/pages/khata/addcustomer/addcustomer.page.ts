@@ -27,6 +27,8 @@ export class AddcustomerPage implements OnInit {
   img_base: string = CoreConfigConstant.uploadedPath;
   isMobile:boolean = false;
   queryParmSub:any;
+  selectedFile: File[];
+  cDetail:any = [];
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -57,13 +59,33 @@ export class AddcustomerPage implements OnInit {
     this.queryParmSub = this.route.queryParams.subscribe(params => {
       this.customer.mobile_number = params['mobile'];
       this.customer.name = params['name'];
+      this.customer.image = params['img'];
+      
+     
       if(params['mobile'])
       this.customer.is_update = 1
     });
+
+    this.cDetail = this.appProvider.tempStorage;
+
+    if( this.cDetail == undefined || this.cDetail == null){
+      
+    }else{
+      this.customer.mobile_number = this.cDetail.mobile;
+      this.customer.name = this.cDetail.name;
+      this.customer.image = this.cDetail.img;
+    }
+
   }
 
   ngOnInit() {
     this.isMobile = this.appProvider.isMobile();
+    if(this.customer.image){
+    setTimeout(() => {
+      this.croppedImagepath = this.img_base+this.customer.image ;
+      console.log(this.croppedImagepath );
+    }, 1000);
+  }
   }
   getContact(){
     this.contact.pickContact().then(()=>{
@@ -114,6 +136,9 @@ export class AddcustomerPage implements OnInit {
 
                 this.appProvider.dismissLoading();
                 if (data.status)
+                  this.appProvider.goto('mykhatas', 1);
+
+                  if (!data.status && this.customer.is_update)
                   this.appProvider.goto('mykhatas', 1);
               }, 2000);
 
@@ -170,21 +195,24 @@ export class AddcustomerPage implements OnInit {
         this.isLoading = data;
       });
     }
+    console.log(this.croppedImagepathSubscriber);
     if (typeof this.croppedImagepathSubscriber != 'object') {
       this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
-        this.croppedImagepath = data;
+        
         this.imageName = this.uploadImage.imageFileName();
         if (this.imageName) {
+          this.croppedImagepath = data;
           this.customer.image = this.imageName;
           console.log('this.imageName if ' + this.imageName);
+        }
 
-
-          if (typeof this.croppedImagepathSubscriber == 'object') {
-            this.isLoading = false;
-            this.croppedImagepathSubscriber.unsubscribe();
-            this.isLoadingSubscriber.unsubscribe();
-          }
-
+        if (typeof this.croppedImagepathSubscriber == 'object') {
+          this.isLoading = false;
+          
+          this.croppedImagepathSubscriber.unsubscribe();
+          this.isLoadingSubscriber.unsubscribe();
+          this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
         }
 
         console.log('this.imageName ' + this.imageName);
@@ -192,6 +220,28 @@ export class AddcustomerPage implements OnInit {
       });
     }
   }
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
+
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+      this.customer.image =  data.status.data.file_name;
+      this.croppedImagepath = this.img_base+this.customer.image;
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')
       this.isLoadingSubscriber.unsubscribe();
@@ -200,6 +250,11 @@ export class AddcustomerPage implements OnInit {
       this.croppedImagepathSubscriber.unsubscribe();
 
         this.appProvider.dismissLoading();
+        this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
+
+          this.cDetail = [];
+          this.appProvider.deleteStorage();
       
   }
 }

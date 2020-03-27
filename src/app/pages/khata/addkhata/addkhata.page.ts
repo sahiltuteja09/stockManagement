@@ -27,6 +27,7 @@ export class AddkhataPage implements OnInit {
   croppedImagepathSubscriber;
   isMobile: boolean = false;
   countImage: number = 0;
+  selectedFile: File[];
   constructor(
     private uploadImage: ImagesService,
     private appProvider: CoreAppProvider,
@@ -82,7 +83,7 @@ export class AddkhataPage implements OnInit {
 
               this.appProvider.dismissLoading();
               if (data.status)
-                this.appProvider.searchParam('khata', { queryParams: { 'mobile': this.mobile } });
+                this.appProvider.searchParam('khata', { queryParams: { 'mobile': this.mobile }, skipLocationChange: true  });
             }, 2000);
 
           },
@@ -97,9 +98,9 @@ export class AddkhataPage implements OnInit {
     });
   }
   saveKhataImage(id) {
-    if(Object.keys(this.croppedImagepath).length == 0){
-      return false;
-    }
+    // if(Object.keys(this.croppedImagepath).length == 0){
+    //   return false;
+    // }
     let param = { 'id': id };
     let images = { 'images': this.croppedImagepath };
 
@@ -174,6 +175,9 @@ export class AddkhataPage implements OnInit {
             this.isLoadingSubscriber.unsubscribe();
             this.croppedImagepathSubscriber = '';
             setTimeout(() => {
+              if(this.croppedImagepath[this.countImage])
+              this.countImage = this.countImage + 1;
+              
               this.croppedImagepath[this.countImage] = imageName;
               this.countImage = this.countImage + 1;
             }, 2000);
@@ -209,13 +213,47 @@ export class AddkhataPage implements OnInit {
     });
     await actionSheet.present();
   }
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
+
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+
+      if(this.croppedImagepath[this.countImage])
+      this.countImage = this.countImage + 1;
+
+      this.croppedImagepath[this.countImage] =  data.status.data.file_name;
+              this.countImage = this.countImage + 1;
+
+              console.log(this.croppedImagepath);
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
   removeImg(item, e) {
     e.preventDefault();
     console.log(item);
     console.log(this.croppedImagepath);
-    var index = this.croppedImagepath.indexOf(item);
-    if (index !== -1) this.croppedImagepath.splice(index, 1);
-    console.log(this.croppedImagepath);
+   
+this.uploadImage.removeImage(item).then(()=> {
+  var index = this.croppedImagepath.indexOf(item);
+  if (index !== -1) this.croppedImagepath.splice(index, 1);
+  this.countImage = this.countImage - 1;
+}).catch((err)=> {
+
+});
+    
   }
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')
@@ -225,6 +263,8 @@ export class AddkhataPage implements OnInit {
       this.croppedImagepathSubscriber.unsubscribe();
 
     this.appProvider.dismissLoading();
+    this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber = '';
 
   }
 }

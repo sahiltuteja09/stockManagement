@@ -13,15 +13,21 @@ import { ImageModalPage } from '../../image-modal/image-modal.page';
   styleUrls: ['./khataview.page.scss'],
 })
 export class KhataviewPage implements OnInit {
-  khataDetail:any = [];
   backButtonSub:any;
   isMobile:boolean = true;
   noDataFound:string = '';
 
-  queryParmSub: any;
-  khata_id:number = 0;
   khataImges:any = [];
   img_base: string = CoreConfigConstant.uploadedPath;
+
+  khataDetail:any = {
+    'you_got' : 0,
+    'name' : '',
+    'you_paid':0,
+    'description': '',
+    'purchase_id':0,
+    'mobile_number':'',
+  }
   constructor(
     public appProvider: CoreAppProvider, 
     public platform:Platform, 
@@ -33,22 +39,28 @@ export class KhataviewPage implements OnInit {
       const currentUser = this.authenticationService.currentUserValue;
       const imgUserID = currentUser.id;
       this.img_base = this.img_base + imgUserID + 'assets/';
-      this.queryParmSub = this.route.queryParams.subscribe(params => {
-        this.khata_id = params['khata_id'];
-      });
-     }
+      
+      
+ }
+ ionViewWillEnter() {
+  let kDetail = this.appProvider.tempStorage;
+
+  if( kDetail == undefined || kDetail == null){
+    this.appProvider.searchParam('mykhatas', { skipLocationChange: true });
+  }else{
+    this.khataDetail = [];
+    this.khataDetail = kDetail;
+    this.getKhataImages();
+  }
+ }
 
   ngOnInit() {
-    console.log(JSON.stringify(this.appProvider.tempStorage));
    this.isMobile = this.appProvider.isMobile();
-    this.khataDetail = this.appProvider.tempStorage;
-
+    
   this.backButtonSub =  this.platform.backButton.subscribe(async () => {
-      this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number} });
+      this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number, 'name': this.khataDetail.name, 'img':this.khataDetail.img}, replaceUrl: true });
     });
-this.getKhataImages();
-    if(typeof this.khataDetail == 'undefined')
-      this.khataDetails();
+  
   }
   khataDetails(){
     this.khataDetail = {
@@ -61,7 +73,7 @@ this.getKhataImages();
     }
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
-        let param = { 'id':this.khata_id };
+        let param = { 'id': this.khataDetail.id };
         this.curdService.getData('myKhataDetail', param)
           .subscribe((data: any) => {
             if (data.status == false) {
@@ -127,7 +139,7 @@ shareSocial(){
 getKhataImages(){
   this.appProvider.showLoading().then(loading => {
     loading.present().then(() => {
-      let param = { 'khata_id':this.khata_id };
+      let param = { 'khata_id': this.khataDetail.id};
       this.curdService.getData('getKhataImages', param)
         .subscribe((data: any) => {
           if (data.status == false) {
@@ -180,7 +192,7 @@ async deleteTransaction(){
             } else {
               this.appProvider.showToast(result.msg);
               setTimeout(() => {
-                this.appProvider.searchParam('khata', { queryParams: { mobile:  this.khataDetail.mobile_number} });
+                this.appProvider.searchParam('khata', { queryParams: { mobile:  this.khataDetail.mobile_number}, skipLocationChange: true });
               }, 2000);
             }
           },
@@ -204,10 +216,10 @@ viewBill(data:any){
 }
 
 BackButtonAction(){
-  this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number} });
+  this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number, 'name': this.khataDetail.name, 'img':this.khataDetail.img}, replaceUrl: true});
 }
 ionViewWillLeave() {
   this.backButtonSub.unsubscribe();
-  this.queryParmSub.unsubscribe();
+  this.appProvider.deleteStorage();
 }
 }

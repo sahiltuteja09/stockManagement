@@ -26,7 +26,7 @@ export class RequestbymequotesPage implements OnInit {
       
     const currentUser = this.authenticationService.currentUserValue;
         const imgUserID = currentUser.id;
-        this.img_base = this.img_base + imgUserID + 'assets/';
+        this.img_base = this.img_base ;//+ imgUserID + 'assets/';
 
     }
 

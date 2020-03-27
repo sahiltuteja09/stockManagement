@@ -46,11 +46,14 @@
   </ion-row>
   <div *ngIf="khataImges.status">
     <ion-row>
-      <ion-col ssize="6" size="4" size="3"  size-sm *ngFor="let imges of khataImges.data">
+      <ion-col size="3"  *ngFor="let imges of khataImges.data">
       <!-- <ion-card class="ion-text-center" >
         <ion-thumbnail> -->
           <!-- <img [src]="img_base+imges.image" tappable (click)="openPreview(img_base+imges.image)"> -->
-          <div tappable (click)="openPreview(img_base+imges.image)" class="image-container" [ngStyle]="{'background-image':'url(' + img_base+imges.image + ')', 'background-size':'cover', 'background-repeat':'no-repeat'}"></div>
+          <div class="square">
+            <div tappable (click)="openPreview(img_base+imges.image)" class="image-container" [ngStyle]="{'background-image':'url(' + img_base+imges.image + ')', 'background-size':'cover', 'background-repeat':'no-repeat'}"></div>
+          </div>
+          
                
         <!-- </ion-thumbnail>
       </ion-card> -->

@@ -37,6 +37,8 @@ export class MypurchasesPage implements OnInit {
   isAndroid: boolean = false;
   downloadFolder:string = 'Download';
   zipFileName:string = '';
+  appName:String = CoreConfigConstant.appName;
+  billzipName:any = '';
   constructor(
     private appProvider: CoreAppProvider, 
     private curdService: CurdService,
@@ -67,11 +69,14 @@ export class MypurchasesPage implements OnInit {
   ngOnInit() {
     this.isMobile = this.appProvider.isMobile();
     this.isAndroid = this.appProvider.isAndroid();
+    console.log(this.isAndroid);
+    if(this.isMobile){
     if(this.isAndroid){
       this.downloadPath = this.file.externalRootDirectory;
     }else{
       this.downloadPath = this.file.documentsDirectory;
     }
+  }
   }
   ionViewWillEnter() {
     this.purchases();
@@ -170,7 +175,11 @@ export class MypurchasesPage implements OnInit {
   }
   goto(page,product) {
 
-    this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id} });
+    this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id},skipLocationChange: true });
+  }
+  gotoPage(page) {
+
+    this.appProvider.searchParam(page);
   }
 
   doRefresh(event) {
@@ -238,8 +247,7 @@ export class MypurchasesPage implements OnInit {
       this.appProvider.showToast('Please select a bill to download.');
       return false;
     }
-    if(!this.isMobile)
-    return false;
+    if(this.isMobile){
 
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
       .then(status => {
@@ -257,6 +265,9 @@ export class MypurchasesPage implements OnInit {
             });
         }
       });
+    }else{
+      this.createZip();
+    }
   }
 
   createZip() {
@@ -269,8 +280,11 @@ export class MypurchasesPage implements OnInit {
             if (data.status) {
               this.appProvider.showToast(data.msg);
               this.zipFileName = this.img_base + data.zipname +'.zip';
+              this.billzipName = data.zipname;
               if(this.isMobile)
               this.downloadFile();
+              else
+              (<any>window).open(this.zipFileName);
             } else {
               this.appProvider.showToast(data.msg);
             }
@@ -319,7 +333,7 @@ export class MypurchasesPage implements OnInit {
   
     const fileTransfer: FileTransferObject = this.transfer.create();
     fileTransfer.download(imageURL, this.downloadPath  + 
-      '/'+this.downloadFolder+'/' + "bill-"+Math.round(Math.random() * 10000) +"."+ext, true).then((entry) => {
+      '/'+this.downloadFolder+'/' + this.appName+"-"+this.billzipName+Math.round(Math.random() * 10) +"."+ext, true).then((entry) => {
       console.log('download complete: ' + entry.toURL());
       this.appProvider.dismissLoading();
       this.appProvider.showToast('Your bill has been downloaded successfully in your '+this.downloadFolder + ' folder.');

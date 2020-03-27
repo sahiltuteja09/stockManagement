@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, Events, MenuController } from '@ionic/angular';
+import { Platform, Events, MenuController, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ConfigServiceService } from 'src/config';
@@ -86,7 +86,7 @@ export class AppComponent {
     private router: Router,
     private location: Location,
     public menuCtrl: MenuController,
-    private localNotification: LocalnotificationService
+    private localNotification: LocalnotificationService,private alertCtrl: AlertController
   ) {
     this.initializeApp();
     router.events.subscribe((event: Event) => {
@@ -97,22 +97,20 @@ export class AppComponent {
         // Show loading indicator
         let isOnline = this.appProvider.isOnline();
         this.menuControl();
-      console.log('isOnline app ' + isOnline);
       }
 
       if (event instanceof NavigationEnd) {
         // Hide loading indicator
         let isOnline = this.appProvider.isOnline();
         this.menuControl();
-    console.log('isOnline app hide ' + isOnline);
 
     let routePage = this.router.routerState.snapshot.url;
         console.log('routePage => '+routePage);
         if(routePage != '/no-internet' && !isOnline){
           this.router.navigate(['/no-internet'], { replaceUrl: true });
         }
-
-        if(routePage == '/login' || routePage == '/login?returnUrl=%2Fhome' || routePage == '/register' || routePage == '/forgot' || routePage == '/no-internet'){
+let findIndex = routePage.indexOf('returnUrl');
+        if(routePage == '/login' || findIndex > 0 || routePage == '/register' || routePage == '/forgot' || routePage == '/no-internet'){
           this.menuCtrl.enable(false);
         }else{
           this.menuCtrl.enable(true);
@@ -138,12 +136,14 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      if(this.appProvider.isMobile()){
       this.statusBar.overlaysWebView(false);
       this.statusBar.styleDefault();
       // set status bar to color
       this.statusBar.backgroundColorByHexString('#3880ff');
       this.splashScreen.hide();
       this.exitApp() ;
+      }
       setTimeout(() => {
         this.configs = this.configService.configValue;
         if (this.configs != undefined) {
@@ -177,8 +177,27 @@ export class AppComponent {
   menuControl() {
     this.loggedin = this.authenticationService.isLoggedin();
   }
-  logout() {
-    this.localNotification.cancelAllLocalNotifications();
-    this.authenticationService.logout();
+  async logout() {
+    const alert = await this.alertCtrl.create({
+      header: 'Are you sure ?',
+      message: '',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.localNotification.cancelAllLocalNotifications();
+            this.authenticationService.logout();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

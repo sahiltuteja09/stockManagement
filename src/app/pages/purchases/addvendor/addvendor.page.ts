@@ -27,6 +27,7 @@ export class AddvendorPage implements OnInit {
   croppedImagepathSubscriber;
   img_base: string = CoreConfigConstant.uploadedPath;
   isMobile:boolean = false;
+  selectedFile: File[];
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -89,7 +90,8 @@ export class AddvendorPage implements OnInit {
             'description': '',
             'purchase_id': 0,
             'purchase_date': '',
-            'is_vendor':1
+            'is_vendor':1,
+            'is_update':0
           };
           let merged = { ...this.vendor, ...emptyfields };
           this.curdService.postData(apiMethod, merged)
@@ -105,7 +107,7 @@ export class AddvendorPage implements OnInit {
 
                 this.appProvider.dismissLoading();
                 if (data.status)
-                  this.appProvider.searchParam('purchases', { queryParams: { mobile:  merged.mobile_number, name:merged.name } });
+                  this.appProvider.searchParam('purchases', { queryParams: { mobile:  merged.mobile_number, name:merged.name }, replaceUrl: true });
               }, 2000);
 
             },
@@ -163,19 +165,22 @@ export class AddvendorPage implements OnInit {
     }
     if (typeof this.croppedImagepathSubscriber != 'object') {
       this.croppedImagepathSubscriber = this.uploadImage.croppedImagepath.subscribe((data) => {
-        this.croppedImagepath = data;
+        
         this.imageName = this.uploadImage.imageFileName();
         if (this.imageName) {
+          this.croppedImagepath = data;
           this.vendor.image = this.imageName;
           console.log('this.imageName if ' + this.imageName);
+        }
 
+        if (typeof this.croppedImagepathSubscriber == 'object') {
+          
+          this.isLoading = false;
+          this.croppedImagepathSubscriber.unsubscribe();
+          this.isLoadingSubscriber.unsubscribe();
 
-          if (typeof this.croppedImagepathSubscriber == 'object') {
-            this.isLoading = false;
-            this.croppedImagepathSubscriber.unsubscribe();
-            this.isLoadingSubscriber.unsubscribe();
-          }
-
+          this.croppedImagepathSubscriber = '';
+          this.isLoadingSubscriber= '';
         }
 
         console.log('this.imageName ' + this.imageName);
@@ -183,6 +188,28 @@ export class AddvendorPage implements OnInit {
       });
     }
   }
+  onFileChanged(event) {
+    this.selectedFile = event.target.files;//[0];
+    const uploadData = new FormData();
+
+    for (const file of this.selectedFile) {
+      uploadData.append('photo', file);
+  }
+  this.selectedFile = event.target.files;//[0];
+   //  uploadData.append('photo', this.selectedFile, this.selectedFile.name);
+  this.uploadImage.uploadDesktopImage(uploadData).then((data) => {
+    if(!data.status.status){
+      this.appProvider.showToast(data.status.msg);
+    }else{
+      this.appProvider.showToast(data.status.msg);
+      this.vendor.image =  data.status.data.file_name;
+      this.croppedImagepath = this.img_base+this.vendor.image;
+    }
+  }).catch((err) => {
+    console.error(err)
+  }
+  );
+}
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')
       this.isLoadingSubscriber.unsubscribe();
@@ -191,6 +218,9 @@ export class AddvendorPage implements OnInit {
       this.croppedImagepathSubscriber.unsubscribe();
 
         this.appProvider.dismissLoading();
+
+        this.croppedImagepathSubscriber = '';
+            this.isLoadingSubscriber= '';
       
   }
 

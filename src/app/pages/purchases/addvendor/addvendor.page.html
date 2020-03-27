@@ -41,14 +41,24 @@
 
             
               <ion-list *ngIf="!isLoading && croppedImagepath">
-                <ion-item >
+                <ion-item  lines="none">
                   <ion-thumbnail>
                     <ion-img [src]="croppedImagepath"></ion-img>
                   </ion-thumbnail>
                 </ion-item>
               </ion-list>
+              <span *ngIf="isMobile">
             <ion-button *ngIf="!isLoading" (click)="pickImage()" color="primary" small
                   color="tertiary" shape="round">Upload Image</ion-button>
+                </span>
+                <span *ngIf="!isMobile">
+                  <input
+                  style="display: none"
+                  type="file" (change)="onFileChanged($event)" accept="image/*"
+                  #fileInput>
+                  <ion-button *ngIf="!isLoading" (click)="fileInput.click()" color="primary" small
+                  color="tertiary" shape="round" >Upload Image</ion-button>
+                </span>
                 <ion-button *ngIf="isLoading && !croppedImagepath" color="primary" small color="tertiary" shape="round">
                   Loading ...</ion-button>
               <ion-input type="hidden" formControlName="image" [(ngModel)]="vendor.image" name="image"></ion-input>

@@ -63,7 +63,9 @@
 <ion-footer translucent [ngClass]="{ 'custom-footer': phone_model=='iPhone X'}">
   <ion-row class="input-position" [ngClass]="{ 'custom-footer-row': phone_model=='iPhone X'}">
     <ion-col size="9">
-      <ion-input class="input restrict" type="text" placeholder="Type a message" [(ngModel)]="input" padding-start></ion-input>
+      <form #form="ngForm" (keyup.enter)="send()">
+      <ion-input name="input" class="input restrict" type="text" placeholder="Type a message" [(ngModel)]="input" padding-start></ion-input>
+    </form>
     </ion-col>
     <ion-col size="3">
       <ion-button shape="round" class="send-button" color="d3blue" [disabled]="sending_text == 'SENDING...'" (click)="send()">

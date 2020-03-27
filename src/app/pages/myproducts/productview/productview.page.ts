@@ -12,24 +12,7 @@ import { AuthenticationService } from '../../auth/authentication.service';
 })
 export class ProductviewPage implements OnInit {
 
-  product:any = [];
-  defaultImage: string = 'http://placehold.it/300x200';
-  img_base: string = CoreConfigConstant.uploadedPath;
-
-  constructor(
-    private appProvider: CoreAppProvider, 
-    private modalController: ModalController, 
-    public authenticationService: AuthenticationService) { 
-      
-    const currentUser = this.authenticationService.currentUserValue;
-        const imgUserID = currentUser.id;
-        this.img_base = this.img_base + imgUserID + 'assets/';
-  }
-
-  ngOnInit() {
-   this.product = this.appProvider.tempStorage;
-   if(!this.product){
-    this.product.product = {
+  product:any = {'product' : {
     'id': "",
     'user_id': "0",
     'image': "",
@@ -41,14 +24,41 @@ export class ProductviewPage implements OnInit {
     'product_placed': "na",
     'date_added': "2019-08-24 09:56:22",
     'marketplace_unique_id': ""
-    };
-    this.product.totalSold = '0';
-    this.product.totalReturn = '0';
-    this.product.totalLoss = '0';
-    this.product.totalDamage = '0';
-   }
-   console.log(this.product);
+  },
+  totalSold:0,
+  totalReturn:0,
+  totalLoss:0,
+  totalDamage:0
+};
+  defaultImage: string = 'http://placehold.it/300x200';
+  img_base: string = CoreConfigConstant.uploadedPath;
+  isMobile:boolean = false;
+  constructor(
+    private appProvider: CoreAppProvider, 
+    private modalController: ModalController, 
+    public authenticationService: AuthenticationService) { 
+      
+    const currentUser = this.authenticationService.currentUserValue;
+    let imgUserID = 0;
+    if(currentUser != undefined)
+         imgUserID = currentUser.id;
+        this.img_base = this.img_base + imgUserID + 'assets/';
+        this.isMobile = this.appProvider.isMobile();
   }
+
+  ngOnInit() {
+  }
+
+  ionViewWillEnter() {
+    let pDetail = this.appProvider.tempStorage;
+  
+    if( pDetail == undefined || pDetail == null){
+      this.appProvider.searchParam('myproducts');
+    }else{
+      this.product = [];
+      this.product = pDetail;
+    }
+   }
   openPreview(img) {
     this.modalController.create({
       component: ImageModalPage,
@@ -62,6 +72,13 @@ export class ProductviewPage implements OnInit {
   goto(page) {
 
     this.appProvider.searchParam(page, { queryParams: { term:  this.product.product.marketplace_unique_id} });
+  }
+  editStock(){
+    this.appProvider.goto('addnewstock/'+this.product.product.id, 1);
+  }
+  ionViewWillLeave(){
+   // if(!this.isMobile)
+    this.appProvider.deleteStorage();
   }
 
 }

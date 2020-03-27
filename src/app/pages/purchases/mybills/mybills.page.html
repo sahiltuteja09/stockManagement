@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button ></ion-back-button>
+      <ion-back-button defaultHref="mypurchases"></ion-back-button>
     </ion-buttons>
     <ion-title>
       My Bills
@@ -51,7 +51,7 @@
     </ion-col>
     <ion-col size="3">
       <div class="ion-text-center">
-        <ion-text [color]="'danger'" (click)="downloadBill()">
+        <ion-text [color]="'danger'" (click)="downlaodBill(item.path)">
           <ion-icon name="cloud-download"></ion-icon>
           </ion-text>
       </div>
