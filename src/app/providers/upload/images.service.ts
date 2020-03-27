@@ -9,6 +9,7 @@ import { CoreConfigConstant } from '../../../configconstants';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AuthenticationService } from 'src/app/pages/auth/authentication.service';
 import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
+import { CurdService } from 'src/app/services/rest/curd.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,8 @@ export class ImagesService {
     private transfer: FileTransfer,
     private camera: Camera,
     private authenticationService: AuthenticationService,
-    private http: HttpClient
+    private http: HttpClient,
+    private curdService: CurdService
   ) { }
 
   pickImage() {
@@ -151,7 +153,33 @@ captureImage(){
     let n = this.imageFileNames;
     return n;
   }
-
+removeImage(filename:string):Promise<any>{
+  return new Promise( (resolve, reject) => {
+    this.appProvider.showLoading().then(loading => {
+      loading.present().then(() => {
+        this.curdService.postData('removeimg', {'img':filename})
+                .subscribe((data: any) => {
+                  this.appProvider.dismissLoading();
+                  if (data.status) {
+                    this.appProvider.showToast(data.data);
+                    resolve();
+                  } else {
+                    this.appProvider.showToast(data.msg);
+                    reject();
+                  }
+                },
+                  error => {
+                    this.appProvider.showToast(error);
+                    this.appProvider.dismissLoading();
+                    reject();
+                  },
+                  () => {
+             }
+          );
+        });
+      });
+    });
+}
   uploadDesktopImage(uploadData:any):Promise<any>{
     //https://academind.com/learn/angular/snippets/angular-image-upload-made-easy/
 

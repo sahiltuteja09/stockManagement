@@ -201,13 +201,20 @@ this.partialAmount = data.data.amount_paid;
   }
   removeImg(item, e) {
     e.preventDefault();
-    console.log(item);
-    console.log(this.croppedImagepath);
-    var index = this.croppedImagepath.indexOf(item);
-    if (index !== -1) this.croppedImagepath.splice(index, 1);
+if(this.purchase_id > 0){
+  var index = this.croppedImagepath.indexOf(item);
+  if (index !== -1) this.croppedImagepath.splice(index, 1);
+  this.countImage = this.countImage - 1;
+}else{
+
+    this.uploadImage.removeImage(item).then(()=> {
+      var index = this.croppedImagepath.indexOf(item);
+      if (index !== -1) this.croppedImagepath.splice(index, 1);
+      this.countImage = this.countImage - 1;
+    }).catch((err)=> {
     
-    this.countImage = this.countImage - 1;
-    console.log(this.croppedImagepath);
+    });
+  }
   }
   // get the form contorls in a f object
   get f() { return this.newstockdetail.controls; }

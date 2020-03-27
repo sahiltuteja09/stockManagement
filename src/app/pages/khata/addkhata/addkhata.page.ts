@@ -245,10 +245,15 @@ export class AddkhataPage implements OnInit {
     e.preventDefault();
     console.log(item);
     console.log(this.croppedImagepath);
-    var index = this.croppedImagepath.indexOf(item);
-    if (index !== -1) this.croppedImagepath.splice(index, 1);
-    this.countImage = this.countImage - 1;
-    console.log(this.croppedImagepath);
+   
+this.uploadImage.removeImage(item).then(()=> {
+  var index = this.croppedImagepath.indexOf(item);
+  if (index !== -1) this.croppedImagepath.splice(index, 1);
+  this.countImage = this.countImage - 1;
+}).catch((err)=> {
+
+});
+    
   }
   ionViewWillLeave() {
     if (typeof this.isLoadingSubscriber == 'object')
