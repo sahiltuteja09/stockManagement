@@ -3,7 +3,7 @@ import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { AuthenticationService } from '../auth/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Events } from '@ionic/angular';
+import { Events, ToastController } from '@ionic/angular';
 import { interval } from 'rxjs';
 import { CoreConfigConstant } from 'src/configconstants';
 import { LocalnotificationService } from 'src/app/services/notification/localnotification.service';
@@ -39,7 +39,8 @@ export class HomePage {
     public events: Events,
     private authenticationService: AuthenticationService,
     private localNotification: LocalnotificationService,
-    private oneSignalService: OnesignalnotificationService
+    private oneSignalService: OnesignalnotificationService,
+    public toastController: ToastController
   ) {
 
     const currentUser = this.authenticationService.currentUserValue;
@@ -61,8 +62,69 @@ export class HomePage {
     this.oneSignalService.initOneSignalPush();
    // this.stockLatest();
   }
+  showAddToHomeBtn: boolean = true;
+  deferredPrompt;
   ionViewWillEnter() {
     this.stockLatest();
+    (<any>window).addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      // Stash the event so it can be triggered later on the button event.
+      this.deferredPrompt = e;
+       
+    // Update UI by showing a button to notify the user they can add to home screen
+      
+      if(this.showAddToHomeBtn){
+        this.addToHomeTost() ;
+        this.showAddToHomeBtn = false;
+      }
+      
+    });
+     
+    //button click event to show the promt
+             
+    (<any>window).addEventListener('appinstalled', (event) => {
+      console.log('installed');
+     // this.appProvider.showToast('Thank you');
+    });
+     
+     
+    if ((<any>window).matchMedia('(display-mode: standalone)').matches) {
+      console.log('display-mode is standalone');
+    }
+  }
+
+  async addToHomeTost() {
+    const toast = await this.toastController.create({
+      showCloseButton: true,
+      closeButtonText: 'Ok',
+      animated:true,
+      message: 'Click "ADD" to get full screen mode and faster loading..',
+      position: 'bottom',
+     
+    });
+    toast.present();
+
+    toast.onWillDismiss().then(() => {
+      this.add_to_home();
+    });
+  }
+  add_to_home(){
+    debugger
+    // hide our user interface that shows our button
+    // Show the prompt
+    this.deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    this.deferredPrompt.userChoice
+      .then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the prompt');
+        } else {
+          this.showAddToHomeBtn = true;
+          console.log('User dismissed the prompt');
+        }
+        this.deferredPrompt = null;
+      });
   }
   checkUpdates() {
     this.curdService.getData('unreadMsg')
