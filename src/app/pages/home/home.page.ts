@@ -59,6 +59,7 @@ uslideOpts = {
   slidesPerView:1,
   slidesPerGroup: 1,
 };
+
   constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider,
@@ -82,19 +83,39 @@ uslideOpts = {
     });
     localNotification.stockReminder();
     localNotification.stockQuantityNotification();
+
+    if(!this.appProvider.isMobile()){
+      this.slideOpts = {
+        initialSlide: 1,
+        speed: 400,
+        slidesPerView:8,
+        slidesPerGroup: 8,
+      };
+      this.pslideOpts = {
+        initialSlide: 1,
+        speed: 400,
+        slidesPerView:6,
+        slidesPerGroup: 6,
+      };
+      this.uslideOpts = {
+        initialSlide: 1,
+        speed: 400,
+        slidesPerView:3,
+        slidesPerGroup: 3,
+      };
+    }
   }
 
   
 
   ngOnInit() {
-    this.oneSignalService.initOneSignalPush();
-    this.home();
+    
   }
   showAddToHomeBtn: boolean = true;
   deferredPrompt;
   ionViewWillEnter() {
-   // this.stockLatest();
-    
+   this.oneSignalService.initOneSignalPush();
+   this.home();
 
     (<any>window).addEventListener('beforeinstallprompt', (e) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
