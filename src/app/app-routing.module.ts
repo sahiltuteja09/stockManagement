@@ -63,7 +63,8 @@ const routes: Routes = [
   { path: 'mybills', loadChildren: './pages/purchases/mybills/mybills.module#MybillsPageModule', canActivate: [AuthguardService],  data: { num: 257 } },
   { path: 'change-password', loadChildren: './pages/setting/change-password/change-password.module#ChangePasswordPageModule', canActivate: [AuthguardService],  data: { num: 300 } },
   { path: 'addvendor', loadChildren: './pages/purchases/addvendor/addvendor.module#AddvendorPageModule', canActivate: [AuthguardService],  data: { num: 301 } },
-  { path: 'myvendors', loadChildren: './pages/purchases/my-vendors/my-vendors.module#MyVendorsPageModule', canActivate: [AuthguardService],  data: { num: 302 } },
+  { path: 'myvendors', loadChildren: './pages/purchases/my-vendors/my-vendors.module#MyVendorsPageModule', canActivate: [AuthguardService],  data: { num: 302 } },  { path: 'newsfeed', loadChildren: './pages/home/newsfeed/newsfeed.module#NewsfeedPageModule' },
+
 
 
 

@@ -21,93 +21,207 @@
       refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  <div *ngIf="(latestStock.status); else noData">
-    
-  <ion-card *ngFor="let result of latestStock.data">
-    <ion-card-header>
-      <ion-row>
-        <ion-col size="3" size-sm align-items-start>
-          <ion-avatar *ngIf="result.uimage == ''">
-            <img src="http://placehold.it/75">
-          </ion-avatar>
-          <ion-avatar *ngIf="result.uimage != ''" >
-            <img [src]="imgBase+result.user_id+'assets/'+result.uimage" >
-          </ion-avatar>
-        </ion-col>
-        <ion-col size="9" size-sm align-items-start>
-          <ion-card-title>{{result.name}}</ion-card-title>
-          <ion-card-subtitle>Updated {{result.date_modify | timeAgo}}</ion-card-subtitle>
-        </ion-col>
-      </ion-row>
-    </ion-card-header>
-
-    <ion-card-content>{{result.title}}
-    </ion-card-content>
-
-    <ion-img class="card-image" src="{{result.image == '' ? defaultImage : imgBase+result.user_id+'assets/'+result.image }}"></ion-img>
-
-    <ion-row *ngIf="userID != result.user_id">
-      <ion-col size="2" size-sm align-items-start>
+  <div  padding-top *ngIf="recentProductsStatus; else recentProductsAdd">
+    <ion-row>
+      <ion-col size="6">
+        
+        <div class="ion-text-start "> Recent Products </div>
       </ion-col>
-      <ion-col size="10" size-sm text-end *ngIf="userID != result.user_id">
-        <ion-button (click)="requestQuote(result)" color="success" shape="round" size="small">Get Quote</ion-button>
+      <ion-col size="6" >
+        <ion-text >
+        <div class="ion-text-end view-all" (click)="navto('myproducts')"> View All > </div>
+        </ion-text>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="userID == result.user_id">
-      <ion-col size="6" size-sm align-items-end>
-        <ion-button (click)="goto('scanin',result)" float-right color="tertiary" shape="round" size="small">
-          <ion-icon name="add"></ion-icon> Stock in
-        </ion-button>
-      </ion-col>
-      <ion-col size="6" size-sm align-items-end>
-        <ion-button (click)="goto('stockout',result)" float-right color="danger" shape="round" size="small">
-          <ion-icon name="remove-circle-outline"></ion-icon> Stock out
-        </ion-button>
-      </ion-col>
-    </ion-row>
-    <div class="line-divider"></div>
-    <ion-row class="padding-top-5">
-      <!-- <ion-col class="comment-count" size="6" size-sm text-center>
-        <small>
-          <ion-icon name="chatbubbles"></ion-icon>
-          999.9k Comments
-        </small>
-      </ion-col> -->
-      <ion-col class="like-count" size="12" size-sm text-center #like (click)="userLikes(result)">
-        <small>
-          <ion-icon name="thumbs-up"></ion-icon>{{result.likes}} Likes 
-        </small>
-      </ion-col>
-    </ion-row>
-  </ion-card>
+  <ion-slides pager="false" [options]="slideOpts">
+    <ion-slide *ngFor="let recentProduct of recentProducts">
+      <div class="img-container">
+        <img src="{{recentProduct.image == '' ? defaultImage : imgBase+recentProduct.user_id+'assets/'+recentProduct.image }}">
+      </div>
+    </ion-slide>
+    <!-- <ion-slide>
+      <div class="img-container img-container-text-parent">
+     <span class="img-container-text" (click)="navto('myproducts')">View All</span>  
+      </div>
+    </ion-slide> -->
+  </ion-slides>
 </div>
-<ng-template #noData>
-  <div class="ion-text-center">
-    {{noDataFound}}
+<ng-template #recentProductsAdd >
+  <div class="ion-text-center" padding-top>
+   <ion-button color="primary" small color="tertiary" shape="round" class="ion-text-uppercase" (click)="navto('addnewstock')">Add New Product</ion-button>
   </div>
 </ng-template>
-<ion-infinite-scroll (ionInfinite)="doInfinite($event)">
-  <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
-  </ion-infinite-scroll-content>
-</ion-infinite-scroll>
+<div  padding-top *ngIf="recentTransactionsStatus; else recentTransactionsAdd">
+  <ion-row>
+    <ion-col size="6">
+      
+      <div class="ion-text-start "> Recent Transactions </div>
+    </ion-col>
+    <ion-col size="6" >
+      <ion-text >
+      <div class="ion-text-end view-all" (click)="navto('mykhatas')"> View All > </div>
+      </ion-text>
+    </ion-col>
+  </ion-row>
+<ion-slides pager="false" [options]="pslideOpts">
+  <ion-slide *ngFor="let recentTransaction of recentTransactions">
+      <ion-list>
+        <ion-card >
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <img class="thumbnail-margin" src="{{customerImages[recentTransaction.mobile_number] == '' || customerImages[recentTransaction.mobile_number] == undefined ? defaultImage : img_base+customerImages[recentTransaction.mobile_number] }}">
+            </ion-thumbnail>
+            <ion-label>
+              <ion-row>
+              <ion-col size="12" >
+                <p>
+                  <small>Paid : Rs. {{recentTransaction.you_paid}}/-</small>
+                </p>
+                <p>
+                  <small>Got : Rs. {{recentTransaction.you_got}}/-</small>
+                </p>
+              </ion-col>
+            </ion-row>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+  
+      </ion-list>
+  </ion-slide>
+</ion-slides>
+</div>
+<ng-template #recentTransactionsAdd >
+  <div class="ion-text-center" padding-top>
+   <ion-button color="primary" small color="tertiary" shape="round" class="ion-text-uppercase" (click)="navto('addcustomer')">Add customer</ion-button>
+  </div>
+</ng-template>
+<div  padding-top *ngIf="recentPurchasessStatus; else recentPurchasessAdd">
+  <ion-row>
+    <ion-col size="6">
+      
+      <div class="ion-text-start "> Recent Purchases </div>
+    </ion-col>
+    <ion-col size="6" >
+      <ion-text >
+      <div class="ion-text-end view-all" (click)="navto('mypurchases')"> View All > </div>
+      </ion-text>
+    </ion-col>
+  </ion-row>
+<ion-slides pager="false" [options]="uslideOpts">
+  <ion-slide *ngFor="let recentPurchases of recentPurchasess">
+      <ion-list>
+        <ion-card >
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <img class="thumbnail-margin" src="{{recentPurchases.image == '' ? defaultImage : img_base+recentPurchases.image }}">
+            </ion-thumbnail>
+            <ion-label>
+              <ion-row>
+                <ion-col size="12" size-sm >
+                  <ion-text>
+                    Bill Amount is Rs. {{recentPurchases.totalcost}}/-
+                  </ion-text>
+                </ion-col>
+              <ion-col size="12" size-sm >
+                  <small>You Paid : Rs. {{recentPurchases.amount_paid}}/-</small>
+              </ion-col>
+              <ion-col size="12" size-sm >
+                <ion-text>
+                  <small>Vendor : {{recentPurchases.name}}</small>
+                </ion-text>
+              </ion-col>
+            </ion-row>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+  
+      </ion-list>
+  </ion-slide>
+</ion-slides>
+</div>
+<ng-template #recentPurchasessAdd >
+  <div class="ion-text-center" padding-top>
+   <ion-button color="primary" small color="tertiary" shape="round" class="ion-text-uppercase" (click)="navto('mypurchases')">Add new bill</ion-button>
+  </div>
+</ng-template>
+<div  padding-top *ngIf="vendorsStatus; else vendorsAdd;">
+  <ion-row>
+    <ion-col size="6">
+      
+      <div class="ion-text-start "> Vendors </div>
+    </ion-col>
+    <ion-col size="6" >
+      <ion-text >
+      <div class="ion-text-end view-all" (click)="navto('myvendors')"> View All > </div>
+      </ion-text>
+    </ion-col>
+  </ion-row>
+<ion-slides pager="false" [options]="slideOpts">
+  <ion-slide *ngFor="let vendor of vendors">
+    <div class="img-container">
+      <img src="{{vendor.customer_image == '' ? defaultImage : img_base+vendor.customer_image }}">
+    </div>
+  </ion-slide>
+  <ion-slide>
+    <div class="img-container img-container-text-parent">
+   <span class="img-container-text">View All</span>  
+    </div>
+  </ion-slide>
+</ion-slides>
+</div>
+<ng-template #vendorsAdd >
+  <div class="ion-text-center" padding-top>
+   <ion-button color="primary" small color="tertiary" shape="round" class="ion-text-uppercase" (click)="navto('addvendor')">Add new vendor</ion-button>
+  </div>
+</ng-template>
+<div  padding-top *ngIf="recentUpdatesStatus">
+  <ion-row>
+    <ion-col size="6">
+      
+      <div class="ion-text-start "> Recent Updates </div>
+    </ion-col>
+    <ion-col size="6" >
+      <ion-text >
+      <div class="ion-text-end view-all" (click)="navto('newsfeed')"> View All > </div>
+      </ion-text>
+    </ion-col>
+  </ion-row>
+  <ion-slides pager="false" [options]="uslideOpts" >
+    <ion-slide  *ngFor="let recentUpdate of recentUpdates">
+      <ion-list >
+        <ion-card >
+              <ion-item lines="none">
+                <ion-thumbnail >
+                  <img src="{{recentUpdate.image == '' ? defaultImage : img_base+recentUpdate.image }}"tappable >
+                </ion-thumbnail>
+                    <ion-label >
+                      <ion-row >
+                        <ion-col size="12" size-sm>
+                        <ion-text>
+                          {{recentUpdate.title}}
+                        </ion-text>
+                      </ion-col>
+                        <ion-col size="12" size-sm >
+                          <small class="deal_price">
+                            Seller : {{recentUpdate.name}}
+                          </small>
+                        </ion-col>
+                      
+                        <ion-col size="12" size-sm >
+                          <small class="deal_price">
+                            Likes : {{recentUpdate.likes}}
+                          </small>
+                        </ion-col>
+                      </ion-row>
+                    </ion-label>
+              </ion-item>
+            
+            </ion-card>
+        </ion-list>
 
- <!-- fab placed in the center of the content with a list on each side -->
- <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button color="danger">
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-  <ion-fab-list side="top">
-    <ion-fab-button routerLink="/scanin" routerDirection="forward" data-desc="Stockin">
-      <ion-icon name="basket"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-button routerLink="/stockout" routerDirection="forward" data-desc="Stockout">
-      <ion-icon name="cart"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-button routerLink="/myproducts" routerDirection="forward" data-desc="My Products">
-      <ion-icon name="shirt"></ion-icon>
-    </ion-fab-button>
-  </ion-fab-list>
-</ion-fab> -->
+    </ion-slide>
+  </ion-slides>
+</div>
 </ion-content>
 <ion-footer no-border [scrollHide]="footerScrollConfig" [scrollContent]="pageContent">
   <ion-grid>

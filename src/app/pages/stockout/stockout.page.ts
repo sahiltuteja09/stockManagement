@@ -67,6 +67,7 @@ export class StockoutPage implements OnInit {
   quickUpdate:boolean = false;
   quickUpdateObject:any = {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
   speakToSearch:boolean = false;
+  isSafariBrowser:boolean = false;
   constructor(
     private scanService: ScannerService,
     private curdService: CurdService,
@@ -96,6 +97,7 @@ export class StockoutPage implements OnInit {
     this.getMerchants();
     this.compareWithType = this.compareWithFn;
     this.compareWithMerchant = this.compareWithMerchantFn;
+this.isSafariBrowser = this.appProvider.isSafari();
     
   }
   

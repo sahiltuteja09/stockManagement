@@ -24,6 +24,8 @@ export class KhataPage implements OnInit {
   customerImg:string = '';
   defaultImage: string = 'http://placehold.it/300x200';
   img_base: string = CoreConfigConstant.uploadedPath;
+  marginTextImg:string = '';
+  marginLeftTextImg:string = '';
   constructor( private route: ActivatedRoute, private appProvider: CoreAppProvider, private curdService: CurdService, 
     public authenticationService: AuthenticationService, 
     private modalController: ModalController
@@ -41,6 +43,13 @@ export class KhataPage implements OnInit {
 
     if(this.searchTerm == undefined || this.searchTerm == ''){
       this.appProvider.goto('mykhatas');
+    }
+    
+    if(!this.appProvider.isIos()){
+      this.marginTextImg = '10px';
+    }
+    if(this.appProvider.isIos()){
+      this.marginLeftTextImg = '10px';
     }
   }
 

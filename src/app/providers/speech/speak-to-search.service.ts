@@ -60,6 +60,7 @@ speechInProcess:boolean = false;
       }
     });
   }else{
+    console.log('safari');
     this.webListing().then(()=>{
       console.log('test');
       resolve()
@@ -132,9 +133,10 @@ textToSpeech(msg):Promise<any> {
     });
   }
   
-SpeechRecognition = (<any>window).SpeechRecognition || (<any>window).webkitSpeechRecognition;
-recognition = new this.SpeechRecognition();
+SpeechRecognition = (<any>window).SpeechRecognition || (<any>window).webkitSpeechRecognition || null;
+recognition:any;
 webListing():Promise<any>{
+  this.recognition =  new this.SpeechRecognition();
  let self = this;
 
  return new Promise( (resolve, reject) => {

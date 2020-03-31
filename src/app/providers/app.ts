@@ -119,6 +119,9 @@ export class CoreAppProvider {
     isIos(): boolean {
         return this.platform.is('ios');
     }
+    isSafari(){
+        return this.isBrowser() && /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    }
 
     /**
      * Checks if the current window is wider than a mobile.

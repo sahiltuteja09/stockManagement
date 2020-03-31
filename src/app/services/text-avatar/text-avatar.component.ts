@@ -13,12 +13,14 @@ export class TextAvatarDirective {
   @Input() color: string;
   @Input() textColor: string;
   @Input() marginTop:string;
+  @Input() marginLeft:string;
   
   public firstLetter = "";
   public styles = {
     'background-color': "#fff",
     'color': "#000",
-    'margin-top' : '0px'
+    'margin-top' : '0px',
+    'margin-left':'0px'
   };
   
   constructor(private colorGenerator: ColorGenerator) {}
@@ -28,10 +30,11 @@ export class TextAvatarDirective {
     let color = changes['color'] ? changes['color'].currentValue : null;
     let textColor = changes['textColor'] ? changes['textColor'].currentValue : this.styles.color;
     let marginTop = changes['marginTop'] ? changes['marginTop'].currentValue : 'none';
+    let marginLeft = changes['marginLeft'] ? changes['marginLeft'].currentValue : 'none';
 
     this.firstLetter = this.extractFirstCharacter(text);
 
-    this.styles = {...this.styles, 'background-color': this.backgroundColorHexString(color, text), 'color': textColor, 'margin-top' : marginTop}
+    this.styles = {...this.styles, 'background-color': this.backgroundColorHexString(color, text), 'color': textColor, 'margin-top' : marginTop, 'margin-left' : marginLeft};
   }
 
   private extractFirstCharacter(text: string): string {

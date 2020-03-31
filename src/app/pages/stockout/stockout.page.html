@@ -23,7 +23,7 @@
               <ion-icon color="success" name="expand" ></ion-icon>
             </ion-button>
             </div>
-          <div slot="end"  class="padding-top-15">
+          <div slot="end" *ngIf="!isSafariBrowser" class="padding-top-15">
             <ion-button color="default" (click)="startListing()">
               <ion-icon color="danger" name="mic" ></ion-icon>
             </ion-button>
@@ -68,7 +68,7 @@
                 <ion-item lines="none">
                   <p>{{result.title}}</p>
                 </ion-item>
-                <ion-button  color="default" type="button" block (click)="updateFields(qtyInput.value, result.id,product_status_id.value, marketplace_id.value, reason.value, 0,sale_price.value)" float-right><ion-icon color="danger" name="mic" ></ion-icon></ion-button>
+                <ion-button *ngIf="!isSafariBrowser" color="default" type="button" block (click)="updateFields(qtyInput.value, result.id,product_status_id.value, marketplace_id.value, reason.value, 0,sale_price.value)" float-right><ion-icon color="danger" name="mic" ></ion-icon></ion-button>
               </ion-item>
   
               <ion-row>
@@ -77,7 +77,7 @@
                     <ion-label position="floating"><span class="required">*</span>Quantity</ion-label>
                     <ion-input type="number" [id]="'quantity'+result.id"  formControlName="quantity" name="quantity" maxlength="5" value="1" #qtyInput></ion-input>
                   
-                    <div slot="end"  class="padding-top-35">
+                    <div slot="end" *ngIf="!isSafariBrowser" class="padding-top-35">
                       <ion-button color="default" (click)="updateQuantityField(qtyInput.value, result.id,product_status_id.value, marketplace_id.value, reason.value, 0,sale_price.value)">
                         <ion-icon color="danger" name="mic" ></ion-icon>
                       </ion-button>
@@ -90,7 +90,7 @@
                     <ion-label position="floating">Sale Price<span class="required">*</span></ion-label>
                     <ion-input type="number" [id]="result.id" formControlName="sale_price" required maxlength="6" #sale_price [value]="result.purchase_cost"
                     name="sale_price"></ion-input>
-                    <div slot="end"  class="padding-top-35">
+                    <div slot="end" *ngIf="!isSafariBrowser" class="padding-top-35">
                       <ion-button color="default" (click)="updatePriceField(qtyInput.value, result.id,product_status_id.value, marketplace_id.value, reason.value, 0,sale_price.value)">
                       <ion-icon color="danger" name="mic" ></ion-icon>
                     </ion-button>
@@ -250,7 +250,7 @@
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>
   </ion-content>
-  <ion-footer no-border >
+  <ion-footer no-border *ngIf="!isSafariBrowser" >
     <ion-grid>
       <ion-row>
         <ion-col size="12">

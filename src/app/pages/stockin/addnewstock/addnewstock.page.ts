@@ -51,6 +51,7 @@ export class AddnewstockPage implements OnInit {
   selectedFile: File[];
 
   quickUpdateObject:any = { 'color': 'danger', 'disabled':false };
+  isSafariBrowser:boolean=false;
   constructor(
     private scanService: ScannerService,
     public formBuilder: FormBuilder,
@@ -64,6 +65,8 @@ export class AddnewstockPage implements OnInit {
     const currentUser = this.authenticationService.currentUserValue;
         const imgUserID = currentUser.id;
         this.img_base = this.img_base + imgUserID + 'assets/';
+
+        this.isSafariBrowser = this.appProvider.isSafari();
 
     this.stock = {
       'product_unique': '',

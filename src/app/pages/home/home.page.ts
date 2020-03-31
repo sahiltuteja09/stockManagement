@@ -16,9 +16,6 @@ import { ScrollHideConfig } from 'src/app/providers/hide-heaer-footer/hide-heade
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  latestStock: any = [];
-  page: number = 1;
-  noDataFound: string = 'Fetching records...';
   defaultImage: string = 'http://placehold.it/300x200';
   img_base: string = CoreConfigConstant.uploadedPath;
   imgBase:string = '';
@@ -31,6 +28,37 @@ export class HomePage {
   footerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-bottom', maxValue: undefined };
   headerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-top', maxValue: 44 };
  // notifications: any[] = [];
+recentProducts:any = [];
+recentTransactions:any = [];
+customerImages: any = [];
+recentPurchasess:any = [];
+vendors:any = [];
+recentUpdates:any = [];
+
+recentProductsStatus:boolean = false;
+recentTransactionsStatus:boolean = false;
+recentPurchasessStatus:boolean = false;
+vendorsStatus:boolean = false;
+recentUpdatesStatus:boolean = false;
+
+ slideOpts = {
+  initialSlide: 1,
+  speed: 400,
+  slidesPerView:3,
+  slidesPerGroup: 3,
+};
+pslideOpts = {
+  initialSlide: 1,
+  speed: 400,
+  slidesPerView:2,
+  slidesPerGroup: 2,
+};
+uslideOpts = {
+  initialSlide: 1,
+  speed: 400,
+  slidesPerView:1,
+  slidesPerGroup: 1,
+};
   constructor(
     private curdService: CurdService,
     private appProvider: CoreAppProvider,
@@ -60,12 +88,14 @@ export class HomePage {
 
   ngOnInit() {
     this.oneSignalService.initOneSignalPush();
-   // this.stockLatest();
+    this.home();
   }
   showAddToHomeBtn: boolean = true;
   deferredPrompt;
   ionViewWillEnter() {
-    this.stockLatest();
+   // this.stockLatest();
+    
+
     (<any>window).addEventListener('beforeinstallprompt', (e) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
       e.preventDefault();
@@ -138,24 +168,55 @@ export class HomePage {
 
   // https://medium.com/google-developer-experts/angular-supercharge-your-router-transitions-using-new-animation-features-v4-3-3eb341ede6c8
 
-  stockLatest() {
+  home() {
     this.appProvider.dismissLoading();
     
-    this.page = 1;
     this.appProvider.showLoading().then(loading => {
       loading.present().then(() => {
-        let param = { 'page': this.page };
-        this.curdService.getData('home', param)
+        this.curdService.getData('appHome')
           .subscribe((data: any) => {
             if (data.status == false) {
               // no product found
-              this.noDataFound = data.msg;
-              this.latestStock = [];
             } else {
-              this.latestStock = [];
-              this.latestStock = data;
-              this.page = this.page + 1;
+             ;
+              if(data.products.status){
+             this.recentProducts = data.products.data;
+             this.recentProductsStatus = true
+              }
+             else{
+             this.recentProductsStatus = false;
+             }
+
+             if(data.recent_transactions.status){
+             this.recentTransactions = data.recent_transactions.data;
+             this.customerImages = data.recent_transactions.customer_images;
+             this.recentTransactionsStatus = true;
+             }else{
+             this.recentTransactionsStatus = false;
+             }
+
+             if(data.purchase.status){
+             this.recentPurchasess = data.purchase.data;
+             this.recentPurchasessStatus = true;
+             }else{
+             this.recentPurchasessStatus = false;
+             }
+
+             if(data.purchase.status){
+             this.vendors = data.vendors.data;
+             this.vendorsStatus = true;
+             }else{
+             this.vendorsStatus = false;
+             }
+
+             if(data.recent_updates.status){
+             this.recentUpdates = data.recent_updates.data;
+             this.recentUpdatesStatus = true;
+             }else{
+             this.recentUpdatesStatus = false;
+             }
             }
+            console.log(data);
             this.appProvider.dismissLoading();
           },
             error => {
@@ -166,58 +227,11 @@ export class HomePage {
       });
     });
   }
-  userLikes(pid: any) {
-    let param = { 'pid': pid.id };
-    this.curdService.getData('updateLikes', param)
-      .subscribe((data: any) => {
-        if (data.status == false) {
-          // no product found
-          this.appProvider.showToast(data.msg);
-        } else {
-          pid.likes = data.data;
-        }
-        this.appProvider.dismissLoading();
-      },
-        error => {
-          this.appProvider.showToast(error);
-          this.appProvider.dismissLoading();
-        }
-      );
-  }
-
-
-  doInfinite(infiniteScroll) {
-
-    setTimeout(() => {
-      let param = { 'page': this.page };
-      this.curdService.getData('home', param)
-        .subscribe(
-          (result: any) => {
-            if (result.status == false) {
-              // no product found
-              this.noDataFound = result.msg;
-            } else {
-              for (let i = 0; i < result.data.length; i++) {
-                this.latestStock.data.push(result.data[i]);
-              }
-              this.page = this.page + 1;
-            }
-          },
-          error => {
-            this.appProvider.showToast(error);
-          }
-        );
-      infiniteScroll.target.complete();
-    }, 2000);
-  }
   doRefresh(event) {
     setTimeout(() => {
-      this.stockLatest();
+      this.home();
       event.target.complete();
     }, 2000);
-  }
-  requestQuote(data) {
-    this.appProvider.navTo('request-quote', data.id, data.user_id)
   }
 
   checkNetworkStatus() {
@@ -248,9 +262,8 @@ export class HomePage {
       }
     });
   }
-  goto(page,product) {
-
-    this.appProvider.searchParam(page, { queryParams: { term:  product.title} });
+  navto(page) {
+    this.appProvider.goto(page);
   }
   ionViewWillLeave() {
     this.unreadMsgSub.unsubscribe();

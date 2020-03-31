@@ -76,6 +76,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
   quickUpdate:boolean = false;
   speakToSearch:boolean =false;
   quickUpdateObject:any = {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
+  isSafariBrowser:boolean = false;
   constructor(
     private scanService: ScannerService,
     private curdService: CurdService,
@@ -101,6 +102,7 @@ img_base: string = CoreConfigConstant.uploadedPath;
     this.queryParmSub = this.route.queryParams.subscribe(params => {
       this.searchTerm = params['term'];
     });
+    this.isSafariBrowser = this.appProvider.isSafari();
     this.getStockType();
     this.getMerchants();
     if(typeof this.searchTerm == 'undefined')

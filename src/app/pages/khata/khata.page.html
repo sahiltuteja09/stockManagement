@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="mykhatas"></ion-back-button>
       <ion-avatar *ngIf="customerImg == ''" (click)="editCustomer()">
-        <text-avatar [text]="name"  textColor="#fff" marginTop='10px'></text-avatar>
+        <text-avatar [text]="name"  textColor="#fff" [marginTop]='marginTextImg' [marginLeft]="marginLeftTextImg"></text-avatar>
       </ion-avatar>
       <ion-avatar *ngIf="customerImg != ''" >
         <img [src]="customerImg ? img_base + customerImg : defaultImage" (click)="openPreview(img_base + customerImg)">
