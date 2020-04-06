@@ -53,7 +53,7 @@ export class ProductviewPage implements OnInit {
     let pDetail = this.appProvider.tempStorageData;
   
     if( pDetail == undefined || pDetail == null){
-      this.appProvider.searchParam('myproducts');
+      this.appProvider.goto('myproducts',1);
     }else{
       this.product = [];
       this.product = pDetail;
@@ -74,7 +74,7 @@ export class ProductviewPage implements OnInit {
     this.appProvider.searchParam(page, { queryParams: { term:  this.product.product.marketplace_unique_id} });
   }
   editStock(){
-    this.appProvider.goto('addnewstock/'+this.product.product.id, 1);
+    this.appProvider.goto('addnewstock/'+this.product.product.id);
   }
   ionViewWillLeave(){
    // if(!this.isMobile)

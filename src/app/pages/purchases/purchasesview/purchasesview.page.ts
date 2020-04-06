@@ -49,6 +49,9 @@ export class PurchasesviewPage implements OnInit {
     this.queryParmSub = this.route.queryParams.subscribe(params => {
       this.searchTerm = params['purchase_id'];
     });
+   
+  }
+  ionViewWillEnter(){
     if(this.searchTerm){
       this.getPurchaseDetail();
       this.purchaseDetail.id = this.searchTerm;
@@ -60,8 +63,6 @@ export class PurchasesviewPage implements OnInit {
       }
       
     }
-    
-
   }
 
   ngOnInit() {
@@ -100,7 +101,7 @@ export class PurchasesviewPage implements OnInit {
   }
   editPurchase(){
     
-    this.appProvider.goto('purchases/'+this.purchaseDetail.id, 1);
+    this.appProvider.goto('purchases/'+this.purchaseDetail.id);
   }
   getPurchaseDetail(){
 

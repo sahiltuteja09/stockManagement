@@ -100,7 +100,9 @@ export class MyproductsPage implements OnInit {
       'totalLoss': totalLoss,
       'totalDamage': totalDamage
     }
-    this.appProvider.navigateWithState('productview', data);
+    this.appProvider.tempData(data);
+    this.appProvider.navigateWithURL('productview',1);
+    //this.appProvider.navigateWithState('productview', data);
   }
   // goto(page,product) {
 
@@ -151,6 +153,9 @@ export class MyproductsPage implements OnInit {
       }
       event.target.complete();
     }, 2000);
+  }
+  navigateTo(page){
+    this.appProvider.navigateWithURL(page, 1);
   }
   doInfinite(infiniteScroll) {
 

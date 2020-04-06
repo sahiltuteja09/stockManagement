@@ -56,22 +56,25 @@ get tempStorageData(){
 
     }
     navigateWithState(page: string, objectItem){
-        if(!this.isMobile()){
-            this.setStorage(objectItem);
-            this.tempStorage = this.getStorage();
-        }else{
-            this.tempStorage = objectItem;
-        }
+        // if(!this.isMobile()){
+        //     this.setStorage(objectItem);
+        //     this.tempStorage = this.getStorage();
+        // }else{
+        //     this.tempStorage = objectItem;
+        // }
+        this.setStorage(objectItem);
+        this.tempStorage = this.getStorage();
         this.goto(page);
     }
      tempData(data){
-        if(!this.isMobile()){
-            this.setStorage(data);
-            this.tempStorage = this.getStorage();
-        }else{
-            this.tempStorage = data;
-        }
-        //this.tempStorage = data;
+        // if(!this.isMobile()){
+        //     this.setStorage(data);
+        //     this.tempStorage = this.getStorage();
+        // }else{
+        //     this.tempStorage = data;
+        // }
+        this.setStorage(data);
+        this.tempStorage = this.getStorage();
     }
     setStorage(tempData:any){
         localStorage.setItem('tempStorage', JSON.stringify(tempData));

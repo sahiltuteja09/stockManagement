@@ -110,6 +110,9 @@ export class MypurchasesPage implements OnInit {
             error => {
               this.appProvider.showToast(error);
               this.appProvider.dismissLoading();
+            },
+            () => {
+              this.appProvider.dismissLoading();
             }
           );
       });
@@ -180,8 +183,8 @@ export class MypurchasesPage implements OnInit {
     this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id},skipLocationChange: true });
   }
   gotoPage(page) {
-
-    this.appProvider.searchParam(page);
+    this.appProvider.navigateWithURL(page,1);
+  //   this.appProvider.searchParam(page);
   }
 
   doRefresh(event) {
@@ -234,7 +237,9 @@ export class MypurchasesPage implements OnInit {
     }
   }
   purchaseview(data:any){
-    this.appProvider.navigateWithState('purchasesview', data);
+    this.appProvider.tempData(data);
+    this.appProvider.navigateWithURL('purchasesview',1);
+   // this.appProvider.navigateWithState('purchasesview', data);
   }
   
   selectedValues(){

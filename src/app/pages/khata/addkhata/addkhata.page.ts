@@ -267,5 +267,7 @@ this.uploadImage.removeImage(item).then(()=> {
     this.croppedImagepathSubscriber = '';
           this.isLoadingSubscriber = '';
 
+          this.appProvider.deleteStorage();
+
   }
 }
