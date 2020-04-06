@@ -17,7 +17,7 @@ import { FirebasenotificationService } from 'src/app/services/notification/fireb
 // cordova plugin rm cordova-plugin-firebase
 // cordova plugin add cordova-plugin-firebasex
 // cordova plugin add cordova-plugin-androidx
-// cordova plugin add cordova-plugin-androidx-adapter\
+// cordova plugin add cordova-plugin-androidx-adapter 
 
 @Component({
   selector: 'app-home',
@@ -120,11 +120,12 @@ subscribeToPush:any;
   
 
   ngOnInit() {
-    this.home();
+    
   }
   showAddToHomeBtn: boolean = true;
   deferredPrompt;
   ionViewWillEnter() {
+    this.home();
     this.checkUpdates();
     if(this.appProvider.isMobile()){
     this.firebasex.initPush();
