@@ -48,14 +48,14 @@ export class MyproductsPage implements OnInit {
     });
   }
   ngOnInit() {
+    
+  }
+  ionViewWillEnter() {
     console.log(this.keyword);
     if(this.keyword)
     this.filterProduct();
     else
     this.products();
-  }
-  ionViewWillEnter() {
-    
   }
   ionViewWillLeave() {
     this.appProvider.dismissLoading();

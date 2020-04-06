@@ -120,19 +120,20 @@ subscribeToPush:any;
   
 
   ngOnInit() {
-    this.home();
+    
   }
   showAddToHomeBtn: boolean = true;
   deferredPrompt;
   ionViewWillEnter() {
+    this.home();
     this.checkUpdates();
-    if(this.appProvider.isMobile()){
+    if(this.appProvider.isMobile() && !this.appProvider.isIos()){
+
     this.firebasex.initPush();
-    if(this.appProvider.isMobile()){
       this.subscribeToPush =this.firebasex.msgData$.subscribe((data) => {
         this.checkUpdates();
       });
-      }
+      
     }
   // this.oneSignalService.initOneSignalPush();
 
