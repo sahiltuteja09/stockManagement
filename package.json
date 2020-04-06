@@ -51,8 +51,6 @@
     "cordova-android": "^8.1.0",
     "cordova-ios": "^5.1.1",
     "cordova-plugin-android-permissions": "1.0.0",
-    "cordova-plugin-androidx": "^1.0.2",
-    "cordova-plugin-androidx-adapter": "^1.1.0",
     "cordova-plugin-badge": "0.8.8",
     "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-contacts": "^3.0.1",
@@ -145,8 +143,6 @@
       "cordova-plugin-speechrecognition": {},
       "cordova-plugin-contacts": {},
       "cordova-plugin-tts": {},
-      "cordova-plugin-androidx": {},
-      "cordova-plugin-androidx-adapter": {},
       "cordova-plugin-enable-multidex": {}
     },
     "platforms": [
