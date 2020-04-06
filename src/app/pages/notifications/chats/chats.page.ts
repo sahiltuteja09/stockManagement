@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { AuthenticationService } from '../../auth/authentication.service';
+import { FirebasenotificationService } from 'src/app/services/notification/firebasenotification.service';
+import { CoreConfigConstant } from 'src/configconstants';
 @Component({
   selector: 'app-chats',
   templateUrl: './chats.page.html',
@@ -32,7 +34,9 @@ export class ChatsPage implements OnInit {
   routSub: any;
   queryParmSub: any;
   checkHeartbeat;
+  img_base: string = CoreConfigConstant.uploadedPath;
   sending_text:string = 'SEND';
+  subscribeToPush:any;
 
   // Prevent memory leaks
   ngOnDestroy() {
@@ -43,13 +47,19 @@ export class ChatsPage implements OnInit {
   ionViewWillLeave(){
     this.deactivateChatMonitor();
     this.appProvider.dismissLoading();
+    if(this.appProvider.isMobile())
+    this.subscribeToPush.unsubscribe();
   }
   constructor(
     private appProvider: CoreAppProvider,
     private curdService: CurdService,
     public alertController: AlertController,
-    private device: Device, private platform: Platform,
-    private route: ActivatedRoute, private authenticationService: AuthenticationService) {
+    private device: Device, 
+    private platform: Platform,
+    private route: ActivatedRoute, 
+    private authenticationService: AuthenticationService,
+    public firebasex: FirebasenotificationService
+    ) {
 
     const currentUser = this.authenticationService.currentUserValue;
 
@@ -120,7 +130,14 @@ export class ChatsPage implements OnInit {
               }, 10)
             }
             this.appProvider.dismissLoading();
-            this.activateChatMonitor();
+            if(this.appProvider.isMobile()){
+              this.subscribeToPush = this.firebasex.msgData$.subscribe((data) => {
+                this.getRealTimeChat()
+              });
+              }else{
+                this.activateChatMonitor();
+              }
+            
           },
             error => {
               this.appProvider.showToast(error);
@@ -155,13 +172,26 @@ export class ChatsPage implements OnInit {
               this.scrollToBottom();
             }, 10)
           }
-          this.activateChatMonitor();
+          if(this.appProvider.isMobile()){
+            this.subscribeToPush = this.firebasex.msgData$.subscribe((data) => {
+              this.getRealTimeChat()
+            });
+            }else{
+              this.activateChatMonitor();
+            }
+          
           this.sending_text = 'SEND';
         },
           error => {
             this.appProvider.showToast(error);
             this.appProvider.dismissLoading();
-            this.activateChatMonitor();
+            if(this.appProvider.isMobile()){
+              this.subscribeToPush = this.firebasex.msgData$.subscribe((data) => {
+                this.getRealTimeChat()
+              });
+              }else{
+                this.activateChatMonitor();
+              }
           this.sending_text = 'SEND';
           },
           () => {
@@ -234,7 +264,13 @@ export class ChatsPage implements OnInit {
             }
             event.target.complete();
             this.appProvider.dismissLoading();
-            this.activateChatMonitor();
+            if(this.appProvider.isMobile()){
+              this.subscribeToPush =  this.firebasex.msgData$.subscribe((data) => {
+                this.getRealTimeChat()
+              });
+              }else{
+                this.activateChatMonitor();
+              }
           },
             error => {
               this.appProvider.showToast(error);

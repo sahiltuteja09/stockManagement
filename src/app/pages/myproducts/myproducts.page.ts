@@ -48,14 +48,14 @@ export class MyproductsPage implements OnInit {
     });
   }
   ngOnInit() {
-    
-  }
-  ionViewWillEnter() {
     console.log(this.keyword);
     if(this.keyword)
     this.filterProduct();
     else
     this.products();
+  }
+  ionViewWillEnter() {
+    
   }
   ionViewWillLeave() {
     this.appProvider.dismissLoading();
@@ -120,7 +120,7 @@ export class MyproductsPage implements OnInit {
             if (data.status == false) {
               this.myproducts = [];
               //this.appProvider.showToast(data.msg);
-              //this.noDataFound = data.msg;
+              this.noDataFound = data.msg;
             } else {
               this.myproducts = [];
               this.myproducts = data;

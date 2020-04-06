@@ -26,8 +26,8 @@
           <ion-row>
             <ion-col size="12" size-sm align-items-end>
               <small class="deal_price">
-                Sold : {{product.totalSold}} 
-                | Return : {{product.totalReturn}} | Loss : {{product.totalLoss}} | Damages :  {{product.totalDamage}}
+              <span *ngIf="product.totalSold > 0">Sold : {{product.totalSold}} 
+                | </span> <span *ngIf="product.totalReturn > 0">Return : {{product.totalReturn}} |</span><span *ngIf="product.totalLoss > 0"> Loss : {{product.totalLoss}} |</span> <span *ngIf="product.totalDamage > 0"> Damages :  {{product.totalDamage}}</span>
               </small>
             </ion-col>
           </ion-row>

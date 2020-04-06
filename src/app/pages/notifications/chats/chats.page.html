@@ -31,9 +31,15 @@
     <div *ngIf="conversation.length">
       <ion-row *ngFor="let conv of conversation; let first = first; let last = last " class="full no-padding">
         <ion-col class="no-padding chat-row" [ngClass]="{ 'reverse': conv.msg_from == userID ? 1 : 0}">
-          <div class="avatar-parent">
+          <!-- <div class="avatar-parent">
             <div class="avatar-border"></div>
             <img [src]="conv.image ? conv.image : ((conv.msg_from == userID) ? defaultImg_sender : defaultImg_reciver) " class="avatar">
+          </div> -->
+          <div class="avatar-parent">
+            <div class="avatar-border"></div>
+            <!-- <img [src]="conv.msg_from == userID ?  ((conv.sender_image) ? img_base+conv.msg_from+'assets/'+conv.sender_image : defaultImg_sender) : ((conv.reciver_image) ? img_base+conv.msg_to+'assets/'+conv.reciver_image : defaultImg_reciver) " class="avatar"> -->
+            <img *ngIf="conv.msg_from == userID" [src]="(conv.sender_image) ? img_base+conv.msg_from+'assets/'+conv.sender_image : defaultImg_sender" class="avatar">
+            <img *ngIf="conv.msg_from != userID" [src]="(conv.reciver_image) ? img_base+conv.msg_from+'assets/'+conv.sender_image : defaultImg_reciver" class="avatar">
           </div>
           <div [ngClass]="{ 'name-row-parent-right': (conv.msg_from == userID ? 1 : 0),'name-row-parent-left': (conv.msg_from == userID ? 0 : 1)}">
             <div class="no-padding" [ngClass]="{ 'name-row-right': (conv.msg_from == userID ? 1 : 0),'name-row-left': (conv.msg_from == userID ? 0 : 1)}">

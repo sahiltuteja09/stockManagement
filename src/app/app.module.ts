@@ -25,7 +25,7 @@ import { SharedPipesModule } from './services/shared.module';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { ImageModalPageModule } from './pages/image-modal/image-modal.module';
-import { OneSignal } from '@ionic-native/onesignal/ngx';
+//import { OneSignal } from '@ionic-native/onesignal/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { NativeAudio } from '@ionic-native/native-audio/ngx';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,6 +37,7 @@ import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 import { Contacts } from '@ionic-native/contacts/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { FirebaseX } from "@ionic-native/firebase-x/ngx";
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -67,10 +68,12 @@ import { environment } from '../environments/environment';
     Device,CoreAppProvider,
     Crop,
     ImagePicker,
-    File,FileTransfer,OneSignal,
+    File,FileTransfer,
     AndroidPermissions, NativeAudio, 
     CallNumber, SpeechRecognition, 
-    TextToSpeech,Contacts
+    TextToSpeech,Contacts,FirebaseX
+    //OneSignal,
+
   ],
   bootstrap: [AppComponent]
 })

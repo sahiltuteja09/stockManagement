@@ -65,6 +65,13 @@
           </ion-col>
         </ion-row>
 
+        <!-- Checkboxes in a List -->
+<ion-list *ngIf="customer.is_update && hideMakeVendor == 0">
+  <ion-item lines="none">
+    <ion-label>Make vendor</ion-label>
+    <ion-checkbox slot="start" (click)="makeVendor()"></ion-checkbox>
+  </ion-item>
+</ion-list>
         <br />
         <ion-button color="success" [disabled]="form.invalid" type="submit" block>
           Save

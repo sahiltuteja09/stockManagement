@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
 import { AuthenticationService } from '../auth/authentication.service';
@@ -9,6 +9,15 @@ import { CoreConfigConstant } from 'src/configconstants';
 import { LocalnotificationService } from 'src/app/services/notification/localnotification.service';
 import { OnesignalnotificationService } from 'src/app/services/notification/onesignalnotification.service';
 import { ScrollHideConfig } from 'src/app/providers/hide-heaer-footer/hide-header.directive';
+import { FirebasenotificationService } from 'src/app/services/notification/firebasenotification.service';
+//com.vedific.testApp
+// plugin settings
+//https://github.com/arnesson/cordova-plugin-firebase/issues/1033
+// cordova platform rm android
+// cordova plugin rm cordova-plugin-firebase
+// cordova plugin add cordova-plugin-firebasex
+// cordova plugin add cordova-plugin-androidx
+// cordova plugin add cordova-plugin-androidx-adapter\
 
 @Component({
   selector: 'app-home',
@@ -22,7 +31,7 @@ export class HomePage {
   userID: number = 0;
 
   secondsCounter = interval(120000);
-  counter: any = '';
+  counter: number = 0;
   unreadMsgSub: any;
 
   footerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-bottom', maxValue: undefined };
@@ -60,7 +69,8 @@ uslideOpts = {
   slidesPerGroup: 1,
 };
 
-  constructor(
+subscribeToPush:any;
+  constructor(private ngZone: NgZone,
     private curdService: CurdService,
     private appProvider: CoreAppProvider,
     private router: Router,
@@ -69,7 +79,8 @@ uslideOpts = {
     private authenticationService: AuthenticationService,
     private localNotification: LocalnotificationService,
     private oneSignalService: OnesignalnotificationService,
-    public toastController: ToastController
+    public toastController: ToastController,
+    public firebasex: FirebasenotificationService
   ) {
 
     const currentUser = this.authenticationService.currentUserValue;
@@ -77,10 +88,10 @@ uslideOpts = {
     this.imgBase = this.img_base;
     this.img_base = this.img_base + this.userID + 'assets/';
     this.checkNetworkStatus();
-    this.checkUpdates();
-    this.unreadMsgSub = this.secondsCounter.subscribe(x => { // will execute every 30 seconds
-      this.checkUpdates();
-    });
+    
+    // this.unreadMsgSub = this.secondsCounter.subscribe(x => { // will execute every 30 seconds
+    //   this.checkUpdates();
+    // });
     localNotification.stockReminder();
     localNotification.stockQuantityNotification();
 
@@ -109,13 +120,21 @@ uslideOpts = {
   
 
   ngOnInit() {
-    
+    this.home();
   }
   showAddToHomeBtn: boolean = true;
   deferredPrompt;
   ionViewWillEnter() {
-   this.oneSignalService.initOneSignalPush();
-   this.home();
+    this.checkUpdates();
+    if(this.appProvider.isMobile()){
+    this.firebasex.initPush();
+    if(this.appProvider.isMobile()){
+      this.subscribeToPush =this.firebasex.msgData$.subscribe((data) => {
+        this.checkUpdates();
+      });
+      }
+    }
+  // this.oneSignalService.initOneSignalPush();
 
     (<any>window).addEventListener('beforeinstallprompt', (e) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
@@ -128,18 +147,13 @@ uslideOpts = {
       if(this.showAddToHomeBtn){
         this.addToHomeTost() ;
         this.showAddToHomeBtn = false;
-      }
-      
+      }      
     });
-     
     //button click event to show the promt
              
     (<any>window).addEventListener('appinstalled', (event) => {
       console.log('installed');
-     // this.appProvider.showToast('Thank you');
     });
-     
-     
     if ((<any>window).matchMedia('(display-mode: standalone)').matches) {
       console.log('display-mode is standalone');
     }
@@ -181,7 +195,11 @@ uslideOpts = {
     this.curdService.getData('unreadMsg')
       .subscribe((data: any) => {
         if (data.status) {
-          this.counter = +(data.data);
+//https://stackoverflow.com/questions/50519200/angular-6-view-is-not-updated-after-changing-a-variable-within-subscribe
+          this.ngZone.run( () => {
+            this.counter = +(data.data) *1;
+         });
+
         }
       }
       );
@@ -286,8 +304,36 @@ uslideOpts = {
   navto(page) {
     this.appProvider.goto(page);
   }
+  productView(product, totalSold, totalReturn, totalLoss, totalDamage){
+    let data = {
+      'product': product,
+      'totalSold' : totalSold,
+      'totalReturn': totalReturn,
+      'totalLoss': totalLoss,
+      'totalDamage': totalDamage
+    }
+    this.appProvider.navigateWithState('productview', data);
+  }
+  purchaseview(data:any){
+    this.appProvider.navigateWithState('purchasesview', data);
+  }
+  gotoKhataView(page,khata) {
+    let customerImg = this.customerImages[khata.mobile_number];
+    if(!customerImg){
+      customerImg = '';
+    }
+        this.appProvider.searchParam(page, { queryParams: { mobile:  khata.mobile_number, img:customerImg, 'name':khata.name} });
+      }
+      gotoAddPurchases(page,vendor) {
+        this.appProvider.searchParam(page, { queryParams: { mobile:  vendor.mobile_number, name:vendor.name } });
+      }
   ionViewWillLeave() {
-    this.unreadMsgSub.unsubscribe();
+ //   this.unreadMsgSub.unsubscribe();
     this.appProvider.dismissLoading();
+
+    if(this.appProvider.isMobile()){
+      this.subscribeToPush.unsubscribe(); 
+    }
+
   }
 }

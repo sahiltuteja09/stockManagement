@@ -50,7 +50,7 @@ export class ProductviewPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    let pDetail = this.appProvider.tempStorage;
+    let pDetail = this.appProvider.tempStorageData;
   
     if( pDetail == undefined || pDetail == null){
       this.appProvider.searchParam('myproducts');

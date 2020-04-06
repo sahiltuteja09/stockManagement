@@ -53,10 +53,10 @@ export class PurchasesviewPage implements OnInit {
       this.getPurchaseDetail();
       this.purchaseDetail.id = this.searchTerm;
     }else{
-      if(this.appProvider.tempStorage == null || this.appProvider.tempStorage == undefined){
+      if(this.appProvider.tempStorageData == null || this.appProvider.tempStorageData == undefined){
         this.appProvider.goto('mypurchases',1);
       }else{
-        this.purchaseDetail = this.appProvider.tempStorage;
+        this.purchaseDetail = this.appProvider.tempStorageData;
       }
       
     }

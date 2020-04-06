@@ -38,22 +38,28 @@
   <!-- <content> -->
   <ion-list *ngIf="segmentTab == 'chat' " no-padding>
     <ion-item *ngFor="let chat of chatData.data" (click)="goforChat(chat)">
-      <ion-avatar class="chatImage" slot="start">
+      <!-- <ion-avatar class="chatImage" slot="start">
         <ion-img [src]="chat.image"></ion-img>
+      </ion-avatar> -->
+      <ion-avatar class="chatImage" slot="start">
+        <ion-img *ngIf="chat.msg_to == userID" [src]=" chat.image ? img_base+chat.msg_from+'assets/'+chat.image : defaultImg_reciver"></ion-img>
+        <ion-img *ngIf="chat.msg_to != userID" [src]=" chat.image ? img_base+chat.msg_to+'assets/'+chat.image : defaultImg_reciver"></ion-img>
       </ion-avatar>
       <ion-label>
         <div class="withcount">
           <div class="nameAvatar">
             <h2 color="light">{{chat.name}}
             </h2>
-            <ion-avatar class="chatCount" *ngIf="chat.count">{{chat.count}}</ion-avatar>
+           
           </div>
 
           <div class="timeEnd">
-            <ion-text slot="end" color="light">{{chat.time | timeAgo}}</ion-text>
+            <ion-text slot="end" color="light">{{chat.time | timeAgo}}</ion-text><br/>
+            <ion-avatar class="chatCount" *ngIf="chat.msg_to == userID && chat.mark_read == 0"></ion-avatar>
           </div>
         </div>
         <p class="widthHalf">{{chat.description}} </p>
+       
       </ion-label>
     </ion-item>
   </ion-list>

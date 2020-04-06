@@ -128,9 +128,11 @@ export class AuthenticationService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
-    this.curdService.postData('logout', {}).subscribe((d:any) =>{});
+    this.curdService.postData('logout', {}).subscribe((d:any) =>{
+
+    });
 
     this.currentUserSubject.next(null);
-    this.appProvider.goto('login', 1);
+    this.appProvider.navigateWithURL('login', 1);
   }
 }

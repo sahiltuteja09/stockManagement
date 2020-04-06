@@ -23,13 +23,31 @@ export class CoreAppProvider {
         private platform: Platform,
         private router: Router,
         private device: Device
-    ) { }
-
+    ) {
+        console.log('tempStorage');
+        console.log(this.tempStorage);
+     }
+get tempStorageData(){
+    return this.tempStorage = JSON.parse(localStorage.getItem('tempStorage'));
+}
     goto(page: string, removeHistory?: any) {
         if (removeHistory) {
             this.router.navigate(['/'+page], { replaceUrl: true });
         } else {
             this.router.navigate(['/'+page]);
+        }
+
+    }
+    navigateWithURL(page: string, removeHistory?: any) {
+
+        //this.router.navigateByUrl('/'+page, { skipLocationChange: true });
+        if (removeHistory) {
+            console.log('in iff');
+            this.router.navigateByUrl('/'+page, { skipLocationChange: true });
+         //   this.router.navigateByUrl('/'+page, { skipLocationChange: true });
+        } else {
+            console.log('in else');
+            this.router.navigateByUrl('/'+page);
         }
 
     }
@@ -62,6 +80,7 @@ export class CoreAppProvider {
        return JSON.parse(localStorage.getItem('tempStorage'));
     }
     deleteStorage(){
+        localStorage.setItem('tempStorage', '');
         return localStorage.removeItem('tempStorage');
      }
     // for chat and quotes request routes structure

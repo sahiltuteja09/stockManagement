@@ -43,7 +43,7 @@ export class KhataviewPage implements OnInit {
       
  }
  ionViewWillEnter() {
-  let kDetail = this.appProvider.tempStorage;
+  let kDetail = this.appProvider.tempStorageData;
 
   if( kDetail == undefined || kDetail == null){
     this.appProvider.searchParam('mykhatas', { skipLocationChange: true });

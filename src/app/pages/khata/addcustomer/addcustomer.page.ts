@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AddcustomerPage implements OnInit {
   public addcustomer: FormGroup;
-  customer: any;
+  //customer: any;
 
   isLoading: boolean = false;
   defaultdImg: string = 'http://placehold.it/300x200';
@@ -29,6 +29,14 @@ export class AddcustomerPage implements OnInit {
   queryParmSub:any;
   selectedFile: File[];
   cDetail:any = [];
+  hideMakeVendor:number = 1;
+  customer = {
+    name: '',
+    mobile_number: '',
+    image: '',
+    is_update:0,
+    is_vendor:0
+  }
   constructor(
     public formBuilder: FormBuilder,
     private appProvider: CoreAppProvider,
@@ -44,12 +52,7 @@ export class AddcustomerPage implements OnInit {
     let imgUserID = currentUser.id;
     this.img_base = this.img_base + imgUserID + 'assets/';
 
-    this.customer = {
-      name: '',
-      mobile_number: '',
-      image: '',
-      is_update:0
-    }
+    
     this.addcustomer = formBuilder.group({
       name: ['', Validators.compose([Validators.required])],
       mobile_number: ['', Validators.compose([Validators.maxLength(10), Validators.required])],
@@ -63,18 +66,34 @@ export class AddcustomerPage implements OnInit {
       
      
       if(params['mobile'])
-      this.customer.is_update = 1
+      this.customer.is_update = 1;
+
+      this.hideMakeVendor = params['is_vendor'];
     });
 
-    this.cDetail = this.appProvider.tempStorage;
+    this.cDetail = this.appProvider.tempStorageData;
 
     if( this.cDetail == undefined || this.cDetail == null){
+
+      this.customer.mobile_number = '';
+      this.customer.name = '';
+      this.customer.image = '';
+      this.customer.is_vendor = 0;
+      this.customer.is_update = 0;
+
+      this.hideMakeVendor = 1;
       
     }else{
       this.customer.mobile_number = this.cDetail.mobile;
       this.customer.name = this.cDetail.name;
       this.customer.image = this.cDetail.img;
+      this.customer.is_vendor = this.cDetail.is_vendor;
+      if(this.cDetail.mobile)
+      this.customer.is_update = 1;
+
+      this.hideMakeVendor = this.cDetail.is_vendor;
     }
+    console.log(this.cDetail);
 
   }
 
@@ -86,6 +105,10 @@ export class AddcustomerPage implements OnInit {
       console.log(this.croppedImagepath );
     }, 1000);
   }
+  }
+  makeVendor(){
+    this.customer.is_vendor = this.customer.is_vendor == 0 ? 1 : 0;
+    console.log(this.customer.is_vendor);
   }
   getContact(){
     this.contact.pickContact().then(()=>{
@@ -119,8 +142,7 @@ export class AddcustomerPage implements OnInit {
             'amount_received': '0',
             'description': '',
             'purchase_id': 0,
-            'purchase_date': '',
-            'is_vendor':0
+            'purchase_date': ''
           };
           let merged = { ...this.customer, ...emptyfields };
           this.curdService.postData(apiMethod, merged)
@@ -138,8 +160,14 @@ export class AddcustomerPage implements OnInit {
                 if (data.status)
                   this.appProvider.goto('mykhatas', 1);
 
-                  if (!data.status && this.customer.is_update)
-                  this.appProvider.goto('mykhatas', 1);
+                  if (!data.status && this.customer.is_update){
+                    if(data.redirect != undefined){
+                      if(data.redirect)
+                      this.appProvider.goto('mykhatas', 1);
+                    }
+                    
+                  }
+                  
               }, 2000);
 
             },
@@ -252,6 +280,9 @@ export class AddcustomerPage implements OnInit {
         this.appProvider.dismissLoading();
         this.croppedImagepathSubscriber = '';
           this.isLoadingSubscriber = '';
+          
+          if (typeof this.queryParmSub == 'object')
+          this.queryParmSub.unsubscribe()
 
           this.cDetail = [];
           this.appProvider.deleteStorage();

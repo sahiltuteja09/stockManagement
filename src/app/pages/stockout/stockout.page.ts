@@ -129,14 +129,16 @@ this.isSafariBrowser = this.appProvider.isSafari();
   startListing(msg?:string){
     if(this.speakToSearch){return false;}
     if(!msg)
-    msg = 'Hey. I will try to search whatever you speak.Please Speak after the beep.';
+    msg = 'Hey. Please Speak after the beep.';//I will try to search whatever you speak.
     this.speakToSearch = true;
     this.voiceService.txtToSpeech(msg).then(()=>{
+      console.log('voiceService end');
         this.quickUpdateObject = {'txt':"Hey!! I am Listing...", 'color': 'success', 'disabled':true };
     this.voiceService.startListing().then(() => {
       if(this.voiceService.speechTxt == this.searchTerm){
         this.speakToSearch =false;
              }
+             console.log('after resolved');
        this.quickUpdateObject= {'txt':"Quick Update", 'color': 'danger', 'disabled':false };
       this.sform.controls["searchControl"].setValue(this.voiceService.speechTxt);
     }).catch((err) => {
@@ -144,6 +146,9 @@ this.isSafariBrowser = this.appProvider.isSafari();
         this.speakToSearch =false;
       console.log(err);
     });
+  }).catch((err) => {
+    console.log('hello error');
+    console.log(err);
   });
   }
 
@@ -660,6 +665,8 @@ this.isSafariBrowser = this.appProvider.isSafari();
       this.searchTerm = '';
         this.appProvider.dismissLoading();
         console.log('ionViewWillLeave');
+        
+        this.voiceService.stopListing();
   }
   ngOnDestroy(){
     this.searchTerm = '';

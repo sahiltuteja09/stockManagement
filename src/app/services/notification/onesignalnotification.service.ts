@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OneSignal } from '@ionic-native/onesignal/ngx';
+//import { OneSignal } from '@ionic-native/onesignal/ngx';
 import { CoreConfigConstant } from 'src/configconstants';
 import { CurdService } from '../rest/curd.service';
 import { CoreAppProvider } from 'src/app/providers/app';
@@ -9,7 +9,7 @@ import { CoreAppProvider } from 'src/app/providers/app';
 export class OnesignalnotificationService {
 
   constructor(
-    private oneSignal: OneSignal,
+   // private oneSignal: OneSignal,
     private curdService: CurdService,
     private appProvider: CoreAppProvider
     ) { }
@@ -17,23 +17,23 @@ export class OnesignalnotificationService {
    if(!this.appProvider.isMobile()){
 return;
    }
-    this.oneSignal.startInit(CoreConfigConstant.oneSIgnalSecretKey, CoreConfigConstant.oneSIgnalSecretId);
+    // this.oneSignal.startInit(CoreConfigConstant.oneSIgnalSecretKey, CoreConfigConstant.oneSIgnalSecretId);
     
-      this.oneSignal.handleNotificationReceived().subscribe(() => {
-      // do something when notification is received
-      });
+    //   this.oneSignal.handleNotificationReceived().subscribe(() => {
+    //   // do something when notification is received
+    //   });
 
-      this.oneSignal.handleNotificationOpened().subscribe(() => {
-        // do something when a notification is opened
-      });
+    //   this.oneSignal.handleNotificationOpened().subscribe(() => {
+    //     // do something when a notification is opened
+    //   });
 
-      this.oneSignal.getIds().then(identity => {
-        console.log('identity');
-        console.log(identity);
-        this.updatePlayerId(identity.userId)
-    });
+    //   this.oneSignal.getIds().then(identity => {
+    //     console.log('identity');
+    //     console.log(identity);
+    //     this.updatePlayerId(identity.userId)
+    // });
 
-      this.oneSignal.endInit();
+    //   this.oneSignal.endInit();
   }
   updatePlayerId(player_id){
 

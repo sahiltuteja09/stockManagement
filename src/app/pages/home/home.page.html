@@ -21,6 +21,58 @@
       refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
+  <div  padding-top *ngIf="recentUpdatesStatus">
+    <ion-row>
+      <ion-col size="6">
+        
+        <div class="ion-text-start "> Recent Updates </div>
+      </ion-col>
+      <ion-col size="6" >
+        <ion-text >
+        <div class="ion-text-end view-all" (click)="navto('newsfeed')"> View All > </div>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-slides pager="false" [options]="uslideOpts" >
+      <ion-slide  *ngFor="let recentUpdate of recentUpdates">
+        <ion-list >
+          <ion-card >
+                <ion-item lines="none">
+                  <ion-thumbnail >
+                    <img src="{{recentUpdate.image == '' ? defaultImage : img_base+recentUpdate.image }}"tappable >
+                  </ion-thumbnail>
+                      <ion-label >
+                        <ion-row >
+                          <ion-col size="12" >
+                          <ion-text>
+                            {{recentUpdate.title}}
+                          </ion-text>
+                        </ion-col>
+                          <ion-col size="12" size-sm >
+                            <ion-text>
+                            <small >
+                              Seller : {{recentUpdate.name}}
+                            </small>
+                          </ion-text>
+                          </ion-col>
+                        
+                          <ion-col size="12" size-sm >
+                            <ion-text>
+                            <small >
+                              Likes : {{recentUpdate.likes}}
+                            </small>
+                          </ion-text>
+                          </ion-col>
+                        </ion-row>
+                      </ion-label>
+                </ion-item>
+              
+              </ion-card>
+          </ion-list>
+  
+      </ion-slide>
+    </ion-slides>
+  </div>
   <div  padding-top *ngIf="recentProductsStatus; else recentProductsAdd">
     <ion-row>
       <ion-col size="6">
@@ -34,7 +86,7 @@
       </ion-col>
     </ion-row>
   <ion-slides pager="false" [options]="slideOpts">
-    <ion-slide *ngFor="let recentProduct of recentProducts">
+    <ion-slide *ngFor="let recentProduct of recentProducts" (click)="productView(recentProduct, 0,0, 0, 0)">
       <div class="img-container">
         <img src="{{recentProduct.image == '' ? defaultImage : imgBase+recentProduct.user_id+'assets/'+recentProduct.image }}">
       </div>
@@ -64,7 +116,7 @@
     </ion-col>
   </ion-row>
 <ion-slides pager="false" [options]="pslideOpts">
-  <ion-slide *ngFor="let recentTransaction of recentTransactions">
+  <ion-slide *ngFor="let recentTransaction of recentTransactions" (click)="gotoKhataView('khata', recentTransaction)">
       <ion-list>
         <ion-card >
           <ion-item>
@@ -108,7 +160,7 @@
     </ion-col>
   </ion-row>
 <ion-slides pager="false" [options]="uslideOpts">
-  <ion-slide *ngFor="let recentPurchases of recentPurchasess">
+  <ion-slide *ngFor="let recentPurchases of recentPurchasess"(click)="purchaseview(recentPurchases)">
       <ion-list>
         <ion-card >
           <ion-item>
@@ -140,11 +192,11 @@
 </ion-slides>
 </div>
 <ng-template #recentPurchasessAdd >
-  <div class="ion-text-center" padding-top>
+  <div class="ion-text-center" padding-top >
    <ion-button color="primary" small color="tertiary" shape="round" class="ion-text-uppercase" (click)="navto('mypurchases')">Add new bill</ion-button>
   </div>
 </ng-template>
-<div  padding-top *ngIf="vendorsStatus; else vendorsAdd;">
+<div  padding-top padding-bottom *ngIf="vendorsStatus; else vendorsAdd;">
   <ion-row>
     <ion-col size="6">
       
@@ -157,16 +209,16 @@
     </ion-col>
   </ion-row>
 <ion-slides pager="false" [options]="slideOpts">
-  <ion-slide *ngFor="let vendor of vendors">
+  <ion-slide *ngFor="let vendor of vendors" (click)="gotoAddPurchases('purchases', vendor)">
     <div class="img-container">
       <img src="{{vendor.customer_image == '' ? defaultImage : img_base+vendor.customer_image }}">
     </div>
   </ion-slide>
-  <ion-slide>
+  <!-- <ion-slide>
     <div class="img-container img-container-text-parent">
    <span class="img-container-text">View All</span>  
     </div>
-  </ion-slide>
+  </ion-slide> -->
 </ion-slides>
 </div>
 <ng-template #vendorsAdd >
@@ -174,58 +226,7 @@
    <ion-button color="primary" small color="tertiary" shape="round" class="ion-text-uppercase" (click)="navto('addvendor')">Add new vendor</ion-button>
   </div>
 </ng-template>
-<div  padding-top *ngIf="recentUpdatesStatus">
-  <ion-row>
-    <ion-col size="6">
-      
-      <div class="ion-text-start "> Recent Updates </div>
-    </ion-col>
-    <ion-col size="6" >
-      <ion-text >
-      <div class="ion-text-end view-all" (click)="navto('newsfeed')"> View All > </div>
-      </ion-text>
-    </ion-col>
-  </ion-row>
-  <ion-slides pager="false" [options]="uslideOpts" >
-    <ion-slide  *ngFor="let recentUpdate of recentUpdates">
-      <ion-list >
-        <ion-card >
-              <ion-item lines="none">
-                <ion-thumbnail >
-                  <img src="{{recentUpdate.image == '' ? defaultImage : img_base+recentUpdate.image }}"tappable >
-                </ion-thumbnail>
-                    <ion-label >
-                      <ion-row >
-                        <ion-col size="12" >
-                        <ion-text>
-                          {{recentUpdate.title}}
-                        </ion-text>
-                      </ion-col>
-                        <ion-col size="12" size-sm >
-                          <ion-text>
-                          <small >
-                            Seller : {{recentUpdate.name}}
-                          </small>
-                        </ion-text>
-                        </ion-col>
-                      
-                        <ion-col size="12" size-sm >
-                          <ion-text>
-                          <small >
-                            Likes : {{recentUpdate.likes}}
-                          </small>
-                        </ion-text>
-                        </ion-col>
-                      </ion-row>
-                    </ion-label>
-              </ion-item>
-            
-            </ion-card>
-        </ion-list>
 
-    </ion-slide>
-  </ion-slides>
-</div>
 </ion-content>
 <ion-footer no-border [scrollHide]="footerScrollConfig" [scrollContent]="pageContent">
   <ion-grid>

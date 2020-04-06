@@ -26,6 +26,7 @@ export class KhataPage implements OnInit {
   img_base: string = CoreConfigConstant.uploadedPath;
   marginTextImg:string = '';
   marginLeftTextImg:string = '';
+  isVendor:number = 0;
   constructor( private route: ActivatedRoute, private appProvider: CoreAppProvider, private curdService: CurdService, 
     public authenticationService: AuthenticationService, 
     private modalController: ModalController
@@ -36,6 +37,7 @@ export class KhataPage implements OnInit {
     this.queryParmSub = this.route.queryParams.subscribe(params => {
       this.searchTerm = params['mobile'];
       this.customerImg = params['img'];
+      this.isVendor = params['is_vendor'];
 
       this.name= params['name'];
        this.mobileNumber =params['mobile'];
@@ -128,8 +130,8 @@ export class KhataPage implements OnInit {
      //this.appProvider.navigateWithState('khataview', item);
   }
   editCustomer(){
-    this.appProvider.tempData({ 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg});
-    this.appProvider.searchParam('addcustomer', { queryParams: { 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg} });
+    this.appProvider.tempData({ 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg, 'is_vendor':this.isVendor});
+    this.appProvider.searchParam('addcustomer', { queryParams: { 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg, 'is_vendor':this.isVendor} });
   }
   addkhata(type:number){
     this.appProvider.tempData({'name':this.name,'khata_id':0, 'type':type, 'mobile': this.searchTerm, 'amount': 0,'description': '',purchase_date:new Date().toISOString()});

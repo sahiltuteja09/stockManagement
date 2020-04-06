@@ -28,10 +28,11 @@ export class MyVendorsPage implements OnInit {
       }
   
     ngOnInit() {
-      
+      //from enter to init
+      this.vendors();
     }
     ionViewWillEnter() {
-      this.vendors();
+      
     }
     ionViewWillLeave() {
       this.appProvider.dismissLoading();

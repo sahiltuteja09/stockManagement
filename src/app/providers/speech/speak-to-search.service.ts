@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 import { CoreAppProvider } from '../app';
+import { NativeAudio } from '@ionic-native/native-audio/ngx';
+
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,8 @@ import { CoreAppProvider } from '../app';
 export class SpeakToSearchService {
 speechTxts:any = '';
 speechInProcess:boolean = false;
-  constructor(private speechRecognition: SpeechRecognition, private tts: TextToSpeech, public appProvider: CoreAppProvider) { }
+  constructor(private speechRecognition: SpeechRecognition, private tts: TextToSpeech, public appProvider: CoreAppProvider,
+    private nativeAudio: NativeAudio) { }
 
   txtToSpeech(txt:string){
 
@@ -17,10 +20,28 @@ speechInProcess:boolean = false;
     return new Promise( (resolve, reject) => {
       this.speechInProcess = true;
       if(this.appProvider.isMobile()){
-    this.tts.speak(txt)
-    .then(() => {console.log('Success'); resolve()})
-    .catch((reason: any) => {console.log(reason);reject();});
+
+        let speakText:any = txt;
+      //  if(this.appProvider.isIos()){
+      //   speakText = {
+      //     text: txt,
+      //     rate: 1.5
+      //   };
+      //  }
+
+       if(this.appProvider.isIos()){
+        this.tts.speak(speakText);
+        setTimeout(() => {
+          this.stopListing();
+          resolve();
+        }, 3000);
+       }else{
+        this.tts.speak(speakText)
+        .then(() => { console.log('Success speak 1'); resolve(); })
+        .catch((reason: any) => {console.log(reason);reject();});
+       }
       }else{
+        // for website
         this.textToSpeech(txt).then(() => {console.log('Success'); resolve()})
         .catch((reason: any) => {console.log(reason);reject();});
       }
@@ -29,7 +50,11 @@ speechInProcess:boolean = false;
   
 }
  
-
+stopListing(){
+  if(this.appProvider.isMobile()){
+    this.tts.stop();
+  }
+}
   get speechTxt(){
     return this.speechTxts;
   }
@@ -43,7 +68,7 @@ speechInProcess:boolean = false;
     .then((hasPermission: boolean) => {
 
       if(hasPermission){
-        this.speetchToText().then(()=>{resolve()}).catch((err)=>{reject(err)});
+        this.speetchToText().then(()=>{console.log('resolved'); resolve()}).catch((err)=>{reject(err)});
       }else{
         this.txtToSpeech('Please allow for voice search.');
       // Request permissions
@@ -73,15 +98,32 @@ speechInProcess:boolean = false;
 }
 
 speetchToText():Promise<any>{
+  console.log('speetchToText');
+
+  if(this.appProvider.isIos()){
+    let notificationSound: string = 'assets/sound/bell.mp3';
+          var audio = new Audio(notificationSound ) ;
+          audio.play();
+   }
+
   // Start the recognition process
   let options = {
-      matches: 1
+      matches: 1,
+      showPartial:true
   };
+  if(this.appProvider.isIos()){
+    setTimeout(() => {
+      console.log('stopListening');
+      this.speechRecognition.stopListening();
+    }, 5000);
+  
+  }
   return new Promise( (resolve, reject) => {
       this.speechRecognition.startListening(options)
       .subscribe(
         (matches: string[]) => {
         // this.searchTerm = '';
+        console.log('matches');
           console.log(matches);
           this.speechTxts = matches[0];
           resolve();
@@ -90,7 +132,8 @@ speetchToText():Promise<any>{
           // this.sform.controls["searchControl"].setValue(this.searchTerm);
         },
         (onerror) => {console.log('error:', onerror);reject(onerror)}
-      )
+      );
+      
   });
 }
 textToSpeech(msg):Promise<any> {
@@ -138,7 +181,7 @@ recognition:any;
 webListing():Promise<any>{
   this.recognition =  new this.SpeechRecognition();
  let self = this;
-
+ console.log('webListing');
  return new Promise( (resolve, reject) => {
       try {
         let notificationSound: string = 'assets/sound/bell.mp3';

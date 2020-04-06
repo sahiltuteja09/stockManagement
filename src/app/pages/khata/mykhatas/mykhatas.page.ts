@@ -114,7 +114,10 @@ import { AuthenticationService } from '../../auth/authentication.service';
   if(!customerImg){
     customerImg = '';
   }
-      this.appProvider.searchParam(page, { queryParams: { mobile:  khata.mobile_number, img:customerImg, 'name':khata.name} });
+      this.appProvider.searchParam(page, { queryParams: { mobile:  khata.mobile_number, img:customerImg, 'name':khata.name, 'is_vendor':khata.is_vendor} });
+    }
+    navTo(page){
+this.appProvider.goto(page)
     }
   
     doRefresh(event) {

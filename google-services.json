@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "309452144343",
+    "firebase_url": "https://emartos-app.firebaseio.com",
+    "project_id": "emartos-app",
+    "storage_bucket": "emartos-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309452144343:android:9c8f59ea7fea6c47d87a92",
+        "android_client_info": {
+          "package_name": "com.emartos.inventory"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "309452144343-5f8dr5rqfnbj12ql20bnjtfk64f7sd2s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtSsDwIj4vRvqmk2dwc1q6So9TMMaohcg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "309452144343-5f8dr5rqfnbj12ql20bnjtfk64f7sd2s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

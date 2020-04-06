@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CoreAppProvider } from 'src/app/providers/app';
 import { CurdService } from 'src/app/services/rest/curd.service';
-
+import { CoreConfigConstant } from 'src/configconstants';
+import { AuthenticationService } from '../../auth/authentication.service';
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.page.html',
@@ -13,10 +14,19 @@ export class MessagesPage implements OnInit {
   noDataFound:string = '';
   chatData : any = [];
   chatDataa : ({ "name": string; "image": string; "description": string; "count": string; "time": string; } | { "name": string; "image": string; "description": string; "time": string; "count"?: undefined; })[];
-
-  constructor(private appProvider: CoreAppProvider, private curdService: CurdService) { }
+  img_base: string = CoreConfigConstant.uploadedPath;
+  userID = 0;
+  defaultImg_reciver: string = 'assets/chat/user3.jpeg';
+  constructor(private appProvider: CoreAppProvider, private curdService: CurdService,
+    private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
+    
+  }
+  ionViewWillEnter(){
+    const currentUser = this.authenticationService.currentUserValue;
+
+    this.userID = currentUser.id;
     this.messages();
   }
   messages(){

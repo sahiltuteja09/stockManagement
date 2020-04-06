@@ -136,15 +136,16 @@ export class AddkhataPage implements OnInit {
     });
   }
   ionViewWillEnter() {
-    if (this.appProvider.tempStorage) {
-      console.log(this.appProvider.tempStorage);
-      this.name = this.appProvider.tempStorage.name;
-      this.khata_type = this.appProvider.tempStorage.type;
-      this.mobile = this.appProvider.tempStorage.mobile;
+    if (this.appProvider.tempStorageData) {
+
+    let  tempStorage = this.appProvider.tempStorageData;
+      this.name = tempStorage.name;
+      this.khata_type = tempStorage.type;
+      this.mobile = tempStorage.mobile;
       this.khata = {
-        'amount': this.appProvider.tempStorage.amount,
-        'description': this.appProvider.tempStorage.description,
-        purchase_date: this.appProvider.tempStorage.purchase_date
+        'amount': tempStorage.amount,
+        'description': tempStorage.description,
+        purchase_date: tempStorage.purchase_date
       };
 
     }

@@ -77,9 +77,11 @@ export class MypurchasesPage implements OnInit {
       this.downloadPath = this.file.documentsDirectory;
     }
   }
+  // this from enter to init
+  this.purchases();
   }
   ionViewWillEnter() {
-    this.purchases();
+    
   }
   ionViewWillLeave() {
     this.appProvider.dismissLoading();
