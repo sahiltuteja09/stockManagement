@@ -1,9 +1,9 @@
 export class CoreConfigConstant {
   static appName = 'Emartos';
-//  static apiUrl = 'http://localhost/php-stockmanagement/api/v1/'; 
-//  static uploadedPath = 'http://localhost/php-stockmanagement/uploads/'; 
-   static apiUrl = 'http://viaraaa.com/apis/api/v1/'; 
-   static uploadedPath = 'http://viaraaa.com/apis/uploads/';
+ static apiUrl = 'http://localhost/php-stockmanagement/api/v1/'; 
+ static uploadedPath = 'http://localhost/php-stockmanagement/uploads/'; 
+  //  static apiUrl = 'http://viaraaa.com/apis/api/v1/'; 
+  //  static uploadedPath = 'http://viaraaa.com/apis/uploads/';
   
   //  static apiUrl = 'https://emartos.com/apis/api/v1/'; 
   //  static uploadedPath = 'https://emartos.com/apis/uploads/';

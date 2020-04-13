@@ -33,6 +33,14 @@ export class MybillsPage implements OnInit {
     const currentUser = this.authenticationService.currentUserValue;
         const imgUserID = currentUser.id;
         this.img_base = this.img_base + imgUserID + 'assets/';
+        this.isMobile = this.appProvider.isMobile();
+
+        if(this.appProvider.isAndroid()){
+          this.downloadPath = this.file.externalRootDirectory;
+        }else{
+          this.downloadPath = this.file.documentsDirectory;
+        }
+        console.log(this.downloadPath);
     }
 
   ngOnInit() {
@@ -125,7 +133,7 @@ this.zipFileName = this.img_base + zipName +'.zip';
     }
   }
   downloadFile() {
-  
+  console.log(this.downloadPath , this.downloadFolder);
     this.file.checkDir(this.downloadPath , this.downloadFolder).then(response => {
       console.log('Directory exists'+response);
       this.downloadBill();

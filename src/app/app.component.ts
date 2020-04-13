@@ -141,7 +141,10 @@ let findIndex = routePage.indexOf('returnUrl');
       this.statusBar.styleDefault();
       // set status bar to color
       this.statusBar.backgroundColorByHexString('#3880ff');
-      this.splashScreen.hide();
+      setTimeout(() => {
+        this.splashScreen.hide();
+      }, 1000);
+      
       this.exitApp() ;
       }
       setTimeout(() => {
