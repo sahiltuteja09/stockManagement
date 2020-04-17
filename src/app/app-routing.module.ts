@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthguardService } from './pages/auth/guard/authguard.service';
+import { MYPRODUCTS_ROUTES } from './pages/myproducts/myproducts-route';
 
 const routes: Routes = [
   {
@@ -47,7 +48,8 @@ const routes: Routes = [
   { path: 'product-report/:product_id', loadChildren: './pages/reports/sale/product-report/product-report.module#ProductReportPageModule', canActivate: [AuthguardService],  data: { num: 116 } },
   { path: 'requestbymequotes', loadChildren: './pages/quotes/requestbymequotes/requestbymequotes.module#RequestbymequotesPageModule' , canActivate: [AuthguardService],  data: { num: 117 }},
   { path: 'requestbyotherquotes', loadChildren: './pages/quotes/requestbyotherquotes/requestbyotherquotes.module#RequestbyotherquotesPageModule', canActivate: [AuthguardService],  data: { num: 118 } },
-  { path: 'myproducts', loadChildren: './pages/myproducts/myproducts.module#MyproductsPageModule', canActivate: [AuthguardService], data: { num: 102 } },
+  // { path: 'myproducts', loadChildren: './pages/myproducts/myproducts.module#MyproductsPageModule', canActivate: [AuthguardService], data: { num: 102 } },
+  {path: 'myproducts', children: MYPRODUCTS_ROUTES},
   { path: 'no-internet', loadChildren: './pages/no-internet/no-internet.module#NoInternetPageModule',  data: { num: 200 } },
   { path: 'purchases', loadChildren: './pages/purchases/purchases.module#PurchasesPageModule', canActivate: [AuthguardService],  data: { num: 112 } },
   { path: 'purchases/:purchase_id', loadChildren: './pages/purchases/purchases.module#PurchasesPageModule', canActivate: [AuthguardService],  data: { num: 113 } },
@@ -59,11 +61,12 @@ const routes: Routes = [
   { path: 'addcustomer', loadChildren: './pages/khata/addcustomer/addcustomer.module#AddcustomerPageModule', canActivate: [AuthguardService],  data: { num: 253 }  },
   { path: 'addkhata', loadChildren: './pages/khata/addkhata/addkhata.module#AddkhataPageModule', canActivate: [AuthguardService],  data: { num: 254 }  },
   { path: 'purchasesview', loadChildren: './pages/purchases/purchasesview/purchasesview.module#PurchasesviewPageModule', canActivate: [AuthguardService],  data: { num: 255 }  },
-  { path: 'productview', loadChildren: './pages/myproducts/productview/productview.module#ProductviewPageModule', canActivate: [AuthguardService],  data: { num: 256 }  },
+  // { path: 'productview', loadChildren: './pages/myproducts/productview/productview.module#ProductviewPageModule', canActivate: [AuthguardService],  data: { num: 256 }  },
   { path: 'mybills', loadChildren: './pages/purchases/mybills/mybills.module#MybillsPageModule', canActivate: [AuthguardService],  data: { num: 257 } },
   { path: 'change-password', loadChildren: './pages/setting/change-password/change-password.module#ChangePasswordPageModule', canActivate: [AuthguardService],  data: { num: 300 } },
   { path: 'addvendor', loadChildren: './pages/purchases/addvendor/addvendor.module#AddvendorPageModule', canActivate: [AuthguardService],  data: { num: 301 } },
-  { path: 'myvendors', loadChildren: './pages/purchases/my-vendors/my-vendors.module#MyVendorsPageModule', canActivate: [AuthguardService],  data: { num: 302 } },  { path: 'newsfeed', loadChildren: './pages/home/newsfeed/newsfeed.module#NewsfeedPageModule' },
+  { path: 'myvendors', loadChildren: './pages/purchases/my-vendors/my-vendors.module#MyVendorsPageModule', canActivate: [AuthguardService],  data: { num: 302 } },
+  { path: 'newsfeed', loadChildren: './pages/home/newsfeed/newsfeed.module#NewsfeedPageModule' },
 
 
 

@@ -7,19 +7,20 @@ import { IonicModule } from '@ionic/angular';
 
 import { MyproductsPage } from './myproducts.page';
 import { SharedPipesModule } from 'src/app/services/shared.module';
-const routes: Routes = [
-  {
-    path: '',
-    component: MyproductsPage
-  }
-];
+import { MYPRODUCTS_ROUTES } from './myproducts-route';
+// const routes: Routes = [
+//   {
+//     path: '',
+//     component: MyproductsPage
+//   }
+// ];
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,SharedPipesModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(MYPRODUCTS_ROUTES)
   ],
   declarations: [MyproductsPage]
 })

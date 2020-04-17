@@ -101,7 +101,7 @@ export class MyproductsPage implements OnInit {
       'totalDamage': totalDamage
     }
     this.appProvider.tempData(data);
-    this.appProvider.navigateWithURL('productview',1);
+    this.appProvider.navigateWithURL('productview');
     //this.appProvider.navigateWithState('productview', data);
   }
   // goto(page,product) {
