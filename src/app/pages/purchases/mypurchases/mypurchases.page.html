@@ -64,7 +64,7 @@
     <ion-row>
       <ion-col  size="12" size-sm >
         <ion-button color="danger" float-right (click)="bulkDownload();">  <ion-icon name="cloud-download"></ion-icon></ion-button>
-        <ion-button color="primary" float-right routerLink="/mybills"> My Bills</ion-button>
+        <ion-button color="primary" float-right (click)="gotoPage('mypurchases/mybills')"> My Bills</ion-button>
       </ion-col>
     </ion-row>
     <ion-list *ngFor="let purchase of mypurchases.data">
@@ -127,7 +127,7 @@
   <ng-template #noData>
     <div class="ion-text-center">
       <p>{{noDataFound}}</p>
-        <ion-button color="primary" small color="tertiary" shape="round" (click)="gotoPage('myvendors')">Add New</ion-button>
+        <ion-button color="primary" small color="tertiary" shape="round" (click)="gotoPage('mypurchases/myvendors')">Add New</ion-button>
     </div>
   </ng-template>
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
@@ -136,7 +136,7 @@
   </ion-infinite-scroll>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
-    <ion-fab-button color="danger"  data-desc="add New" (click)="gotoPage('myvendors')">
+    <ion-fab-button color="danger"  data-desc="add New" (click)="gotoPage('mypurchases/myvendors')">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

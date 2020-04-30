@@ -13,7 +13,7 @@
   <ion-searchbar showCancelButton="always" animated debounce="500" [(ngModel)]="keyword" (ionChange)="filterReport()"></ion-searchbar>
   <div *ngIf="(myVendors.status); else noData">
       <ion-virtual-scroll [items]="myVendors.data" >
-          <ion-item *virtualItem="let item;" (click)="goto('purchases', item)">
+          <ion-item *virtualItem="let item;" (click)="goto('mypurchases/purchases', item)">
             <ion-avatar slot="start">
               <span *ngIf="item.customer_image">
                 <img [src]="img_base + item.customer_image">
@@ -31,7 +31,7 @@
     <ng-template #noData>
       <div class="ion-text-center danger" >
         <p>Vendor to added yet. Please add new vendor.</p>
-        <ion-button color="primary" small color="tertiary" shape="round" routerLink="/addvendor">Add Vendor</ion-button>
+        <ion-button color="primary" small color="tertiary" shape="round" (click)="gotoPage('mypurchases/myvendors/addvendor')">Add Vendor</ion-button>
       </div>
     </ng-template>
     <!-- <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
@@ -40,7 +40,7 @@
     </ion-infinite-scroll> -->
 
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
-      <ion-fab-button color="danger" routerDirection="forward" data-desc="add New" routerLink="/addvendor">
+      <ion-fab-button color="danger" routerDirection="forward" data-desc="add New" (click)="gotoPage('mypurchases/myvendors/addvendor')">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>

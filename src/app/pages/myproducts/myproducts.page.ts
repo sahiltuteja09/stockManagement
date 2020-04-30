@@ -101,7 +101,7 @@ export class MyproductsPage implements OnInit {
       'totalDamage': totalDamage
     }
     this.appProvider.tempData(data);
-    this.appProvider.navigateWithURL('productview');
+    this.appProvider.navigateWithURL('myproducts/productview',0);
     //this.appProvider.navigateWithState('productview', data);
   }
   // goto(page,product) {
@@ -156,6 +156,9 @@ export class MyproductsPage implements OnInit {
   }
   navigateTo(page){
     this.appProvider.navigateWithURL(page, 1);
+  }
+  goto(page){
+    this.appProvider.goto(page);
   }
   doInfinite(infiniteScroll) {
 

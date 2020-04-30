@@ -11,7 +11,7 @@ import { MYPRODUCTS_ROUTES } from './myproducts-route';
 // const routes: Routes = [
 //   {
 //     path: '',
-//     component: MyproductsPage
+//     component: MyproductsPage,
 //   }
 // ];
 

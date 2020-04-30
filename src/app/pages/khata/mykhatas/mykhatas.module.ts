@@ -8,12 +8,16 @@ import { IonicModule } from '@ionic/angular';
 import { MykhatasPage } from './mykhatas.page';
 import { SharedPipesModule } from 'src/app/services/shared.module';
 import { TextAvatarModule } from 'src/app/services/text-avatar/text-avatar.module';
+import { AuthguardService } from '../../auth/guard/authguard.service';
 
 const routes: Routes = [
   {
     path: '',
     component: MykhatasPage
-  }
+  },
+  
+  { path: 'khata', loadChildren: '../khata.module#KhataPageModule', canActivate: [AuthguardService],  data: { num: 250 }  },
+  { path: 'addcustomer', loadChildren: '../addcustomer/addcustomer.module#AddcustomerPageModule', canActivate: [AuthguardService],  data: { num: 253 }  },
 ];
 
 @NgModule({

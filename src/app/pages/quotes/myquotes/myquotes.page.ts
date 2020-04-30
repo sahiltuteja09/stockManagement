@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CoreAppProvider } from 'src/app/providers/app';
 
 @Component({
   selector: 'app-myquotes',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyquotesPage implements OnInit {
 
-  constructor() { }
+  constructor(private appProvider: CoreAppProvider) { }
 
   ngOnInit() {
   }
-
+  gotopage(page:string){
+this.appProvider.goto(page);
+  }
 }

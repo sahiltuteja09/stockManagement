@@ -7,12 +7,15 @@ import { IonicModule } from '@ionic/angular';
 
 import { KhataPage } from './khata.page';
 import { TextAvatarModule } from 'src/app/services/text-avatar/text-avatar.module';
+import { AuthguardService } from '../auth/guard/authguard.service';
 
 const routes: Routes = [
   {
     path: '',
     component: KhataPage
-  }
+  },
+  { path: 'khataview', loadChildren: './khataview/khataview.module#KhataviewPageModule', canActivate: [AuthguardService],  data: { num: 252 }  },
+  { path: 'addkhata', loadChildren: './addkhata/addkhata.module#AddkhataPageModule', canActivate: [AuthguardService],  data: { num: 254 }  },
 ];
 
 @NgModule({

@@ -118,7 +118,7 @@ export class NewsfeedPage {
     }, 2000);
   }
   requestQuote(data) {
-    this.appProvider.navTo('request-quote', data.id, data.user_id)
+    this.appProvider.navTo('myquotes/request-quote', data.id, data.user_id)
   }
 
   goto(page,product) {

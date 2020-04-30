@@ -6,20 +6,21 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { AddnewstockPage } from './addnewstock.page';
+import { UPDATE_ADDNEWSTOCK_ROUTES } from './addnewstock-route';
 
-const routes: Routes = [
-  {
-    path: '',
-    component: AddnewstockPage
-  }
-];
+// const routes: Routes = [
+//   {
+//     path: '',
+//     component: AddnewstockPage
+//   }
+// ];
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,ReactiveFormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(UPDATE_ADDNEWSTOCK_ROUTES)
   ],
   declarations: [AddnewstockPage]
 })

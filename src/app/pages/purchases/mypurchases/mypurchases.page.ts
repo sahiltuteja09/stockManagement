@@ -180,10 +180,10 @@ export class MypurchasesPage implements OnInit {
   }
   goto(page,product) {
 
-    this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id},skipLocationChange: true });
+    this.appProvider.searchParam(page, { queryParams: { term:  product.marketplace_unique_id}});
   }
   gotoPage(page) {
-    this.appProvider.navigateWithURL(page,1);
+    this.appProvider.navigateWithURL(page);
   //   this.appProvider.searchParam(page);
   }
 
@@ -238,7 +238,7 @@ export class MypurchasesPage implements OnInit {
   }
   purchaseview(data:any){
     this.appProvider.tempData(data);
-    this.appProvider.navigateWithURL('purchasesview',1);
+    this.appProvider.navigateWithURL('mypurchases/purchasesview');
    // this.appProvider.navigateWithState('purchasesview', data);
   }
   

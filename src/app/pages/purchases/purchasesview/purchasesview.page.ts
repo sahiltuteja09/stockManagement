@@ -70,7 +70,7 @@ export class PurchasesviewPage implements OnInit {
   }
   ionViewWillLeave() {
     this.queryParmSub.unsubscribe();
-    this.appProvider.deleteStorage();
+    //this.appProvider.deleteStorage();
 }
   openPreview(img) {
     this.modalController.create({
@@ -101,7 +101,7 @@ export class PurchasesviewPage implements OnInit {
   }
   editPurchase(){
     
-    this.appProvider.goto('purchases/'+this.purchaseDetail.id);
+    this.appProvider.goto('mypurchases/purchases/'+this.purchaseDetail.id);
   }
   getPurchaseDetail(){
 

@@ -192,7 +192,7 @@ async deleteTransaction(){
             } else {
               this.appProvider.showToast(result.msg);
               setTimeout(() => {
-                this.appProvider.searchParam('khata', { queryParams: { mobile:  this.khataDetail.mobile_number}, skipLocationChange: true });
+                this.appProvider.searchParam('mykhatas/khata', { queryParams: { mobile:  this.khataDetail.mobile_number} });
               }, 2000);
             }
           },
@@ -212,14 +212,14 @@ async deleteTransaction(){
 }
 viewBill(data:any){
   this.appProvider.tempData(data);
-  this.appProvider.searchParam('purchasesview', { queryParams: { purchase_id:  this.khataDetail.purchase_id} });
+  this.appProvider.searchParam('mypurchases/purchasesview', { queryParams: { purchase_id:  this.khataDetail.purchase_id} });
 }
 
 BackButtonAction(){
-  this.appProvider.searchParam('khata',{ queryParams: { mobile:  this.khataDetail.mobile_number, 'name': this.khataDetail.name, 'img':this.khataDetail.img}, replaceUrl: true});
+  this.appProvider.searchParam('mykhatas/khata',{ queryParams: { mobile:  this.khataDetail.mobile_number, 'name': this.khataDetail.name, 'img':this.khataDetail.img}});
 }
 ionViewWillLeave() {
   this.backButtonSub.unsubscribe();
-  this.appProvider.deleteStorage();
+ // this.appProvider.deleteStorage();
 }
 }

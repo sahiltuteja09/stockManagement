@@ -126,16 +126,16 @@ export class KhataPage implements OnInit {
     item.name = this.name;
     item.img = this.customerImg;
     this.appProvider.tempData(item);console.log(item);
-    this.appProvider.searchParam('khataview');
+    this.appProvider.searchParam('mykhatas/khata/khataview');
      //this.appProvider.navigateWithState('khataview', item);
   }
   editCustomer(){
     this.appProvider.tempData({ 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg, 'is_vendor':this.isVendor});
-    this.appProvider.searchParam('addcustomer', { queryParams: { 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg, 'is_vendor':this.isVendor} });
+    this.appProvider.searchParam('mykhatas/addcustomer', { queryParams: { 'mobile':  this.searchTerm, 'name':this.name, 'img':this.customerImg, 'is_vendor':this.isVendor} });
   }
   addkhata(type:number){
     this.appProvider.tempData({'name':this.name,'khata_id':0, 'type':type, 'mobile': this.searchTerm, 'amount': 0,'description': '',purchase_date:new Date().toISOString()});
-    this.appProvider.searchParam('addkhata');
+    this.appProvider.searchParam('mykhatas/khata/addkhata');
   }
   ionViewWillLeave() {
       this.queryParmSub.unsubscribe();

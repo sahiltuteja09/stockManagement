@@ -38,7 +38,6 @@ import { Contacts } from '@ionic-native/contacts/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { FirebaseX } from "@ionic-native/firebase-x/ngx";
-import { MyproductsPageModule } from './pages/myproducts/myproducts.module';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -49,7 +48,7 @@ import { MyproductsPageModule } from './pages/myproducts/myproducts.module';
     HttpClientModule,
     SharedPipesModule,
     ImageModalPageModule,
-    BrowserAnimationsModule,MyproductsPageModule,
+    BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [

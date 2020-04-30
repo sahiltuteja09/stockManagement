@@ -8,6 +8,7 @@ import { HomePage } from './home.page';
 import { SharedPipesModule } from 'src/app/services/shared.module';
 import { HideHeaderDirective } from 'src/app/providers/hide-heaer-footer/hide-header.directive';
 import { TextAvatarModule } from 'src/app/services/text-avatar/text-avatar.module';
+import { AuthguardService } from '../auth/guard/authguard.service';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { TextAvatarModule } from 'src/app/services/text-avatar/text-avatar.modul
       {
         path: '',
         component: HomePage
-      }
+      },
+      { path: 'newsfeed', loadChildren: './newsfeed/newsfeed.module#NewsfeedPageModule', canActivate: [AuthguardService],  data: { num: 500 } },
     ])
   ],
   declarations: [HomePage,HideHeaderDirective],

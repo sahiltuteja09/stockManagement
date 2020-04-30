@@ -74,11 +74,11 @@ export class ProductviewPage implements OnInit {
     this.appProvider.searchParam(page, { queryParams: { term:  this.product.product.marketplace_unique_id} });
   }
   editStock(){
-    this.appProvider.goto('addnewstock/'+this.product.product.id);
+    this.appProvider.goto('myproducts/addnewstock/'+this.product.product.id);
   }
   ionViewWillLeave(){
    // if(!this.isMobile)
-    this.appProvider.deleteStorage();
+   // this.appProvider.deleteStorage();
   }
 
 }

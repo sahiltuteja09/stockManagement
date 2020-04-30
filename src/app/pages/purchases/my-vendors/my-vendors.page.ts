@@ -103,7 +103,9 @@ export class MyVendorsPage implements OnInit {
     goto(page,vendor) {
       this.appProvider.searchParam(page, { queryParams: { mobile:  vendor.mobile_number, name:vendor.name } });
     }
-  
+    gotoPage(page) {
+      this.appProvider.goto(page);
+    }
     doRefresh(event) {
       setTimeout(() => {
         if(this.isFiltered){

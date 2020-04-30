@@ -40,7 +40,7 @@
       <ion-searchbar showCancelButton="always" animated debounce="500" [(ngModel)]="keyword" (ionChange)="filterReport()"></ion-searchbar>
 <div *ngIf="(mykhatas.status); else noData">
     <ion-virtual-scroll [items]="mykhatas.data" >
-        <ion-item *virtualItem="let item;" (click)="goto('khata', item)">
+        <ion-item *virtualItem="let item;" (click)="goto('mykhatas/khata', item)">
           <ion-avatar slot="start">
             <span *ngIf="customerImages[item.mobile_number]">
               <img [src]="img_base + customerImages[item.mobile_number]">
@@ -67,7 +67,7 @@
   </div>
   <ng-template #noData>
     <div class="ion-text-center danger" >
-      <ion-button color="primary" small color="tertiary" shape="round" (click)="navTo('addcustomer')">Add New</ion-button>
+      <ion-button color="primary" small color="tertiary" shape="round" (click)="navTo('mykhatas/addcustomer')">Add New</ion-button>
     </div>
   </ng-template>
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
@@ -76,7 +76,7 @@
   </ion-infinite-scroll>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
-    <ion-fab-button color="danger" routerDirection="forward" data-desc="Add Customer" (click)="navTo('addcustomer')">
+    <ion-fab-button color="danger" routerDirection="forward" data-desc="Add Customer" (click)="navTo('mykhatas/addcustomer')">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

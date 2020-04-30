@@ -83,7 +83,7 @@ export class AddkhataPage implements OnInit {
 
               this.appProvider.dismissLoading();
               if (data.status)
-                this.appProvider.searchParam('khata', { queryParams: { 'mobile': this.mobile }, skipLocationChange: true  });
+                this.appProvider.searchParam('mykhatas/khata', { queryParams: { 'mobile': this.mobile }, });
             }, 2000);
 
           },

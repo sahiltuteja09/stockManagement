@@ -13,7 +13,7 @@
 <ion-content>
   <ion-row>
     <ion-col text-center class="ion-padding-top">
-      <ion-button routerLink="/requestbymequotes" color="success" shape="round" >
+      <ion-button (click)="gotopage('myquotes/requestbymequotes')" color="success" shape="round" >
           <ion-icon slot="start" name="star"></ion-icon>
         Request by me</ion-button>
     </ion-col>
@@ -21,7 +21,7 @@
 <div text-center  class="ion-padding-top">Or</div>
   <ion-row>
       <ion-col text-center class="ion-padding-top">
-        <ion-button routerLink="/requestbyotherquotes" color="danger" shape="round" >
+        <ion-button (click)="gotopage('myquotes/requestbyotherquotes')" color="danger" shape="round" >
             <ion-icon slot="start" name="add"></ion-icon>
           Request by others</ion-button>
       </ion-col>
